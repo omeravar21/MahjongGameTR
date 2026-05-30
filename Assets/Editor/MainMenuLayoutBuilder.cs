@@ -68,6 +68,11 @@ namespace MahjongGame.Editor
                     root.AddComponent<MainMenuNavigationController>();
                 }
 
+                if (root.GetComponent<DoorTransitionController>() == null)
+                {
+                    root.AddComponent<DoorTransitionController>();
+                }
+
                 return;
             }
         }

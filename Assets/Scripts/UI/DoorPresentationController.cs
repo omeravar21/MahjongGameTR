@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +17,12 @@ namespace MahjongGame.UI
         [SerializeField] private RectTransform doorLeftRect;
         [SerializeField] private RectTransform doorRightRect;
 
+        private Coroutine _transitionCoroutine;
+        private bool _isTransitionPlaying;
+
         public bool IsAnimationPrepared => animationPrepared;
+
+        public bool IsTransitionPlaying => _isTransitionPlaying;
 
         public CanvasGroup GetDoorCanvasGroup() => doorCanvasGroup;
 
@@ -153,6 +160,83 @@ namespace MahjongGame.UI
             doorLeftRect = visualLayer.Find("DoorLeftPanel") as RectTransform;
             doorRightRect = visualLayer.Find("DoorRightPanel") as RectTransform;
             animationPrepared = doorCanvasGroup != null && doorLeftRect != null && doorRightRect != null;
+        }
+
+        public Coroutine PlayOpenTransition(float duration, Action onComplete)
+        {
+            if (!animationPrepared)
+            {
+                CacheReferences();
+            }
+
+            if (!animationPrepared)
+            {
+                Debug.LogWarning("[DoorPresentationController] Door animation is not prepared.");
+                onComplete?.Invoke();
+                return null;
+            }
+
+            if (_transitionCoroutine != null)
+            {
+                StopCoroutine(_transitionCoroutine);
+            }
+
+            _transitionCoroutine = StartCoroutine(OpenTransitionRoutine(duration, onComplete));
+            return _transitionCoroutine;
+        }
+
+        private IEnumerator OpenTransitionRoutine(float duration, Action onComplete)
+        {
+            _isTransitionPlaying = true;
+
+            Vector2 leftClosedPosition = doorLeftRect.anchoredPosition;
+            Vector2 rightClosedPosition = doorRightRect.anchoredPosition;
+            float slideDistance = ResolveSlideDistance();
+            Vector2 leftOpenPosition = leftClosedPosition + new Vector2(-slideDistance, 0f);
+            Vector2 rightOpenPosition = rightClosedPosition + new Vector2(slideDistance, 0f);
+            float startAlpha = doorCanvasGroup != null ? doorCanvasGroup.alpha : 1f;
+
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float normalizedTime = duration <= 0f ? 1f : Mathf.Clamp01(elapsed / duration);
+                float easedTime = Mathf.SmoothStep(0f, 1f, normalizedTime);
+
+                doorLeftRect.anchoredPosition = Vector2.Lerp(leftClosedPosition, leftOpenPosition, easedTime);
+                doorRightRect.anchoredPosition = Vector2.Lerp(rightClosedPosition, rightOpenPosition, easedTime);
+
+                if (doorCanvasGroup != null && normalizedTime >= 0.8f)
+                {
+                    float fadeProgress = Mathf.InverseLerp(0.8f, 1f, normalizedTime);
+                    doorCanvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, fadeProgress);
+                }
+
+                yield return null;
+            }
+
+            doorLeftRect.anchoredPosition = leftOpenPosition;
+            doorRightRect.anchoredPosition = rightOpenPosition;
+            if (doorCanvasGroup != null)
+            {
+                doorCanvasGroup.alpha = 0f;
+            }
+
+            _isTransitionPlaying = false;
+            _transitionCoroutine = null;
+            onComplete?.Invoke();
+        }
+
+        private float ResolveSlideDistance()
+        {
+            Transform canvasTransform = MainMenuLayoutController.GetCanvasTransform();
+            RectTransform canvasRect = canvasTransform != null ? canvasTransform as RectTransform : null;
+            if (canvasRect != null && canvasRect.rect.width > 0f)
+            {
+                return canvasRect.rect.width * 0.55f;
+            }
+
+            return 540f;
         }
 
         private static GameObject CreateRectObject(string name, Transform parent)

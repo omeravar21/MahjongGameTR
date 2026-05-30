@@ -223,7 +223,6 @@ namespace MahjongGame.UI
         private void RequestLevelStart()
         {
             RaiseLevelStartRequested();
-            Debug.Log("[MainMenuNavigationController] Level start requested.");
         }
 
         private void ShowView(MainMenuView view)
