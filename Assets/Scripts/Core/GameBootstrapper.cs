@@ -27,6 +27,11 @@ namespace MahjongGame.Core
             {
                 gameObject.AddComponent<SceneLoadController>();
             }
+
+            if (GetComponent<SaveSystem>() == null)
+            {
+                gameObject.AddComponent<SaveSystem>();
+            }
         }
 
         private void Start()
