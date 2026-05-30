@@ -1,4 +1,4 @@
-using MahjongGame.Progression;
+﻿using MahjongGame.Progression;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -137,7 +137,7 @@ namespace MahjongGame.UI
             for (int i = canvasTransform.childCount - 1; i >= 0; i--)
             {
                 Transform child = canvasTransform.GetChild(i);
-                if (child.name == "DoorPanel")
+                if (child.name == "DoorPanel" || child.name == "MenuOverlayRoot")
                 {
                     continue;
                 }

@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using MahjongGame.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -27,6 +27,7 @@ namespace MahjongGame.Editor
             if (canvasTransform != null)
             {
                 DoorPresentationController.BuildDoorPresentation(canvasTransform);
+                MainMenuNavigationController.BuildOverlayNavigation(canvasTransform);
             }
 
             EnsureMainMenuDirectorComponents(scene);
@@ -35,7 +36,7 @@ namespace MahjongGame.Editor
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
-            Debug.Log("[MainMenuLayoutBuilder] Main menu layout and door presentation complete.");
+            Debug.Log("[MainMenuLayoutBuilder] Main menu layout, door, and navigation complete.");
         }
 
         private static void EnsureMainMenuDirectorComponents(Scene scene)
@@ -60,6 +61,11 @@ namespace MahjongGame.Editor
                 if (root.GetComponent<CurrentLevelButtonController>() == null)
                 {
                     root.AddComponent<CurrentLevelButtonController>();
+                }
+
+                if (root.GetComponent<MainMenuNavigationController>() == null)
+                {
+                    root.AddComponent<MainMenuNavigationController>();
                 }
 
                 return;

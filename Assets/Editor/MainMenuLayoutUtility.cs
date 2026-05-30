@@ -1,7 +1,6 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using MahjongGame.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MahjongGame.Editor
 {
@@ -14,7 +13,12 @@ namespace MahjongGame.Editor
                 return false;
             }
 
-            return DoorPresentationController.HasRequiredDoorPresentation();
+            if (!DoorPresentationController.HasRequiredDoorPresentation())
+            {
+                return false;
+            }
+
+            return MainMenuNavigationController.HasRequiredNavigation();
         }
     }
 }

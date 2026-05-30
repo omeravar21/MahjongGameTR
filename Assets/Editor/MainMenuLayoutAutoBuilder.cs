@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using UnityEditor;
 
 namespace MahjongGame.Editor
@@ -6,7 +6,7 @@ namespace MahjongGame.Editor
     [InitializeOnLoad]
     public static class MainMenuLayoutAutoBuilder
     {
-        private const string BuildSessionKey = "MahjongGame.Phase22LayoutBuilt";
+        private const string BuildSessionKey = "MahjongGame.Phase24LayoutBuilt";
 
         static MainMenuLayoutAutoBuilder()
         {
