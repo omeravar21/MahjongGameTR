@@ -6,7 +6,7 @@ namespace MahjongGame.Editor
     [InitializeOnLoad]
     public static class MainMenuLayoutAutoBuilder
     {
-        private const string BuildSessionKey = "MahjongGame.Phase21LayoutBuilt";
+        private const string BuildSessionKey = "MahjongGame.Phase22LayoutBuilt";
 
         static MainMenuLayoutAutoBuilder()
         {

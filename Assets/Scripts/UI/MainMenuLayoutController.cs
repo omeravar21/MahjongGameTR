@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace MahjongGame.UI
 {
+    [DefaultExecutionOrder(0)]
     public sealed class MainMenuLayoutController : MonoBehaviour
     {
         private static readonly Color ButtonColor = new Color(0.24f, 0.18f, 0.14f, 0.95f);
@@ -20,21 +21,27 @@ namespace MahjongGame.UI
             BuildLayout();
         }
 
-        public static bool HasRequiredLayout()
+        public static Transform GetCanvasTransform()
         {
             GameObject canvas = GameObject.Find("Canvas_MainMenu");
-            if (canvas == null || canvas.GetComponent<Canvas>() == null)
+            return canvas != null ? canvas.transform : null;
+        }
+
+        public static bool HasRequiredLayout()
+        {
+            Transform canvasTransform = GetCanvasTransform();
+            if (canvasTransform == null || canvasTransform.GetComponent<Canvas>() == null)
             {
                 return false;
             }
 
-            return canvas.transform.Find("ProfileButton") != null
-                && canvas.transform.Find("ThemeButton") != null
-                && canvas.transform.Find("SettingsButton") != null
-                && canvas.transform.Find("LevelButton") != null;
+            return FindChild(canvasTransform, "TopBar/ProfileButton") != null
+                && FindChild(canvasTransform, "TopBar/ThemeButton") != null
+                && FindChild(canvasTransform, "TopBar/SettingsButton") != null
+                && FindChild(canvasTransform, "LevelButton") != null;
         }
 
-        private void BuildLayout()
+        public static void BuildLayout()
         {
             EnsureEventSystem();
             GameObject canvasRoot = EnsureCanvas();
@@ -51,9 +58,14 @@ namespace MahjongGame.UI
             CreateMenuButton("LevelButton", canvasTransform, Vector2.zero, new Vector2(420f, 180f), "LEVEL 1");
         }
 
+        private static Transform FindChild(Transform parent, string path)
+        {
+            return parent != null ? parent.Find(path) : null;
+        }
+
         private static void EnsureEventSystem()
         {
-            EventSystem existing = FindFirstObjectByType<EventSystem>();
+            EventSystem existing = Object.FindFirstObjectByType<EventSystem>();
             if (existing != null)
             {
                 if (existing.GetComponent<InputSystemUIInputModule>() == null)
@@ -87,8 +99,9 @@ namespace MahjongGame.UI
                 }
                 else
                 {
-                    DestroyImmediate(canvasObject.GetComponent<Transform>());
+                    Object.DestroyImmediate(canvasObject.GetComponent<Transform>());
                 }
+
                 rectTransform = canvasObject.AddComponent<RectTransform>();
             }
 
@@ -123,13 +136,18 @@ namespace MahjongGame.UI
             for (int i = canvasTransform.childCount - 1; i >= 0; i--)
             {
                 Transform child = canvasTransform.GetChild(i);
+                if (child.name == "DoorPanel")
+                {
+                    continue;
+                }
+
                 if (Application.isPlaying)
                 {
                     Object.Destroy(child.gameObject);
                 }
                 else
                 {
-                    DestroyImmediate(child.gameObject);
+                    Object.DestroyImmediate(child.gameObject);
                 }
             }
         }
