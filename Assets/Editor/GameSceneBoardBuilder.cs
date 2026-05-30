@@ -37,10 +37,21 @@ namespace MahjongGame.Editor
                 boardRoot.gameObject.AddComponent<BoardRootController>();
             }
 
+            if (boardRoot.GetComponent<BoardGridVisualController>() == null)
+            {
+                boardRoot.gameObject.AddComponent<BoardGridVisualController>();
+            }
+
+            BoardGridVisualController.BuildGridVisual(
+                boardRoot,
+                BoardGridDefinition.DefaultCellWidth,
+                BoardGridDefinition.DefaultCellHeight,
+                new Color(0.35f, 0.28f, 0.22f, 0.35f));
+
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
-            Debug.Log("[GameSceneBoardBuilder] Game scene board hierarchy complete.");
+            Debug.Log("[GameSceneBoardBuilder] Game scene board hierarchy and grid complete.");
         }
 
         private static Transform FindGameplayRoot(Scene scene)
