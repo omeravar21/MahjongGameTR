@@ -70,7 +70,7 @@ Match logic is owned only by MatchController.
 
 Board generation is owned only by BoardGenerationPipeline.
 
-League state is owned only by LeagueDirector.
+Global ranking state is owned only by RankingDirector.
 
 Booster economy is owned only by BoosterEconomyDirector.
 
@@ -159,7 +159,7 @@ DoorPanel
 
 LevelButton
 
-LeagueButton
+RankingButton
 
 SettingsButton
 
@@ -179,7 +179,7 @@ MainMenuScene handles:
 
 * Door visual
 * Level button
-* League button
+* Ranking button
 * Settings button
 * Player progress display
 * Entry into GameScene
@@ -362,7 +362,7 @@ Rewards/
 
 Boosters/
 
-League/
+Ranking/
 
 UI/
 
@@ -394,7 +394,7 @@ HolePatterns/
 
 TileSets/
 
-Leagues/
+Rankings/
 
 Audio/
 
@@ -608,21 +608,21 @@ RewardedAdBoosterController
 
 ---
 
-## League
+## Ranking
 
-League and leaderboard systems.
+Global ranking and leaderboard systems.
 
 Examples:
 
-LeagueDirector
+RankingDirector
 
-LeagueData
+RankingData
 
-LeagueRankEntry
+RankingEntry
 
-LeagueUIController
+RankingUIController
 
-LeagueTimerController
+RankingSyncController
 
 ---
 
@@ -742,7 +742,7 @@ Current Hole Pattern
 
 Current Tile Set
 
-Current League
+Current Global Rank
 
 Current FPS
 
@@ -815,8 +815,6 @@ Progression State
 
 Player Statistics
 
-Selected Tile Set
-
 ---
 
 ## Does Not Own
@@ -875,7 +873,7 @@ Tile spawning
 
 Tray slots
 
-League state
+Global ranking state
 
 ---
 
@@ -961,27 +959,21 @@ Match rules
 
 ---
 
-# 22. LEAGUEDIRECTOR
+# 22. RANKINGDIRECTOR
 
 ## Responsibility
 
-LeagueDirector owns league and leaderboard state.
+RankingDirector owns global ranking and leaderboard state.
 
 ---
 
 ## Owns
 
-Current League
+Global Performance Score
 
-League Score
+Global Rank Position
 
-Rank Position
-
-Promotion State
-
-Demotion State
-
-League Timers
+Highest Global Rank
 
 Online leaderboard sync
 
@@ -989,11 +981,11 @@ Online leaderboard sync
 
 ## Does Not Own
 
-Gameplay score
-
-Combo score
-
 Board generation
+
+Runtime session tray state
+
+Match execution logic
 
 ---
 
@@ -1031,7 +1023,7 @@ Board generation
 
 Tile spawning
 
-League score
+Global Performance Score
 
 ---
 
@@ -1213,11 +1205,11 @@ BoosterController
 
 ---
 
-## League State
+## Global Ranking State
 
 Owner:
 
-LeagueDirector
+RankingDirector
 
 ---
 
@@ -1243,9 +1235,9 @@ Current Level
 
 Highest Level
 
-League
+Global Performance Score
 
-League Score
+Highest Global Rank
 
 Booster Counts
 
@@ -1255,7 +1247,7 @@ Audio Settings
 
 Statistics
 
-Selected Tile Set
+Active Symbol Set
 
 Active Level State
 
@@ -1303,7 +1295,7 @@ SaveSystem does not generate boards.
 
 SaveSystem does not resolve matches.
 
-SaveSystem does not modify league logic directly.
+SaveSystem does not modify ranking logic directly.
 
 ---
 
@@ -1331,19 +1323,17 @@ Boosters
 
 Settings
 
-Tile Set Selection
+Statistics Sync
 
 ---
 
 ## Online Systems
 
-League
+Global Ranking
 
 Leaderboard
 
 Cloud ranking sync
-
-Promotion and demotion validation
 
 ---
 
@@ -1387,7 +1377,7 @@ Board Generation
 
 Level 150 must represent the same challenge for all players.
 
-This supports fair league and leaderboard comparison.
+This supports fair global ranking comparison.
 
 ---
 
@@ -1455,7 +1445,7 @@ HolePatternSO
 
 TileSetSO
 
-LeagueSO
+RankingSO
 
 LevelRecipeSO
 
@@ -1485,9 +1475,9 @@ Defines tile visuals and symbol set.
 
 ---
 
-## LeagueSO
+## RankingSO
 
-Defines league configuration.
+Defines global ranking configuration.
 
 ---
 
@@ -2802,7 +2792,7 @@ Tile spawning
 
 Score calculation
 
-League score
+Global Performance Score
 
 ---
 
@@ -2846,7 +2836,7 @@ Tray capacity
 
 Board generation
 
-League score
+Global Performance Score
 
 Booster economy
 
@@ -2904,7 +2894,7 @@ Closed tile placement
 
 Score
 
-League score
+Global Performance Score
 
 ---
 
@@ -2944,7 +2934,7 @@ Board generation
 
 Tile spawning
 
-League score
+Global Performance Score
 
 ---
 
@@ -2960,17 +2950,25 @@ ScoreController owns gameplay score.
 
 Every successful pair match:
 
-+100 points
++1000 Score
 
 ---
 
 ## ScoreController Owns
 
-Gameplay score
+Level gameplay score
 
 Match score
 
+Time performance bonus calculation
+
+Combo bonus calculation
+
 Joker score bonus
+
+Perfect clear bonus
+
+No-booster bonus
 
 Score display events
 
@@ -2978,11 +2976,17 @@ Score display events
 
 ## ScoreController Does Not Own
 
-League score
+Global rank position
 
 Board generation
 
 Timer
+
+---
+
+## Score Handoff Rule
+
+At level completion, ScoreController provides level performance totals to RankingDirector for Global Performance Score accumulation.
 
 ---
 
@@ -3002,25 +3006,25 @@ ComboController owns combo state.
 
 ## Combo Rewards
 
-Combo x1 = 100
+Combo x2: +200
 
-Combo x2 = 120
+Combo x3: +400
 
-Combo x3 = 140
+Combo x4: +600
 
-Combo x4 = 160
+Combo x5: +800
 
-Combo x5 = 180
-
-Combo x6+ = 200
+Combo x6+: +1,200
 
 ---
 
-## Combo Cap
+## Combo Philosophy Rule
 
-Maximum match value:
+Combo rewards good play.
 
-200
+Combo should never become the primary score source.
+
+Time performance remains the dominant scoring factor.
 
 ---
 
@@ -3038,7 +3042,7 @@ Combo timer
 
 ## ComboController Does Not Own
 
-League score
+Global Performance Score
 
 Board generation
 
@@ -3080,63 +3084,105 @@ If timer reaches zero:
 
 SessionDirector triggers level fail.
 
-LeagueDirector applies failure penalty.
-
 Same level restarts.
 
 ---
 
-# 68. LEAGUE SCORE INTEGRATION
+# 68. GLOBAL PERFORMANCE SCORE INTEGRATION
 
 ## Responsibility
 
-LeagueDirector owns league score.
+RankingDirector accumulates Global Performance Score for Global Ranking.
+
+ScoreController calculates level score components.
+
+RankingDirector receives final level performance totals.
 
 ---
 
-## League Score Rule
+## Global Performance Score Sources
 
-League score is based on completion percentage of allocated level time.
+Match score:
 
----
-
-## Rewards
-
-Complete within 40% of level time:
-
-+5 league points
++1000 per matched pair
 
 ---
 
-Complete within 60% of level time:
+Time performance bonus:
 
-+3 league points
+Finish within 40% of allocated level time:
 
----
-
-Complete within 80% of level time:
-
-+2 league points
++25,000
 
 ---
 
-Complete level:
+Finish within 60% of allocated level time:
 
-+1 league point
-
----
-
-Timer fail:
-
--5 league points
++15,000
 
 ---
 
-## League Score Independence
+Finish within 80% of allocated level time:
 
-Gameplay score and league score are separate.
++8,000
 
-Combo does not affect league score.
+---
+
+Finish within 100% of allocated level time:
+
++3,000
+
+---
+
+Perfect clear bonus:
+
++10,000
+
+---
+
+No-booster bonus:
+
++5,000
+
+---
+
+Joker bonus:
+
++2,500 per early joker pair
+
+---
+
+Combo bonuses:
+
+Combo x2: +200
+
+Combo x3: +400
+
+Combo x4: +600
+
+Combo x5: +800
+
+Combo x6+: +1,200
+
+---
+
+## Performance Priority Rule
+
+Time performance is the most valuable scoring factor.
+
+Combo bonuses support performance but do not replace time performance importance.
+
+---
+
+## Timer Fail Rule
+
+If timer reaches zero:
+
+Level fails.
+
+Same level restarts.
+
+No Global Performance Score is awarded for incomplete levels.
 
 ---
 
@@ -3262,7 +3308,7 @@ Completion Time
 
 Gameplay Score
 
-League Score Earned
+Global Performance Score Earned
 
 Joker Bonus
 
@@ -3339,7 +3385,7 @@ Gameplay systems must consume validated boards.
 
 Gameplay systems must not generate or alter board architecture.
 
-Tray, match, score, combo, timer, league, and booster systems must each have one clear owner.
+Tray, match, score, combo, timer, global ranking, and booster systems must each have one clear owner.
 
 END OF PART 4
 # PROJECT_ARCHITECTURE.md
@@ -3398,13 +3444,9 @@ Highest Combo
 
 Booster Usage
 
-League Promotion
-
-League Demotion
+Global Rank Progress
 
 Rewarded Ad Watched
-
-Tile Set Selected
 
 Session Length
 
@@ -3697,15 +3739,15 @@ VFX must use VFX Pool whenever possible.
 
 ---
 
-# 86. TILE SET ARCHITECTURE
+# 86. SYMBOL LIBRARY ARCHITECTURE
 
 ## Purpose
 
-Allow cosmetic personalization.
+Provide expandable symbol data for board generation and tile visuals.
 
 ---
 
-## Launch Tile Sets
+## Launch Symbol Categories
 
 Classic Mahjong
 
@@ -3721,30 +3763,34 @@ Symbols
 
 ---
 
-## Tile Set Rule
+## Symbol Selection Rule
 
-Tile sets are cosmetic only.
+Symbol collections are selected automatically per level by the generation system.
+
+Players do not manually choose symbol collections.
 
 ---
 
-## Tile Set Restrictions
+## Symbol Library Restrictions
 
-Tile sets may not affect:
+Symbol libraries may not affect:
 
 * Difficulty
 * Score
 * Combo
-* Board Generation
-* League Score
+* Board Generation rules
+* Global Performance Score
 * Progression
 
 ---
 
-## Runtime Change Rule
+## Runtime Visual Rule
 
-Changing tile set must not regenerate the board.
+Tile visuals reflect the active level symbol assignment.
 
-Only visuals should update.
+Changing symbol visuals must not regenerate the board.
+
+Only tile face visuals should update when symbol data is applied at level start.
 
 ---
 
@@ -3790,7 +3836,7 @@ Current Hole Pattern
 
 Current Tile Set
 
-Current League
+Current Global Rank
 
 Current FPS
 
@@ -3826,7 +3872,7 @@ Booster Tests
 
 Save System Tests
 
-League Tests
+Global Ranking Tests
 
 Performance Tests
 
@@ -3914,11 +3960,11 @@ Settings
 
 Audio Settings
 
-League Data
+Global Ranking Data
 
 Booster Counts
 
-Tile Set Selection
+Active Symbol Set
 
 ---
 
@@ -3928,19 +3974,17 @@ Player must resume the same active level after closing the application.
 
 ---
 
-# 93. LEAGUE TESTS
+# 93. GLOBAL RANKING TESTS
 
 ## Required Coverage
 
-Promotion
+Global Performance Score accumulation
 
-Demotion
+Global Rank calculation
 
-League Score Gain
+Leaderboard sync
 
-League Score Loss
-
-Leaderboard Sync
+Global rank display
 
 ---
 
@@ -4030,7 +4074,7 @@ Save System
 
 Leaderboard
 
-League Services
+Global Ranking Services
 
 ---
 
@@ -4074,7 +4118,7 @@ Match Stable
 
 Closed Tiles Stable
 
-League Stable
+Global Ranking Stable
 
 Booster Stable
 
@@ -4174,7 +4218,7 @@ The game should remain playable offline.
 
 ## Principle 7
 
-League and leaderboard systems operate online.
+Global Ranking and leaderboard systems operate online.
 
 ---
 

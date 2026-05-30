@@ -407,12 +407,12 @@ BoardQualityChecker
 
 Board Quality Rules:
 
-Minimum Opening Moves = 4
+Minimum Opening Moves = 2 meaningful opening choices
 Selectable Tile Availability controlled by DifficultyDirector
 Maximum Blocked Tile Ratio = 70%
 Maximum Closed Tile Cluster = 4
-Minimum Readability Score = 75
-Minimum Layer Balance Score = 70
+Minimum Readability Score = 75 (design target)
+Minimum Layer Balance Score = 70 (design target)
 
 Invalid boards must regenerate.
 
@@ -420,20 +420,35 @@ ARCHETYPE PHILOSOPHY
 
 Launch Archetypes:
 
-Pyramid
-Tower
-Oval
-Snake
-Spiral
-Maze
 Diamond
+
+Oval
+
+Pyramid
+
+Tower
+
 Cross
+
 Bridge
+
 Island
+
+Maze
+
+Future Archetypes (post-launch expansion):
+
+Snake
+
+Spiral
+
 Stairs
+
 Fortress
 
-All archetypes are available at launch.
+Launch archetypes are available at launch.
+
+Future archetypes are reserved for later updates.
 
 Archetypes modify board shape and occupancy.
 

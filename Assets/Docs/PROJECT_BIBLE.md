@@ -332,7 +332,7 @@ Tile sets never affect:
 * Difficulty
 * Score
 * Combo
-* League Progression
+* Global Ranking
 * Board Generation
 
 Players may freely select their preferred tile set.
@@ -1047,7 +1047,7 @@ No exceptions.
 END OF PART 2
 # PROJECT_BIBLE.md
 
-# PART 3 — SCORE, COMBO, TIMER, LEAGUE, BOOSTERS, ECONOMY
+# PART 3 — SCORE, COMBO, TIMER, GLOBAL RANKING, BOOSTERS, ECONOMY
 
 ---
 
@@ -1067,7 +1067,7 @@ Score does not affect board generation.
 
 Every successful tile pair match awards:
 
-100 Points
++1000 Score
 
 ---
 
@@ -1079,14 +1079,75 @@ Score is awarded immediately after a successful match.
 
 ---
 
+## Time Performance Bonus
+
+Time performance is the most valuable scoring factor.
+
+Finish within 40% of allocated level time:
+
++25,000
+
+---
+
+Finish within 60% of allocated level time:
+
++15,000
+
+---
+
+Finish within 80% of allocated level time:
+
++8,000
+
+---
+
+Finish within 100% of allocated level time:
+
++3,000
+
+---
+
+## Perfect Clear Bonus
+
+Perfect Clear:
+
++10,000
+
+---
+
+Perfect Clear Definition:
+
+No Fail
+
+No Mistakes Leading To Loss
+
+Successful Board Completion
+
+---
+
+## No Booster Bonus
+
+Complete level without using boosters:
+
++5,000
+
+---
+
+## Joker Bonus
+
+Each early joker pair matched within 1 minute:
+
++2,500
+
+---
+
 ## Score Independence Rule
 
-Score is separate from:
+Level score components feed Global Performance Score.
 
-* League Points
-* Difficulty
-* Progression
-* Board Generation
+Score does not determine board difficulty.
+
+Score does not affect board generation.
 
 ---
 
@@ -1118,79 +1179,53 @@ Combo resets.
 
 ---
 
-## Combo Levels
-
-Combo x1
-
-Base Match Score = 100
-
-Bonus = 0
-
-Total = 100
-
----
+## Combo Rewards
 
 Combo x2
 
-Base Match Score = 100
-
-Bonus = 20
-
-Total = 120
++200
 
 ---
 
 Combo x3
 
-Base Match Score = 100
-
-Bonus = 40
-
-Total = 140
++400
 
 ---
 
 Combo x4
 
-Base Match Score = 100
-
-Bonus = 60
-
-Total = 160
++600
 
 ---
 
 Combo x5
 
-Base Match Score = 100
-
-Bonus = 80
-
-Total = 180
++800
 
 ---
 
 Combo x6+
 
-Base Match Score = 100
-
-Bonus = 100
-
-Total = 200
++1,200
 
 ---
 
-## Combo Cap
+## Combo Philosophy Rule
 
-Maximum Combo Bonus = 100
+Combo rewards good play.
 
-Maximum Match Value = 200
+Combo should never become the primary score source.
+
+Time performance remains the dominant scoring factor.
 
 ---
 
-## Combo League Rule
+## Combo Ranking Rule
 
-Combo does not affect league score.
+Combo bonuses contribute to Global Performance Score.
+
+Combo should not dominate total level score.
 
 ---
 
@@ -1247,132 +1282,92 @@ Easier levels may receive less time.
 If timer reaches zero:
 
 * Level fails
-* League score penalty is applied
 * Same level restarts
 
 ---
 
-# 23. LEAGUE SYSTEM
+# 23. GLOBAL RANKING SYSTEM
 
-## League Philosophy
+## Global Ranking Philosophy
 
-Leagues are motivation systems.
+Global Ranking is the single competitive motivation system.
 
-Leagues reward activity and efficiency.
+Global Ranking rewards performance quality.
 
-Leagues are not intended to function as esports competition.
-
----
-
-## League Structure
-
-Bronze
-
-Silver
-
-Gold
-
-Diamond
-
-Elite
-
-Premium
-
-Ultra Premium
+Global Ranking is not intended to function as esports competition.
 
 ---
 
-## Starting League
+## Global Ranking Structure
 
-New players begin in Bronze League.
+There is only one ranking system:
 
----
-
-## Promotion Rule
-
-Top 15 players promote after 12 hours.
+Global Ranking
 
 ---
 
-## Demotion Rule
+## Global Ranking Characteristics
 
-Players inactive for 18 hours may be demoted.
+Permanent
 
----
+Global
 
-# 24. LEAGUE SCORE SYSTEM
+Fair
 
-## League Score Independence
+Performance-based
 
-League Score is separate from:
-
-* Gameplay Score
-* Combo Score
-* Match Score
+Never resets
 
 ---
 
-## League Score Purpose
+## Forbidden Ranking Systems
 
-League Score measures efficiency.
+No league tiers at launch.
 
-League Score does not measure raw points.
+No Bronze, Silver, Gold, Diamond, Elite, Premium, or Ultra Premium leagues.
 
----
+No seasons.
 
-## League Reward Structure
+No rank wipes.
 
-League rewards are based on completion percentage of allocated level time.
-
----
-
-### Fast Completion
-
-Complete within 40% of allocated level time.
-
-Reward:
-
-+5 League Points
+No score resets.
 
 ---
 
-### Strong Completion
+## Ranking Ownership
 
-Complete within 60% of allocated level time.
-
-Reward:
-
-+3 League Points
+Global Ranking is owned by RankingDirector.
 
 ---
 
-### Standard Completion
+# 24. GLOBAL PERFORMANCE SCORE
 
-Complete within 80% of allocated level time.
+## Global Performance Score Purpose
 
-Reward:
+Global Performance Score measures overall player performance quality.
 
-+2 League Points
-
----
-
-### Completion
-
-Complete the level.
-
-Reward:
-
-+1 League Point
+Global Performance Score is the basis for Global Ranking.
 
 ---
 
-### Failure
+## Global Performance Score Sources
 
-Timer reaches zero.
+Global Performance Score is accumulated from:
 
-Penalty:
+* Match score (+1000 per pair)
+* Time performance bonuses
+* Combo bonuses
+* Joker bonuses
+* Perfect clear bonus
+* No-booster bonus
 
--5 League Points
+---
+
+## Performance Priority Rule
+
+Completion time is the most valuable scoring factor.
+
+Combo performance supports score but does not replace time performance importance.
 
 ---
 
@@ -1531,27 +1526,27 @@ Ads may not:
 
 ---
 
-# 30. TILE SET SYSTEM
+# 30. SYMBOL LIBRARY SYSTEM
 
-## Tile Set Philosophy
+## Symbol Library Philosophy
 
-Tile sets are visual themes.
+The game owns a global symbol library.
 
-Tile sets do not affect gameplay.
+Symbol collections are selected automatically per level by the generation system.
 
----
-
-## Player Choice Rule
-
-Players may freely choose active tile sets.
+Symbol libraries do not affect gameplay rules.
 
 ---
 
-## Approved Launch Tile Sets
+## Automatic Selection Rule
 
-Classic Mahjong
+Players do not manually choose symbol collections.
 
-Gem Stones
+The game selects symbols automatically per level.
+
+---
+
+## Launch Symbol Categories
 
 Animals
 
@@ -1561,17 +1556,21 @@ Objects
 
 Symbols
 
+Classic Mahjong
+
+Gem Stones
+
 ---
 
 ## Gameplay Independence
 
-Tile sets must never affect:
+Symbol libraries must never affect:
 
 * Score
 * Difficulty
 * Combo
 * Board Generation
-* League Score
+* Global Performance Score
 * Progression
 
 ---
@@ -1592,7 +1591,7 @@ Completion Time
 
 Gameplay Score
 
-League Score Earned
+Global Performance Score Earned
 
 Joker Bonus
 
@@ -1765,7 +1764,7 @@ DifficultyDirector
 
 BoardQualityChecker
 
-League System
+Global Ranking System
 
 Booster System
 
@@ -1952,7 +1951,7 @@ Match System Stable
 
 Closed Tile System Stable
 
-League System Stable
+Global Ranking System Stable
 
 ---
 
@@ -2048,11 +2047,11 @@ TimerController
 
 ---
 
-League
+Global Ranking
 
 Owner:
 
-LeagueDirector
+RankingDirector
 
 ---
 
@@ -2208,7 +2207,7 @@ Duplicate Match Systems
 
 Duplicate Booster Systems
 
-Duplicate League Systems
+Duplicate Global Ranking Systems
 
 Duplicate Save Systems
 

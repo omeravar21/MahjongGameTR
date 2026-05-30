@@ -822,7 +822,6 @@ Large Level Button
 Top Area:
 
 Theme Selection
-Tile Set Selection
 Settings
 
 Additional Access:

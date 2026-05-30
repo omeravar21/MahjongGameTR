@@ -112,7 +112,7 @@ Low
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -156,7 +156,7 @@ Low
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -1876,15 +1876,13 @@ Implement archetype layouts.
 
 Scope:
 
+Launch Archetypes (Phase 9.5):
+
 Pyramid
 
 Tower
 
 Oval
-
-Snake
-
-Spiral
 
 Maze
 
@@ -1896,6 +1894,12 @@ Bridge
 
 Island
 
+Future Archetypes (deferred — not Phase 9.5 scope):
+
+Snake
+
+Spiral
+
 Stairs
 
 Fortress
@@ -1906,7 +1910,7 @@ Variation Logic
 
 Acceptance Criteria:
 
-Archetypes generated correctly.
+Launch archetypes generated correctly.
 
 GitHub Commit:
 
