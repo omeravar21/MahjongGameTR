@@ -1,3 +1,4 @@
+using MahjongGame.Progression;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -55,7 +56,7 @@ namespace MahjongGame.UI
             CreateMenuButton("ProfileButton", topBar.transform, new Vector2(-220f, -60f), new Vector2(180f, 80f), "Profile");
             CreateMenuButton("ThemeButton", topBar.transform, new Vector2(0f, -60f), new Vector2(180f, 80f), "Theme");
             CreateMenuButton("SettingsButton", topBar.transform, new Vector2(220f, -60f), new Vector2(180f, 80f), "Settings");
-            CreateMenuButton("LevelButton", canvasTransform, Vector2.zero, new Vector2(420f, 180f), "LEVEL 1");
+            CreateMenuButton("LevelButton", canvasTransform, Vector2.zero, new Vector2(420f, 180f), CurrentLevelButtonController.FormatLevelLabel(LevelProgressData.MinLevel));
         }
 
         private static Transform FindChild(Transform parent, string path)

@@ -57,6 +57,11 @@ namespace MahjongGame.Editor
                     root.AddComponent<DoorPresentationController>();
                 }
 
+                if (root.GetComponent<CurrentLevelButtonController>() == null)
+                {
+                    root.AddComponent<CurrentLevelButtonController>();
+                }
+
                 return;
             }
         }

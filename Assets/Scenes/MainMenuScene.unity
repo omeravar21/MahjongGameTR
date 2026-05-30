@@ -393,6 +393,7 @@ GameObject:
   - component: {fileID: 700000003}
   - component: {fileID: 700000009}
   - component: {fileID: 700000010}
+  - component: {fileID: 700000011}
   m_Layer: 0
   m_Name: MainMenuDirector
   m_TagString: Untagged
@@ -505,3 +506,15 @@ MonoBehaviour:
   doorCanvasGroup: {fileID: 0}
   doorLeftRect: {fileID: 0}
   doorRightRect: {fileID: 0}
+--- !u!114 &700000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700000002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9123456789abcdef0123456789abcdef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
