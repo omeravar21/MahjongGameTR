@@ -1,3 +1,4 @@
+using MahjongGame.Progression;
 using UnityEngine;
 
 namespace MahjongGame.Core
@@ -31,6 +32,11 @@ namespace MahjongGame.Core
             if (GetComponent<SaveSystem>() == null)
             {
                 gameObject.AddComponent<SaveSystem>();
+            }
+
+            if (GetComponent<PlayerProgressionDirector>() == null)
+            {
+                gameObject.AddComponent<PlayerProgressionDirector>();
             }
         }
 
