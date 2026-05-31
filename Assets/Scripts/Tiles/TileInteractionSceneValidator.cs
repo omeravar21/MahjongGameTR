@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using MahjongGame.Board;
 using MahjongGame.Matching;
+using MahjongGame.Combo;
 using MahjongGame.Score;
 using MahjongGame.Session;
 using MahjongGame.Timer;
@@ -37,6 +38,7 @@ namespace MahjongGame.Tiles
             passed &= ValidateRequiredComponent<LoseConditionController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<SessionRestartController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<ScoreController>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<ComboController>(gameplayRoot, reportBuilder);
             passed &= ValidateMatchExecutionEvents(reportBuilder);
             passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
 
@@ -76,6 +78,7 @@ namespace MahjongGame.Tiles
 
             passed &= TimerSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= ScoreSystemValidator.Validate(gameplayRoot, reportBuilder);
+            passed &= ComboSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= SessionSystemValidator.Validate(gameplayRoot, reportBuilder);
 
             AppendLine(reportBuilder, passed
