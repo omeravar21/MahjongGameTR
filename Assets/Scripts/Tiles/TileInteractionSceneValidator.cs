@@ -88,7 +88,7 @@ namespace MahjongGame.Tiles
             passed &= ComboSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= ClosedTileSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= JokerSystemValidator.Validate(gameplayRoot, reportBuilder);
-            passed &= BoosterEconomySystemValidator.Validate(gameplayRoot, reportBuilder);
+            passed &= BoosterSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= PerformanceScreenSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= SessionSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= DifficultySystemValidator.Validate(reportBuilder);
