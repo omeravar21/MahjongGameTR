@@ -61,6 +61,8 @@ namespace MahjongGame.Tiles
                 return false;
             }
 
+            closedTileController?.TryRecloseOtherRevealedClosedTiles(tile);
+
             if (closedTileController != null && closedTileController.TryRevealClosedTile(tile))
             {
                 result = TileInteractionResult.Accepted();

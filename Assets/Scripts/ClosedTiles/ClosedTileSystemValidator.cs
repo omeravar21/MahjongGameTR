@@ -32,6 +32,7 @@ namespace MahjongGame.ClosedTiles
             passed &= ValidateRegistryBehavior(closedTileController, reportBuilder);
             passed &= ValidateRevealBehavior(closedTileController, reportBuilder);
             passed &= ValidateSecondTapTrayMove(gameplayRoot, closedTileController, reportBuilder);
+            passed &= ValidateRecloseBehavior(gameplayRoot, closedTileController, reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Closed tile system validation completed successfully."
@@ -347,6 +348,89 @@ namespace MahjongGame.ClosedTiles
             AppendLine(reportBuilder, passed
                 ? "[PASS] Closed tile second-tap tray movement is valid."
                 : "[FAIL] Closed tile second-tap tray movement validation failed.");
+
+            return passed;
+        }
+
+        private static bool ValidateRecloseBehavior(
+            Transform gameplayRoot,
+            ClosedTileController closedTileController,
+            StringBuilder reportBuilder)
+        {
+            if (closedTileController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] ClosedTileController is unavailable for reclose validation.");
+                return false;
+            }
+
+            TileInteractionController interactionController = gameplayRoot.GetComponent<TileInteractionController>();
+            TileMovementController movementController = gameplayRoot.GetComponent<TileMovementController>();
+            TrayController trayController = gameplayRoot.GetComponent<TrayController>();
+
+            if (interactionController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] TileInteractionController is missing for reclose validation.");
+                return false;
+            }
+
+            closedTileController.ResetRuntimeState();
+            trayController?.ResetRuntimeState();
+            movementController?.ResetMovementState();
+
+            GameObject revealedTileObject = new GameObject("ClosedTileRecloseValidationRevealed");
+            Tile revealedTile = revealedTileObject.AddComponent<Tile>();
+            revealedTile.Initialize(new TileData(
+                503,
+                new BoardGridCoordinate(2, 2),
+                0,
+                TileType.Closed,
+                isClosed: true,
+                symbolId: 3));
+
+            GameObject otherTileObject = new GameObject("ClosedTileRecloseValidationOther");
+            Tile otherTile = otherTileObject.AddComponent<Tile>();
+            otherTile.Initialize(new TileData(
+                504,
+                new BoardGridCoordinate(4, 4),
+                0,
+                TileType.Normal,
+                symbolId: 8));
+
+            bool passed = true;
+
+            if (!closedTileController.TryRegisterClosedTile(revealedTile)
+                || !closedTileController.TryRevealClosedTile(revealedTile)
+                || revealedTile.State != TileState.Revealed
+                || !closedTileController.HasRevealedClosedTile)
+            {
+                AppendLine(reportBuilder, "[FAIL] Closed tile setup for reclose validation failed.");
+                passed = false;
+            }
+
+            if (passed)
+            {
+                interactionController.TryHandleInteraction(otherTile, out _);
+            }
+
+            if (passed
+                && (revealedTile.State != TileState.Closed
+                    || !closedTileController.TryGetClosedTileState(503, out ClosedTileState reclosedState)
+                    || reclosedState != ClosedTileState.Closed
+                    || closedTileController.HasRevealedClosedTile))
+            {
+                AppendLine(reportBuilder, "[FAIL] Revealed closed tile did not re-close when another tile was selected.");
+                passed = false;
+            }
+
+            trayController?.ResetRuntimeState();
+            movementController?.ResetMovementState();
+            closedTileController.ResetRuntimeState();
+            Object.DestroyImmediate(revealedTileObject);
+            Object.DestroyImmediate(otherTileObject);
+
+            AppendLine(reportBuilder, passed
+                ? "[PASS] Closed tile reclose behavior is valid."
+                : "[FAIL] Closed tile reclose behavior validation failed.");
 
             return passed;
         }

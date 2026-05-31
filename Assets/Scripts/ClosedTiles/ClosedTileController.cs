@@ -8,6 +8,7 @@ namespace MahjongGame.ClosedTiles
     public sealed class ClosedTileController : MonoBehaviour
     {
         private readonly Dictionary<int, ClosedTileData> _registeredClosedTiles = new Dictionary<int, ClosedTileData>();
+        private readonly Dictionary<int, Tile> _registeredTileReferences = new Dictionary<int, Tile>();
 
         public bool HasRevealedClosedTile
         {
@@ -71,7 +72,45 @@ namespace MahjongGame.ClosedTiles
                 return false;
             }
 
-            return TryRegisterClosedTile(closedTileData);
+            if (!TryRegisterClosedTile(closedTileData))
+            {
+                return false;
+            }
+
+            _registeredTileReferences[tile.TileId] = tile;
+            return true;
+        }
+
+        public bool TryRecloseOtherRevealedClosedTiles(Tile selectedTile)
+        {
+            if (selectedTile == null || _registeredClosedTiles.Count == 0)
+            {
+                return false;
+            }
+
+            int selectedTileId = selectedTile.TileId;
+            bool anyReclosed = false;
+            List<int> revealedOtherTileIds = new List<int>();
+
+            foreach (KeyValuePair<int, ClosedTileData> entry in _registeredClosedTiles)
+            {
+                if (entry.Value.State == ClosedTileState.Revealed && entry.Key != selectedTileId)
+                {
+                    revealedOtherTileIds.Add(entry.Key);
+                }
+            }
+
+            for (int index = 0; index < revealedOtherTileIds.Count; index++)
+            {
+                int tileId = revealedOtherTileIds[index];
+                _registeredTileReferences.TryGetValue(tileId, out Tile tileToReclose);
+                if (TryTransitionClosedTileState(tileId, ClosedTileState.Closed, tileToReclose))
+                {
+                    anyReclosed = true;
+                }
+            }
+
+            return anyReclosed;
         }
 
         public bool TryRegisterClosedTile(ClosedTileData closedTileData)
@@ -150,9 +189,16 @@ namespace MahjongGame.ClosedTiles
             ClosedTileEvents.RaiseClosedTileStateChanged(
                 new ClosedTileStateChangedContext(tileId, previousState, newState));
 
-            if (tile != null && newState == ClosedTileState.Revealed)
+            if (tile != null)
             {
-                tile.SetState(TileState.Revealed);
+                if (newState == ClosedTileState.Revealed)
+                {
+                    tile.SetState(TileState.Revealed);
+                }
+                else if (newState == ClosedTileState.Closed)
+                {
+                    tile.SetState(TileState.Closed);
+                }
             }
 
             return true;
@@ -160,12 +206,13 @@ namespace MahjongGame.ClosedTiles
 
         public void ResetRuntimeState()
         {
-            if (_registeredClosedTiles.Count == 0)
+            if (_registeredClosedTiles.Count == 0 && _registeredTileReferences.Count == 0)
             {
                 return;
             }
 
             _registeredClosedTiles.Clear();
+            _registeredTileReferences.Clear();
             ClosedTileEvents.RaiseClosedTileRuntimeReset();
         }
 
@@ -197,6 +244,7 @@ namespace MahjongGame.ClosedTiles
         private void TryUnregisterClosedTileLeavingBoard(int tileId)
         {
             _registeredClosedTiles.Remove(tileId);
+            _registeredTileReferences.Remove(tileId);
         }
     }
 }
