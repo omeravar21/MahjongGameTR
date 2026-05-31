@@ -62,6 +62,7 @@ namespace MahjongGame.Tiles
             if (trayRoot != null)
             {
                 passed &= TraySystemValidator.Validate(gameplayRoot, trayRoot, reportBuilder);
+                passed &= MatchSystemValidator.Validate(gameplayRoot, trayRoot, reportBuilder);
             }
 
             AppendLine(reportBuilder, passed
