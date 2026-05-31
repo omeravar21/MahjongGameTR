@@ -155,6 +155,20 @@ namespace MahjongGame.Tiles
             tileView?.ApplyLayerDepthVisuals(layerIndex);
         }
 
+        public void ApplyTraySorting(int slotIndex)
+        {
+            TileSortingController.ApplyTraySorting(tileView, slotIndex);
+        }
+
+        public void SetColliderEnabled(bool isEnabled)
+        {
+            BoxCollider2D collider = GetComponent<BoxCollider2D>();
+            if (collider != null)
+            {
+                collider.enabled = isEnabled;
+            }
+        }
+
         private static Sprite _sharedTileSprite;
 
         private static Sprite GetSharedTileSprite()
