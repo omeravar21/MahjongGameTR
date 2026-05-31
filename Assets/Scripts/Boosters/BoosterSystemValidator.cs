@@ -261,6 +261,7 @@ namespace MahjongGame.Boosters
             Dictionary<int, int> symbolCountsBefore = BuildSymbolMultiset(boardTiles);
             Dictionary<int, Vector3> positionsBefore = BuildTilePositions(boardTiles);
             List<int> symbolsBefore = CollectSymbolIds(boardTiles);
+            bool expectSymbolOrderChange = HasAtLeastTwoDistinctSymbols(symbolCountsBefore);
 
             if (!shuffleBooster.TryExecuteShuffle(out int shuffledTileCount))
             {
@@ -288,7 +289,7 @@ namespace MahjongGame.Boosters
             }
 
             List<int> symbolsAfter = CollectSymbolIds(boardTiles);
-            if (!SymbolOrderPossiblyChanged(symbolsBefore, symbolsAfter))
+            if (expectSymbolOrderChange && !SymbolOrderPossiblyChanged(symbolsBefore, symbolsAfter))
             {
                 AppendLine(reportBuilder, "[FAIL] Shuffle did not redistribute symbols.");
                 return false;
@@ -296,6 +297,26 @@ namespace MahjongGame.Boosters
 
             AppendLine(reportBuilder, "[PASS] Shuffle preserves positions and multiset while changing symbols.");
             return true;
+        }
+
+        private static bool HasAtLeastTwoDistinctSymbols(Dictionary<int, int> symbolCounts)
+        {
+            int distinctSymbolCount = 0;
+            foreach (KeyValuePair<int, int> pair in symbolCounts)
+            {
+                if (pair.Value <= 0)
+                {
+                    continue;
+                }
+
+                distinctSymbolCount++;
+                if (distinctSymbolCount >= 2)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool ValidateUndoBehavior(UndoBooster undoBooster, StringBuilder reportBuilder)
