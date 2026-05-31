@@ -39,6 +39,9 @@ namespace MahjongGame.Session
             BoardPreviewSpawner previewSpawner = boardRoot != null
                 ? boardRoot.GetComponent<BoardPreviewSpawner>()
                 : null;
+            BoardSpawner boardSpawner = boardRoot != null
+                ? boardRoot.GetComponent<BoardSpawner>()
+                : null;
 
             passed &= ValidateComponents(
                 sessionDirector,
@@ -46,6 +49,7 @@ namespace MahjongGame.Session
                 loseConditionController,
                 restartController,
                 previewSpawner,
+                boardSpawner,
                 boardRoot,
                 reportBuilder);
             passed &= ValidateTypes(reportBuilder);
@@ -89,6 +93,7 @@ namespace MahjongGame.Session
             LoseConditionController loseConditionController,
             SessionRestartController restartController,
             BoardPreviewSpawner previewSpawner,
+            BoardSpawner boardSpawner,
             Transform boardRoot,
             StringBuilder reportBuilder)
         {
@@ -147,6 +152,21 @@ namespace MahjongGame.Session
             else
             {
                 AppendLine(reportBuilder, "[PASS] BoardPreviewSpawner is present on BoardRoot.");
+            }
+
+            if (boardSpawner == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] BoardSpawner is missing on BoardRoot.");
+                passed = false;
+            }
+            else if (!boardSpawner.HasTilePrefab)
+            {
+                AppendLine(reportBuilder, "[FAIL] BoardSpawner tile prefab is not configured.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] BoardSpawner is present on BoardRoot.");
             }
 
             return passed;

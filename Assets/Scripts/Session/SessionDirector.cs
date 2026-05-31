@@ -1,3 +1,4 @@
+using MahjongGame.Board;
 using MahjongGame.BoardGeneration;
 using MahjongGame.Core;
 using MahjongGame.Progression;
@@ -270,6 +271,31 @@ namespace MahjongGame.Session
                         + distributedBoardLayout.Seed
                         + ".");
                 }
+            }
+
+            TrySpawnRuntimeBoard(levelNumber);
+        }
+
+        private void TrySpawnRuntimeBoard(int levelNumber)
+        {
+            BoardData boardData = BoardGenerationPipeline.GenerateBoardData(levelNumber);
+            Transform boardRoot = transform.Find("BoardRoot");
+            if (boardRoot == null)
+            {
+                Debug.LogWarning("[SessionDirector] BoardRoot was not found under GameplayRoot.");
+                return;
+            }
+
+            BoardSpawner boardSpawner = boardRoot.GetComponent<BoardSpawner>();
+            if (boardSpawner == null)
+            {
+                Debug.LogWarning("[SessionDirector] BoardSpawner is missing on BoardRoot.");
+                return;
+            }
+
+            if (!boardSpawner.Spawn(boardData))
+            {
+                Debug.LogWarning("[SessionDirector] BoardSpawner failed to spawn runtime board for level " + levelNumber + ".");
             }
         }
 

@@ -50,14 +50,24 @@ namespace MahjongGame.Editor
                 previewSpawner = boardRoot.gameObject.AddComponent<BoardPreviewSpawner>();
             }
 
-            SerializedObject spawnerObject = new SerializedObject(previewSpawner);
-            spawnerObject.FindProperty("tilePrefab").objectReferenceValue = tilePrefab;
-            spawnerObject.ApplyModifiedPropertiesWithoutUndo();
+            BoardSpawner boardSpawner = boardRoot.GetComponent<BoardSpawner>();
+            if (boardSpawner == null)
+            {
+                boardSpawner = boardRoot.gameObject.AddComponent<BoardSpawner>();
+            }
+
+            SerializedObject previewSpawnerObject = new SerializedObject(previewSpawner);
+            previewSpawnerObject.FindProperty("tilePrefab").objectReferenceValue = tilePrefab;
+            previewSpawnerObject.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject boardSpawnerObject = new SerializedObject(boardSpawner);
+            boardSpawnerObject.FindProperty("tilePrefab").objectReferenceValue = tilePrefab;
+            boardSpawnerObject.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
-            Debug.Log("[SessionRestartControllerBuilder] Session restart controller and board preview spawner wired.");
+            Debug.Log("[SessionRestartControllerBuilder] Session restart controller, preview spawner, and board spawner wired.");
         }
 
         private static Transform FindGameplayRoot(Scene scene)

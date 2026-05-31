@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MahjongGame.Board;
+using MahjongGame.BoardGeneration;
 using MahjongGame.Matching;
 using MahjongGame.BoardGeneration;
 using MahjongGame.Combo;
@@ -55,6 +56,7 @@ namespace MahjongGame.Tiles
             {
                 AppendLine(reportBuilder, "[PASS] BoardRoot hierarchy is present.");
                 passed &= ValidateRequiredComponent<BoardPreviewSpawner>(boardRoot, reportBuilder);
+                passed &= ValidateRequiredComponent<BoardSpawner>(boardRoot, reportBuilder);
             }
 
             Transform trayRoot = gameplayRoot.Find(TrayRootDefinition.TrayRootName);
@@ -93,6 +95,18 @@ namespace MahjongGame.Tiles
             passed &= HolePatternSystemValidator.Validate(reportBuilder);
             passed &= LayerBuilderSystemValidator.Validate(reportBuilder);
             passed &= TilePairDistributorSystemValidator.Validate(reportBuilder);
+            passed &= BoardGenerationPipelineSystemValidator.Validate(reportBuilder);
+
+            Transform boardRootForSpawner = gameplayRoot != null ? gameplayRoot.Find("BoardRoot") : null;
+            if (boardRootForSpawner != null)
+            {
+                passed &= BoardSpawnerSystemValidator.Validate(boardRootForSpawner, reportBuilder);
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[FAIL] BoardRoot is missing for BoardSpawner validation.");
+                passed = false;
+            }
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Tile interaction validation completed successfully."

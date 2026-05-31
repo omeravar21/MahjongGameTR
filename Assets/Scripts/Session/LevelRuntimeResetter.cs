@@ -1,5 +1,7 @@
 using MahjongGame.Board;
+using MahjongGame.BoardGeneration;
 using MahjongGame.Matching;
+using MahjongGame.Progression;
 using MahjongGame.Tiles;
 using MahjongGame.Tray;
 using UnityEngine;
@@ -42,14 +44,18 @@ namespace MahjongGame.Session
                 return false;
             }
 
-            BoardPreviewSpawner previewSpawner = boardRoot.GetComponent<BoardPreviewSpawner>();
-            if (previewSpawner == null)
+            BoardSpawner boardSpawner = boardRoot.GetComponent<BoardSpawner>();
+            if (boardSpawner == null)
             {
-                Debug.LogWarning("[LevelRuntimeResetter] BoardPreviewSpawner is missing on BoardRoot.");
+                Debug.LogWarning("[LevelRuntimeResetter] BoardSpawner is missing on BoardRoot.");
                 return false;
             }
 
-            return previewSpawner.TryResetBoard();
+            int levelNumber = PlayerProgressionDirector.HasInstance
+                ? PlayerProgressionDirector.Instance.CurrentLevel
+                : LevelProgressData.MinLevel;
+            BoardData boardData = BoardGenerationPipeline.GenerateBoardData(levelNumber);
+            return boardSpawner.Spawn(boardData);
         }
 
         private static void DestroyOrphanTiles(Transform gameplayRoot)
