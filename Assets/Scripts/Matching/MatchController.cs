@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using MahjongGame.Tiles;
 using MahjongGame.Tray;
@@ -8,6 +9,10 @@ namespace MahjongGame.Matching
     public sealed class MatchController : MonoBehaviour
     {
         [SerializeField] private TrayController trayController;
+
+        private readonly MatchQueue _matchQueue = new MatchQueue();
+        private Coroutine _processingCoroutine;
+        private MatchRequest _activeMatchRequest;
 
         private void Awake()
         {
@@ -22,6 +27,7 @@ namespace MahjongGame.Matching
         private void OnDisable()
         {
             TrayEvents.TrayTileStored -= HandleTrayTileStored;
+            StopQueueProcessing();
         }
 
         public bool TryDetectMatchInTray(out MatchRequest matchRequest)
@@ -79,7 +85,59 @@ namespace MahjongGame.Matching
                 return;
             }
 
+            if (IsPairPending(matchRequest.FirstTile, matchRequest.SecondTile))
+            {
+                return;
+            }
+
+            if (!_matchQueue.Enqueue(matchRequest))
+            {
+                return;
+            }
+
             MatchEvents.RaiseMatchDetected(matchRequest);
+            TryStartQueueProcessing();
+        }
+
+        private bool IsPairPending(Tile firstTile, Tile secondTile)
+        {
+            return _matchQueue.ContainsTiles(firstTile, secondTile)
+                || MatchQueue.ReferencesSamePair(_activeMatchRequest, firstTile, secondTile);
+        }
+
+        private void TryStartQueueProcessing()
+        {
+            if (_processingCoroutine != null || _matchQueue.Count == 0)
+            {
+                return;
+            }
+
+            _processingCoroutine = StartCoroutine(ProcessMatchQueueCoroutine());
+        }
+
+        private IEnumerator ProcessMatchQueueCoroutine()
+        {
+            while (_matchQueue.TryDequeue(out MatchRequest matchRequest))
+            {
+                _activeMatchRequest = matchRequest;
+                yield return new WaitForSeconds(MatchDefinition.MatchDelaySeconds);
+                _activeMatchRequest = null;
+                MatchEvents.RaiseMatchDelayCompleted(matchRequest);
+            }
+
+            _processingCoroutine = null;
+        }
+
+        private void StopQueueProcessing()
+        {
+            if (_processingCoroutine != null)
+            {
+                StopCoroutine(_processingCoroutine);
+                _processingCoroutine = null;
+            }
+
+            _activeMatchRequest = null;
+            _matchQueue.Clear();
         }
 
         private TrayController ResolveTrayController()
