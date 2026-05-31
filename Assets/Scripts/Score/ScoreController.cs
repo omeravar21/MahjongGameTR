@@ -115,6 +115,11 @@ namespace MahjongGame.Score
 
         private void HandleSessionStarted(SessionStartedContext context)
         {
+            if (context == null || context.IsResumeSession)
+            {
+                return;
+            }
+
             ResetScoreState();
         }
 
@@ -136,6 +141,22 @@ namespace MahjongGame.Score
         internal void AwardBaseMatchScoreForValidation()
         {
             AwardBaseMatchScore();
+        }
+
+        internal void RestoreScoreStateForResume(int score)
+        {
+            int previousScore = _currentScore;
+            _currentScore = score < 0 ? 0 : score;
+            _matchScoreTotal = _currentScore;
+            _comboScoreTotal = 0;
+            _jokerBonusTotal = 0;
+            _matchCount = 0;
+            _earlyJokerMatchCount = 0;
+
+            if (previousScore != _currentScore)
+            {
+                ScoreEvents.RaiseScoreChanged(new ScoreChangedContext(previousScore, _currentScore));
+            }
         }
 
         private void AwardBaseMatchScore()

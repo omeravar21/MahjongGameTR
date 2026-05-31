@@ -46,6 +46,11 @@ namespace MahjongGame.Combo
 
         private void HandleSessionStarted(SessionStartedContext context)
         {
+            if (context == null || context.IsResumeSession)
+            {
+                return;
+            }
+
             ResetComboState();
         }
 
@@ -72,6 +77,15 @@ namespace MahjongGame.Combo
         internal void AdvanceComboWindowForValidation(float deltaSeconds)
         {
             AdvanceComboWindow(deltaSeconds);
+        }
+
+        internal void RestoreComboStateForResume(int currentCombo, int highestCombo)
+        {
+            _comboWindowActive = false;
+            _comboWindowRemainingSeconds = 0f;
+            _totalComboCount = 0;
+            _highestCombo = highestCombo < 0 ? 0 : highestCombo;
+            SetCurrentCombo(currentCombo < 0 ? 0 : currentCombo);
         }
 
         private void RegisterMatchForCombo()

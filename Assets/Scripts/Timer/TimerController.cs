@@ -107,9 +107,36 @@ namespace MahjongGame.Timer
             AdvanceTimer(deltaSeconds);
         }
 
+        internal bool TryRestoreTimerForResume(float allocatedSeconds, float remainingSeconds, int levelNumber)
+        {
+            if (allocatedSeconds <= 0f)
+            {
+                return false;
+            }
+
+            _levelNumber = levelNumber;
+            _allocatedTimeSeconds = allocatedSeconds;
+            _remainingTimeSeconds = remainingSeconds < 0f ? 0f : remainingSeconds;
+            LastElapsedTimeSeconds = allocatedSeconds - _remainingTimeSeconds;
+
+            if (_remainingTimeSeconds <= 0f)
+            {
+                SetState(TimerState.Expired);
+                return true;
+            }
+
+            SetState(TimerState.Running);
+            TimerEvents.RaiseTimerStarted(new TimerStartedContext(
+                _allocatedTimeSeconds,
+                _remainingTimeSeconds,
+                _levelNumber));
+            TimerEvents.RaiseTimerRemainingTimeChanged(_remainingTimeSeconds);
+            return true;
+        }
+
         private void HandleSessionStarted(SessionStartedContext context)
         {
-            if (context == null)
+            if (context == null || context.IsResumeSession)
             {
                 return;
             }

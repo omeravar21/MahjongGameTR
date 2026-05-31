@@ -59,6 +59,22 @@ namespace MahjongGame.UI
             CacheReferences(canvasTransform);
             WireButtons();
             ShowView(MainMenuView.Home);
+
+            if (ShouldAutoContinueActiveSession())
+            {
+                RequestLevelStart();
+            }
+        }
+
+        private static bool ShouldAutoContinueActiveSession()
+        {
+            if (!SaveSystem.HasInstance || SaveSystem.Instance.Data == null)
+            {
+                return false;
+            }
+
+            SaveSystem.Instance.Data.EnsureDefaults();
+            return SaveSystem.Instance.Data.activeLevelState.hasActiveSession;
         }
 
         public static bool HasRequiredNavigation()

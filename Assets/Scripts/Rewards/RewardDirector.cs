@@ -96,6 +96,11 @@ namespace MahjongGame.Rewards
 
         private void HandleSessionStarted(SessionStartedContext context)
         {
+            if (context == null || context.IsResumeSession)
+            {
+                return;
+            }
+
             ResetJokerRuntimeState();
         }
 

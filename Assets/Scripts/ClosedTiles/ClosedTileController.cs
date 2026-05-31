@@ -218,6 +218,11 @@ namespace MahjongGame.ClosedTiles
 
         private void HandleSessionStarted(SessionStartedContext context)
         {
+            if (context == null || context.IsResumeSession)
+            {
+                return;
+            }
+
             ResetRuntimeState();
         }
 

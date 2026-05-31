@@ -8,11 +8,14 @@ namespace MahjongGame.Session
 
         public SessionData Session { get; }
 
-        public SessionStartedContext(SessionData session)
+        public bool IsResumeSession { get; }
+
+        public SessionStartedContext(SessionData session, bool isResumeSession = false)
         {
             Session = session;
             SessionId = session != null ? session.SessionId : -1;
             LevelNumber = session != null ? session.LevelNumber : 0;
+            IsResumeSession = isResumeSession;
         }
     }
 }
