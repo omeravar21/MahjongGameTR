@@ -165,6 +165,31 @@ namespace MahjongGame.Session
                     + varietyProfile.DeterministicSeed
                     + ".");
             }
+
+            if (LevelRecipeGenerator.HasInstance)
+            {
+                LevelRecipe recipe = LevelRecipeGenerator.Instance.GenerateRecipe(levelNumber);
+                Debug.Log(
+                    "[SessionDirector] Level recipe generated: seed="
+                    + recipe.Seed
+                    + ", tiles="
+                    + recipe.TileCount
+                    + ", layers="
+                    + recipe.LayerDepth
+                    + ", archetype="
+                    + recipe.ArchetypeId
+                    + ", variation="
+                    + recipe.VariationIndex
+                    + ", jokers="
+                    + recipe.JokerCount
+                    + ", rewardPattern="
+                    + recipe.RewardJokerPatternId
+                    + ", difficultyRating="
+                    + recipe.DifficultyRating
+                    + ", maxAttempts="
+                    + recipe.MaxRegenerationAttempts
+                    + ".");
+            }
         }
 
         private void SetState(LevelSessionState newState)

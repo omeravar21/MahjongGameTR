@@ -49,6 +49,11 @@ namespace MahjongGame.Core
             {
                 gameObject.AddComponent<VisualVarietyDirector>();
             }
+
+            if (GetComponent<LevelRecipeGenerator>() == null)
+            {
+                gameObject.AddComponent<LevelRecipeGenerator>();
+            }
         }
 
         private void Start()

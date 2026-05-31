@@ -86,6 +86,7 @@ namespace MahjongGame.Tiles
             passed &= SessionSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= DifficultySystemValidator.Validate(reportBuilder);
             passed &= VisualVarietySystemValidator.Validate(reportBuilder);
+            passed &= LevelRecipeSystemValidator.Validate(reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Tile interaction validation completed successfully."

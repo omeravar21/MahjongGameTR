@@ -43,6 +43,11 @@ namespace MahjongGame.Editor
             "Assets/Scripts/BoardGeneration/VisualVarietyDirector.cs",
             "Assets/Scripts/BoardGeneration/VisualVarietyProfile.cs",
             "Assets/Scripts/BoardGeneration/VisualVarietySystemValidator.cs",
+            "Assets/Scripts/BoardGeneration/RewardJokerPatternId.cs",
+            "Assets/Scripts/BoardGeneration/LevelRecipe.cs",
+            "Assets/Scripts/BoardGeneration/LevelRecipeDefinition.cs",
+            "Assets/Scripts/BoardGeneration/LevelRecipeGenerator.cs",
+            "Assets/Scripts/BoardGeneration/LevelRecipeSystemValidator.cs",
             "Assets/Scripts/UI/DoorTransitionController.cs",
             "Assets/Scripts/UI/MainMenuNavigationController.cs",
         };
