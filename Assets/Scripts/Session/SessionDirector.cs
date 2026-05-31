@@ -241,6 +241,20 @@ namespace MahjongGame.Session
                         + ", seed="
                         + holePatternLayout.Seed
                         + ".");
+
+                    LayeredBoardLayout layeredBoardLayout = LayerBuilder.Build(holePatternLayout, recipe);
+                    Debug.Log(
+                        "[SessionDirector] Layered board layout built: layerDepth="
+                        + layeredBoardLayout.LayerDepth
+                        + ", requestedTiles="
+                        + layeredBoardLayout.RequestedTileCount
+                        + ", assignedTiles="
+                        + layeredBoardLayout.AssignedTileCount
+                        + ", availableSlots="
+                        + layeredBoardLayout.AvailableSlotCount
+                        + ", seed="
+                        + layeredBoardLayout.Seed
+                        + ".");
                 }
             }
         }
