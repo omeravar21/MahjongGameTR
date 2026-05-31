@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MahjongGame.Board;
+using MahjongGame.Matching;
 using MahjongGame.Tray;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ namespace MahjongGame.Tiles
             passed &= ValidateRequiredComponent<TileSelectabilityChecker>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<TileMovementController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<TrayController>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<MatchController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
 
             Transform boardRoot = gameplayRoot.Find("BoardRoot");

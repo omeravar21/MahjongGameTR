@@ -379,6 +379,7 @@ GameObject:
   - component: {fileID: 800000038}
   - component: {fileID: 800000039}
   - component: {fileID: 800000042}
+  - component: {fileID: 800000043}
   m_Layer: 0
   m_Name: GameplayRoot
   m_TagString: Untagged
@@ -477,6 +478,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectabilityChecker: {fileID: 800000019}
   movementController: {fileID: 800000038}
+--- !u!114 &800000043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800000012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6789012345678abcd1030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trayController: {fileID: 800000042}
 --- !u!1 &800000000
 GameObject:
   m_ObjectHideFlags: 0
