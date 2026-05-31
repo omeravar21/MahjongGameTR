@@ -3,6 +3,7 @@ using System.Text;
 using MahjongGame.Board;
 using MahjongGame.Matching;
 using MahjongGame.Session;
+using MahjongGame.Timer;
 using MahjongGame.Tray;
 using UnityEngine;
 
@@ -71,6 +72,7 @@ namespace MahjongGame.Tiles
                 passed &= MatchSystemValidator.Validate(gameplayRoot, trayRoot, reportBuilder);
             }
 
+            passed &= TimerSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= SessionSystemValidator.Validate(gameplayRoot, reportBuilder);
 
             AppendLine(reportBuilder, passed
