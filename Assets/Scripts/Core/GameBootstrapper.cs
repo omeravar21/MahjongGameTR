@@ -1,3 +1,4 @@
+using MahjongGame.BoardGeneration;
 using MahjongGame.Progression;
 using UnityEngine;
 
@@ -37,6 +38,11 @@ namespace MahjongGame.Core
             if (GetComponent<PlayerProgressionDirector>() == null)
             {
                 gameObject.AddComponent<PlayerProgressionDirector>();
+            }
+
+            if (GetComponent<DifficultyDirector>() == null)
+            {
+                gameObject.AddComponent<DifficultyDirector>();
             }
         }
 

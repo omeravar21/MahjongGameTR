@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using MahjongGame.Board;
 using MahjongGame.Matching;
+using MahjongGame.BoardGeneration;
 using MahjongGame.Combo;
 using MahjongGame.Score;
 using MahjongGame.Session;
@@ -83,6 +84,7 @@ namespace MahjongGame.Tiles
             passed &= ComboSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= PerformanceScreenSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= SessionSystemValidator.Validate(gameplayRoot, reportBuilder);
+            passed &= DifficultySystemValidator.Validate(reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Tile interaction validation completed successfully."

@@ -1,3 +1,4 @@
+using MahjongGame.BoardGeneration;
 using MahjongGame.Core;
 using MahjongGame.Progression;
 using UnityEngine;
@@ -128,6 +129,25 @@ namespace MahjongGame.Session
         private void PrepareLevelSession(int levelNumber)
         {
             Debug.Log("[SessionDirector] Preparing level session for level " + levelNumber + ".");
+
+            if (DifficultyDirector.HasInstance)
+            {
+                DifficultyProfile profile = DifficultyDirector.Instance.ResolveProfile(levelNumber);
+                Debug.Log(
+                    "[SessionDirector] Difficulty profile resolved: tiles="
+                    + profile.TileCount
+                    + ", closed="
+                    + profile.ClosedTileCount
+                    + ", jokers="
+                    + profile.JokerCount
+                    + ", layers="
+                    + profile.LayerDepth
+                    + ", timer="
+                    + profile.RecommendedTimerSeconds
+                    + "s, tier="
+                    + profile.ComplexityTier
+                    + ".");
+            }
         }
 
         private void SetState(LevelSessionState newState)

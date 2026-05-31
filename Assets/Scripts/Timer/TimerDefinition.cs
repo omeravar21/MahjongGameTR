@@ -1,3 +1,4 @@
+using MahjongGame.BoardGeneration;
 using MahjongGame.Progression;
 using UnityEngine;
 
@@ -13,6 +14,12 @@ namespace MahjongGame.Timer
         public static float ResolveDurationSeconds(int levelNumber)
         {
             int clampedLevel = LevelProgressData.ClampLevel(levelNumber);
+
+            if (DifficultyDirector.HasInstance)
+            {
+                return DifficultyDirector.Instance.ResolveProfile(clampedLevel).RecommendedTimerSeconds;
+            }
+
             float duration = BaseDurationSeconds + (clampedLevel - LevelProgressData.MinLevel) * PerLevelBonusSeconds;
 
             if (!_loggedStubWarning)
