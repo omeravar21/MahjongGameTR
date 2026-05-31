@@ -67,12 +67,13 @@ namespace MahjongGame.Board
                     continue;
                 }
 
+                TileType tileType = assignment.IsClosed ? TileType.Closed : TileType.Normal;
                 TileData tileData = new TileData(
                     assignment.TileId,
                     assignment.Position.GridCoordinate,
                     assignment.Position.LayerIndex,
-                    TileType.Normal,
-                    isClosed: false,
+                    tileType,
+                    isClosed: assignment.IsClosed,
                     isJoker: false,
                     symbolId: assignment.SymbolId);
                 tile.Initialize(tileData);

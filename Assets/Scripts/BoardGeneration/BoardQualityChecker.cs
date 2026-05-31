@@ -250,8 +250,28 @@ namespace MahjongGame.BoardGeneration
                 return true;
             }
 
-            failureReason = "Closed tile fairness checks are deferred until Phase 11.";
-            return false;
+            if (boardData.TileAssignments == null)
+            {
+                failureReason = "Board assignments are missing for closed tile validation.";
+                return false;
+            }
+
+            int closedAssignmentCount = 0;
+            for (int index = 0; index < boardData.TileAssignments.Count; index++)
+            {
+                if (boardData.TileAssignments[index].IsClosed)
+                {
+                    closedAssignmentCount++;
+                }
+            }
+
+            if (closedAssignmentCount != boardData.ClosedTileCount)
+            {
+                failureReason = "Closed tile assignment count does not match recipe closed tile count.";
+                return false;
+            }
+
+            return true;
         }
 
         private static bool ValidateJokerAccessibility(BoardData boardData, out string failureReason)

@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using MahjongGame.Board;
+using MahjongGame.BoardGeneration;
 using MahjongGame.Tiles;
 using MahjongGame.Tray;
 using UnityEngine;
@@ -33,6 +34,7 @@ namespace MahjongGame.ClosedTiles
             passed &= ValidateRevealBehavior(closedTileController, reportBuilder);
             passed &= ValidateSecondTapTrayMove(gameplayRoot, closedTileController, reportBuilder);
             passed &= ValidateRecloseBehavior(gameplayRoot, closedTileController, reportBuilder);
+            passed &= ValidatePipelineClosedAssignments(reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Closed tile system validation completed successfully."
@@ -433,6 +435,38 @@ namespace MahjongGame.ClosedTiles
                 : "[FAIL] Closed tile reclose behavior validation failed.");
 
             return passed;
+        }
+
+        private static bool ValidatePipelineClosedAssignments(StringBuilder reportBuilder)
+        {
+            BoardData boardData = BoardGenerationPipeline.GenerateCandidateBoardData(
+                LevelRecipeDefinition.GenerateRecipe(18));
+
+            if (boardData.ClosedTileCount <= 0)
+            {
+                AppendLine(reportBuilder, "[FAIL] Level 18 pipeline candidate has no closed tile count.");
+                return false;
+            }
+
+            int closedAssignmentCount = 0;
+            for (int index = 0; index < boardData.TileAssignments.Count; index++)
+            {
+                if (boardData.TileAssignments[index].IsClosed)
+                {
+                    closedAssignmentCount++;
+                }
+            }
+
+            if (closedAssignmentCount != boardData.ClosedTileCount)
+            {
+                AppendLine(
+                    reportBuilder,
+                    "[FAIL] Level 18 pipeline closed assignments do not match closed tile count.");
+                return false;
+            }
+
+            AppendLine(reportBuilder, "[PASS] Level 18 pipeline closed assignments match closed tile count.");
+            return true;
         }
 
         private static bool ValidateEventExists(

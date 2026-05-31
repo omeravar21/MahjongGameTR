@@ -1,7 +1,9 @@
 using MahjongGame.Board;
 using MahjongGame.BoardGeneration;
+using MahjongGame.ClosedTiles;
 using MahjongGame.Core;
 using MahjongGame.Progression;
+using MahjongGame.Tiles;
 using UnityEngine;
 
 namespace MahjongGame.Session
@@ -238,6 +240,30 @@ namespace MahjongGame.Session
             if (!boardSpawner.Spawn(boardData))
             {
                 Debug.LogWarning("[SessionDirector] BoardSpawner failed to spawn runtime board for level " + levelNumber + ".");
+                return;
+            }
+
+            RegisterSpawnedClosedTiles(boardRoot);
+        }
+
+        private void RegisterSpawnedClosedTiles(Transform boardRoot)
+        {
+            ClosedTileController closedTileController = GetComponent<ClosedTileController>();
+            if (closedTileController == null)
+            {
+                return;
+            }
+
+            closedTileController.ResetRuntimeState();
+
+            System.Collections.Generic.List<Tile> occupyingTiles = BoardTileOccupancyQuery.CollectOccupyingTiles(boardRoot);
+            for (int index = 0; index < occupyingTiles.Count; index++)
+            {
+                Tile tile = occupyingTiles[index];
+                if (tile != null && tile.IsClosed)
+                {
+                    closedTileController.TryRegisterClosedTile(tile);
+                }
             }
         }
 

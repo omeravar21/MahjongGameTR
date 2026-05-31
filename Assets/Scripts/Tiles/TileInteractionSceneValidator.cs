@@ -96,6 +96,7 @@ namespace MahjongGame.Tiles
             passed &= HolePatternSystemValidator.Validate(reportBuilder);
             passed &= LayerBuilderSystemValidator.Validate(reportBuilder);
             passed &= TilePairDistributorSystemValidator.Validate(reportBuilder);
+            passed &= ClosedTilePatternSystemValidator.Validate(reportBuilder);
             passed &= BoardGenerationPipelineSystemValidator.Validate(reportBuilder);
             passed &= OpeningMoveCheckerSystemValidator.Validate(reportBuilder);
             passed &= DeadlockRiskCheckerSystemValidator.Validate(reportBuilder);

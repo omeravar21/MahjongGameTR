@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MahjongGame.Progression;
 
 namespace MahjongGame.BoardGeneration
@@ -51,7 +52,9 @@ namespace MahjongGame.BoardGeneration
                 layeredBoardLayout,
                 recipe);
 
-            return CreateBoardData(recipe, distributedBoardLayout);
+            ClosedBoardLayout closedBoardLayout = ClosedTilePatternSelector.Apply(distributedBoardLayout, recipe);
+
+            return CreateBoardData(recipe, closedBoardLayout);
         }
 
         private static LevelRecipe ResolveBaseRecipe(int levelNumber)
@@ -64,9 +67,9 @@ namespace MahjongGame.BoardGeneration
             return LevelRecipeDefinition.GenerateRecipe(levelNumber);
         }
 
-        private static BoardData CreateBoardData(LevelRecipe recipe, DistributedBoardLayout distributedBoardLayout)
+        private static BoardData CreateBoardData(LevelRecipe recipe, ClosedBoardLayout closedBoardLayout)
         {
-            if (recipe == null || distributedBoardLayout == null)
+            if (recipe == null || closedBoardLayout == null)
             {
                 return CreateEmptyBoardData();
             }
@@ -74,15 +77,21 @@ namespace MahjongGame.BoardGeneration
             return new BoardData(
                 recipe.LevelNumber,
                 recipe.Seed,
-                distributedBoardLayout.ArchetypeId,
-                distributedBoardLayout.VariationIndex,
-                distributedBoardLayout.HolePatternId,
-                distributedBoardLayout.LayerDepth,
-                distributedBoardLayout.EffectiveTileCount,
+                closedBoardLayout.ArchetypeId,
+                closedBoardLayout.VariationIndex,
+                closedBoardLayout.HolePatternId,
+                closedBoardLayout.LayerDepth,
+                closedBoardLayout.EffectiveTileCount,
                 recipe.ClosedTileCount,
                 recipe.JokerCount,
                 false,
-                distributedBoardLayout.Assignments);
+                closedBoardLayout.Assignments);
+        }
+
+        private static BoardData CreateBoardData(LevelRecipe recipe, DistributedBoardLayout distributedBoardLayout)
+        {
+            ClosedBoardLayout closedBoardLayout = ClosedTilePatternSelector.Apply(distributedBoardLayout, recipe);
+            return CreateBoardData(recipe, closedBoardLayout);
         }
 
         private static BoardData CreateEmptyBoardData()

@@ -10,11 +10,19 @@ namespace MahjongGame.BoardGeneration
 
         public int SymbolId { get; }
 
-        public TileSymbolAssignment(int tileId, TileBoardPosition position, int symbolId)
+        public bool IsClosed { get; }
+
+        public TileSymbolAssignment(int tileId, TileBoardPosition position, int symbolId, bool isClosed = false)
         {
             TileId = tileId;
             Position = position;
             SymbolId = symbolId;
+            IsClosed = isClosed;
+        }
+
+        public TileSymbolAssignment WithClosed(bool isClosed)
+        {
+            return new TileSymbolAssignment(TileId, Position, SymbolId, isClosed);
         }
     }
 }
