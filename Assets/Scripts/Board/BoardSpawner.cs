@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MahjongGame.BoardGeneration;
 using MahjongGame.Core.Save;
 using MahjongGame.Tiles;
@@ -232,8 +233,10 @@ namespace MahjongGame.Board
                     continue;
                 }
 
-                Tile[] tiles = layerContainer.GetComponentsInChildren<Tile>(includeInactive: true);
-                for (int i = 0; i < tiles.Length; i++)
+                List<Tile> tiles = BoardTileOccupancyQuery.CollectTilesFromTransform(
+                    layerContainer,
+                    includeInactive: true);
+                for (int i = 0; i < tiles.Count; i++)
                 {
                     Tile tile = tiles[i];
                     if (tile == null)

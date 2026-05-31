@@ -58,11 +58,11 @@ namespace MahjongGame.Board
                 return false;
             }
 
-            Tile[] tiles = layerContainer.GetComponentsInChildren<Tile>(includeInactive: false);
-            for (int i = 0; i < tiles.Length; i++)
+            List<Tile> tiles = CollectTilesFromTransform(layerContainer, includeInactive: false, occupyingOnly: true);
+            for (int i = 0; i < tiles.Count; i++)
             {
                 Tile candidate = tiles[i];
-                if (candidate == null || candidate == excludeTile || !OccupiesBoardCell(candidate))
+                if (candidate == null || candidate == excludeTile)
                 {
                     continue;
                 }
@@ -166,18 +166,45 @@ namespace MahjongGame.Board
                     continue;
                 }
 
-                Tile[] tiles = layerContainer.GetComponentsInChildren<Tile>(includeInactive: false);
-                for (int i = 0; i < tiles.Length; i++)
-                {
-                    Tile tile = tiles[i];
-                    if (OccupiesBoardCell(tile))
-                    {
-                        occupyingTiles.Add(tile);
-                    }
-                }
+                CollectTilesFromTransform(
+                    layerContainer,
+                    includeInactive: false,
+                    occupyingOnly: true,
+                    occupyingTiles);
             }
 
             return occupyingTiles;
+        }
+
+        public static List<Tile> CollectTilesFromTransform(
+            Transform root,
+            bool includeInactive,
+            bool occupyingOnly = false,
+            List<Tile> results = null)
+        {
+            List<Tile> tiles = results ?? new List<Tile>();
+            if (root == null)
+            {
+                return tiles;
+            }
+
+            MonoBehaviour[] behaviours = root.GetComponentsInChildren<MonoBehaviour>(includeInactive);
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                if (behaviours[i] is not Tile tile)
+                {
+                    continue;
+                }
+
+                if (occupyingOnly && !OccupiesBoardCell(tile))
+                {
+                    continue;
+                }
+
+                tiles.Add(tile);
+            }
+
+            return tiles;
         }
     }
 }

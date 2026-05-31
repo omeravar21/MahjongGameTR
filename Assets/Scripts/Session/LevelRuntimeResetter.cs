@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MahjongGame.Board;
 using MahjongGame.BoardGeneration;
 using MahjongGame.Matching;
@@ -60,8 +61,10 @@ namespace MahjongGame.Session
 
         private static void DestroyOrphanTiles(Transform gameplayRoot)
         {
-            Tile[] tiles = gameplayRoot.GetComponentsInChildren<Tile>(includeInactive: true);
-            for (int i = 0; i < tiles.Length; i++)
+            List<Tile> tiles = BoardTileOccupancyQuery.CollectTilesFromTransform(
+                gameplayRoot,
+                includeInactive: true);
+            for (int i = 0; i < tiles.Count; i++)
             {
                 Tile tile = tiles[i];
                 if (tile == null)

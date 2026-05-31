@@ -92,6 +92,7 @@ namespace MahjongGame.Session
 
             _currentSession = new SessionData(sessionId, levelNumber, _currentState);
             SessionEvents.RaiseSessionStarted(new SessionStartedContext(_currentSession));
+            TryRegisterSpawnedSpecialTiles();
             session = _currentSession;
             return true;
         }
@@ -278,6 +279,15 @@ namespace MahjongGame.Session
             if (ActiveLevelSaveDirector.HasInstance)
             {
                 ActiveLevelSaveDirector.Instance.NotifyBoardSeed(boardData.Seed);
+            }
+        }
+
+        private void TryRegisterSpawnedSpecialTiles()
+        {
+            Transform boardRoot = transform.Find("BoardRoot");
+            if (boardRoot == null)
+            {
+                return;
             }
 
             RegisterSpawnedClosedTiles(boardRoot);
