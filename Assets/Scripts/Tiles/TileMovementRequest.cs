@@ -14,18 +14,22 @@ namespace MahjongGame.Tiles
 
         public Transform TargetSlotTransform { get; }
 
+        public TileState PreviousTileState { get; }
+
         public TileMovementRequest(
             Tile tile,
             int slotIndex,
             Vector3 startWorldPosition,
             Vector3 targetWorldPosition,
-            Transform targetSlotTransform)
+            Transform targetSlotTransform,
+            TileState previousTileState)
         {
             Tile = tile;
             SlotIndex = slotIndex;
             StartWorldPosition = startWorldPosition;
             TargetWorldPosition = targetWorldPosition;
             TargetSlotTransform = targetSlotTransform;
+            PreviousTileState = previousTileState;
         }
     }
 }

@@ -120,6 +120,29 @@ namespace MahjongGame.Tray
             _pendingAdmissions.Remove(tile);
         }
 
+        public bool TryReleaseStoredTile(Tile tile, out int releasedSlotIndex)
+        {
+            releasedSlotIndex = -1;
+            if (tile == null)
+            {
+                return false;
+            }
+
+            for (int slotIndex = 0; slotIndex < TrayRootDefinition.SlotCount; slotIndex++)
+            {
+                if (_tilesBySlot[slotIndex] != tile)
+                {
+                    continue;
+                }
+
+                _tilesBySlot[slotIndex] = null;
+                releasedSlotIndex = slotIndex;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool TryReleaseMatchedTiles(MatchRequest matchRequest)
         {
             if (matchRequest == null)

@@ -34,6 +34,11 @@ namespace MahjongGame.Editor
                 boosterRoot.gameObject.AddComponent<ShuffleBooster>();
             }
 
+            if (boosterRoot.GetComponent<UndoBooster>() == null)
+            {
+                boosterRoot.gameObject.AddComponent<UndoBooster>();
+            }
+
             BoosterController boosterController = boosterRoot.GetComponent<BoosterController>();
             if (boosterController == null)
             {
@@ -42,6 +47,7 @@ namespace MahjongGame.Editor
 
             BoosterEconomyDirector economyDirector = gameplayRoot.GetComponent<BoosterEconomyDirector>();
             ShuffleBooster shuffleBooster = boosterRoot.GetComponent<ShuffleBooster>();
+            UndoBooster undoBooster = boosterRoot.GetComponent<UndoBooster>();
 
             SerializedObject serializedController = new SerializedObject(boosterController);
             SerializedProperty economyDirectorProperty = serializedController.FindProperty("economyDirector");
@@ -56,12 +62,18 @@ namespace MahjongGame.Editor
                 shuffleBoosterProperty.objectReferenceValue = shuffleBooster;
             }
 
+            SerializedProperty undoBoosterProperty = serializedController.FindProperty("undoBooster");
+            if (undoBoosterProperty != null)
+            {
+                undoBoosterProperty.objectReferenceValue = undoBooster;
+            }
+
             serializedController.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
-            Debug.Log("[BoosterControllerBuilder] BoosterController and ShuffleBooster wired on BoosterRoot.");
+            Debug.Log("[BoosterControllerBuilder] BoosterController, ShuffleBooster, and UndoBooster wired on BoosterRoot.");
         }
 
         private static Transform FindGameplayRoot(Scene scene)

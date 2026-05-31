@@ -1127,6 +1127,7 @@ GameObject:
   - component: {fileID: 800000005}
   - component: {fileID: 800000060}
   - component: {fileID: 800000061}
+  - component: {fileID: 800000062}
   m_Layer: 0
   m_Name: BoosterRoot
   m_TagString: Untagged
@@ -1176,6 +1177,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   economyDirector: {fileID: 800000059}
   shuffleBooster: {fileID: 800000060}
+  undoBooster: {fileID: 800000062}
+--- !u!114 &800000062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800000004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111a111111114111ab8e214c5c3e0142, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardRootTransform: {fileID: 800000001}
+  trayController: {fileID: 800000042}
 --- !u!1 &800000006
 GameObject:
   m_ObjectHideFlags: 0

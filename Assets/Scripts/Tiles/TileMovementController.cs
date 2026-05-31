@@ -61,12 +61,14 @@ namespace MahjongGame.Tiles
 
             Vector3 startWorldPosition = tile.transform.position;
             Vector3 targetWorldPosition = slotTransform.position;
+            TileState previousTileState = tile.State;
             TileMovementRequest request = new TileMovementRequest(
                 tile,
                 slotIndex,
                 startWorldPosition,
                 targetWorldPosition,
-                slotTransform);
+                slotTransform,
+                previousTileState);
 
             _tilesInFlight.Add(tile);
             tile.SetState(TileState.MovingToTray);
