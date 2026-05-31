@@ -60,6 +60,13 @@ namespace MahjongGame.Editor
             }
 
             TrayRootController.BuildTrayHierarchy(trayRoot);
+
+            Transform trayContainer = trayRoot.Find(TrayRootDefinition.TrayContainerName);
+            if (trayContainer != null)
+            {
+                TraySlotVisualController.BuildAllSlotVisuals(trayContainer);
+            }
+
             TrayFrameVisualController.BuildFrameVisual(trayRoot);
             TrayRootController.EnforceTrayHierarchyOrder(trayRoot);
         }

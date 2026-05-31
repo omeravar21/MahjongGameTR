@@ -26,6 +26,12 @@ namespace MahjongGame.Tray
                 TrayFrameVisualController.BuildFrameVisual(trayRootTransform);
             }
 
+            Transform trayContainer = EnsureTrayContainer(trayRootTransform);
+            if (!TraySlotVisualController.HasAllSlotVisuals(trayContainer))
+            {
+                TraySlotVisualController.BuildAllSlotVisuals(trayContainer);
+            }
+
             EnforceTrayHierarchyOrder(trayRootTransform);
         }
 
@@ -63,6 +69,7 @@ namespace MahjongGame.Tray
 
             Transform trayContainer = EnsureTrayContainer(trayRoot);
             EnsureSlotAnchors(trayContainer);
+            TraySlotVisualController.BuildAllSlotVisuals(trayContainer);
         }
 
         public static Transform EnsureTrayContainer(Transform trayRoot)

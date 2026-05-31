@@ -109,6 +109,17 @@ namespace MahjongGame.Tiles
                 AppendLine(reportBuilder, "[PASS] Tray frame visual is present.");
             }
 
+            Transform trayContainer = trayRoot.Find(TrayRootDefinition.TrayContainerName);
+            if (trayContainer == null || !TraySlotVisualController.HasAllSlotVisuals(trayContainer))
+            {
+                AppendLine(reportBuilder, "[FAIL] Tray slot visuals are incomplete.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] All four tray slot visuals are present.");
+            }
+
             return passed;
         }
 
