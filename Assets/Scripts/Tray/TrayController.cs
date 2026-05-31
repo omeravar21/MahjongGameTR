@@ -100,6 +100,26 @@ namespace MahjongGame.Tray
             return capacityController != null && capacityController.HasAvailableSlot();
         }
 
+        public bool ValidateSlotEmpty(int slotIndex)
+        {
+            if (!TrayRootDefinition.IsValidSlotIndex(slotIndex))
+            {
+                return false;
+            }
+
+            return _tilesBySlot[slotIndex] == null;
+        }
+
+        public void ClearPendingAdmissionForTile(Tile tile)
+        {
+            if (tile == null)
+            {
+                return;
+            }
+
+            _pendingAdmissions.Remove(tile);
+        }
+
         public bool TryReleaseMatchedTiles(MatchRequest matchRequest)
         {
             if (matchRequest == null)

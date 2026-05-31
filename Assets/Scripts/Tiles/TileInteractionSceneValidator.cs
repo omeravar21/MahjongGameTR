@@ -73,13 +73,16 @@ namespace MahjongGame.Tiles
 
         private static bool ValidateMatchExecutionEvents(StringBuilder reportBuilder)
         {
-            if (typeof(MatchExecutor) == null || typeof(MatchExecutionContext) == null)
+            if (typeof(MatchExecutor) == null
+                || typeof(MatchExecutionContext) == null
+                || typeof(MatchCleaner) == null
+                || typeof(MatchCleanupContext) == null)
             {
-                AppendLine(reportBuilder, "[FAIL] Match execution types are missing.");
+                AppendLine(reportBuilder, "[FAIL] Match execution or cleanup types are missing.");
                 return false;
             }
 
-            AppendLine(reportBuilder, "[PASS] Match execution types and MatchExecuted event wiring are present.");
+            AppendLine(reportBuilder, "[PASS] Match execution, cleanup types, and match event wiring are present.");
             return true;
         }
 

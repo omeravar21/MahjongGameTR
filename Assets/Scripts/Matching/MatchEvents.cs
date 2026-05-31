@@ -10,6 +10,8 @@ namespace MahjongGame.Matching
 
         public static event Action<MatchExecutionContext> MatchExecuted;
 
+        public static event Action<MatchCleanupContext> MatchCleanedUp;
+
         internal static void RaiseMatchDetected(MatchRequest request)
         {
             if (request == null)
@@ -38,6 +40,16 @@ namespace MahjongGame.Matching
             }
 
             MatchExecuted?.Invoke(context);
+        }
+
+        internal static void RaiseMatchCleanedUp(MatchCleanupContext context)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            MatchCleanedUp?.Invoke(context);
         }
     }
 }

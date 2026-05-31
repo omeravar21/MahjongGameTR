@@ -128,6 +128,11 @@ namespace MahjongGame.Matching
                 if (MatchExecutor.ExecuteMatch(matchRequest, resolvedTrayController))
                 {
                     MatchEvents.RaiseMatchExecuted(new MatchExecutionContext(matchRequest));
+
+                    if (MatchCleaner.CleanupMatch(matchRequest, resolvedTrayController))
+                    {
+                        MatchEvents.RaiseMatchCleanedUp(new MatchCleanupContext(matchRequest));
+                    }
                 }
             }
 
