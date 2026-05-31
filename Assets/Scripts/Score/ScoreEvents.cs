@@ -8,6 +8,8 @@ namespace MahjongGame.Score
 
         public static event Action<MatchScoreAwardedContext> MatchScoreAwarded;
 
+        public static event Action<JokerBonusAwardedContext> JokerBonusAwarded;
+
         internal static void RaiseScoreChanged(ScoreChangedContext context)
         {
             if (context == null)
@@ -26,6 +28,16 @@ namespace MahjongGame.Score
             }
 
             MatchScoreAwarded?.Invoke(context);
+        }
+
+        internal static void RaiseJokerBonusAwarded(JokerBonusAwardedContext context)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            JokerBonusAwarded?.Invoke(context);
         }
     }
 }

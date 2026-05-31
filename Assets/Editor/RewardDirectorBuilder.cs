@@ -28,6 +28,12 @@ namespace MahjongGame.Editor
                 jokerTileController = gameplayRoot.gameObject.AddComponent<JokerTileController>();
             }
 
+            JokerTimerController jokerTimerController = gameplayRoot.GetComponent<JokerTimerController>();
+            if (jokerTimerController == null)
+            {
+                jokerTimerController = gameplayRoot.gameObject.AddComponent<JokerTimerController>();
+            }
+
             RewardDirector rewardDirector = gameplayRoot.GetComponent<RewardDirector>();
             if (rewardDirector == null)
             {
@@ -39,13 +45,20 @@ namespace MahjongGame.Editor
             if (jokerControllerProperty != null)
             {
                 jokerControllerProperty.objectReferenceValue = jokerTileController;
-                serializedDirector.ApplyModifiedPropertiesWithoutUndo();
             }
+
+            SerializedProperty jokerTimerProperty = serializedDirector.FindProperty("jokerTimerController");
+            if (jokerTimerProperty != null)
+            {
+                jokerTimerProperty.objectReferenceValue = jokerTimerController;
+            }
+
+            serializedDirector.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
-            Debug.Log("[RewardDirectorBuilder] RewardDirector and JokerTileController wired on GameplayRoot.");
+            Debug.Log("[RewardDirectorBuilder] RewardDirector, JokerTileController, and JokerTimerController wired on GameplayRoot.");
         }
 
         private static Transform FindGameplayRoot(Scene scene)

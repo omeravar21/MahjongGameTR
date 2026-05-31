@@ -2562,7 +2562,7 @@ Medium
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -2596,7 +2596,7 @@ Medium
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 

@@ -29,6 +29,7 @@ namespace MahjongGame.Score
             passed &= ValidateTypesAndEvents(reportBuilder);
             passed &= ValidatePublicApi(scoreController, reportBuilder);
             passed &= ValidateDefinition(reportBuilder);
+            passed &= ValidateJokerBonusAward(scoreController, reportBuilder);
 
             if (Application.isPlaying && scoreController != null && scoreController.enabled)
             {
@@ -76,6 +77,7 @@ namespace MahjongGame.Score
 
             passed &= ValidateEventExists(typeof(ScoreEvents), nameof(ScoreEvents.ScoreChanged), reportBuilder);
             passed &= ValidateEventExists(typeof(ScoreEvents), nameof(ScoreEvents.MatchScoreAwarded), reportBuilder);
+            passed &= ValidateEventExists(typeof(ScoreEvents), nameof(ScoreEvents.JokerBonusAwarded), reportBuilder);
 
             return passed;
         }
@@ -145,6 +147,65 @@ namespace MahjongGame.Score
             }
 
             AppendLine(reportBuilder, "[PASS] ScoreDefinition.BaseMatchScore is 1000.");
+
+            if (ScoreDefinition.JokerEarlyMatchBonus != 2500)
+            {
+                AppendLine(reportBuilder, "[FAIL] ScoreDefinition.JokerEarlyMatchBonus is not 2500.");
+                return false;
+            }
+
+            AppendLine(reportBuilder, "[PASS] ScoreDefinition.JokerEarlyMatchBonus is 2500.");
+            return true;
+        }
+
+        private static bool ValidateJokerBonusAward(ScoreController scoreController, StringBuilder reportBuilder)
+        {
+            if (scoreController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] ScoreController is unavailable for joker bonus validation.");
+                return false;
+            }
+
+            bool jokerBonusAwardedRaised = false;
+            int scoreBefore = scoreController.CurrentScore;
+
+            void HandleJokerBonusAwarded(JokerBonusAwardedContext context)
+            {
+                if (context != null && context.BonusPoints == ScoreDefinition.JokerEarlyMatchBonus)
+                {
+                    jokerBonusAwardedRaised = true;
+                }
+            }
+
+            ScoreEvents.JokerBonusAwarded += HandleJokerBonusAwarded;
+            try
+            {
+                scoreController.AwardJokerBonusForValidation(900);
+            }
+            finally
+            {
+                ScoreEvents.JokerBonusAwarded -= HandleJokerBonusAwarded;
+            }
+
+            if (!jokerBonusAwardedRaised)
+            {
+                AppendLine(reportBuilder, "[FAIL] JokerBonusAwarded event was not raised.");
+                return false;
+            }
+
+            if (scoreController.CurrentScore != scoreBefore + ScoreDefinition.JokerEarlyMatchBonus)
+            {
+                AppendLine(reportBuilder, "[FAIL] Joker bonus did not update current score.");
+                return false;
+            }
+
+            if (scoreController.EarlyJokerMatchCount <= 0 || scoreController.JokerBonusTotal <= 0)
+            {
+                AppendLine(reportBuilder, "[FAIL] Joker bonus totals were not tracked.");
+                return false;
+            }
+
+            AppendLine(reportBuilder, "[PASS] Joker bonus awards +2500 and tracks totals.");
             return true;
         }
 

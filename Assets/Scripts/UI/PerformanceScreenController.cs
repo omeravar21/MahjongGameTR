@@ -21,6 +21,7 @@ namespace MahjongGame.UI
         private Text _scoreText;
         private Text _completionTimeText;
         private Text _comboCountText;
+        private Text _jokerBonusText;
         private Button _nextLevelButton;
         private LevelResultSummary _activeSummary;
 
@@ -76,6 +77,7 @@ namespace MahjongGame.UI
             return panelTransform.Find("ScoreText") != null
                 && panelTransform.Find("CompletionTimeText") != null
                 && panelTransform.Find("ComboCountText") != null
+                && panelTransform.Find("JokerBonusText") != null
                 && panelTransform.Find(NextLevelButtonName) != null;
         }
 
@@ -132,7 +134,8 @@ namespace MahjongGame.UI
             _ = CreateMetricText("ScoreText", panelObject.transform, new Vector2(0f, 210f), "Score: 0");
             _ = CreateMetricText("CompletionTimeText", panelObject.transform, new Vector2(0f, 80f), "Time: 0.0s");
             _ = CreateMetricText("ComboCountText", panelObject.transform, new Vector2(0f, -50f), "Combos: 0");
-            CreateActionButton(NextLevelButtonName, panelObject.transform, new Vector2(0f, -260f), new Vector2(420f, 120f), "Next Level");
+            _ = CreateMetricText("JokerBonusText", panelObject.transform, new Vector2(0f, -180f), "Joker Bonus: 0");
+            CreateActionButton(NextLevelButtonName, panelObject.transform, new Vector2(0f, -320f), new Vector2(420f, 120f), "Next Level");
         }
 
         internal void ShowSummaryForValidation(LevelResultSummary summary)
@@ -168,6 +171,7 @@ namespace MahjongGame.UI
             _scoreText = panelTransform.Find("ScoreText")?.GetComponent<Text>();
             _completionTimeText = panelTransform.Find("CompletionTimeText")?.GetComponent<Text>();
             _comboCountText = panelTransform.Find("ComboCountText")?.GetComponent<Text>();
+            _jokerBonusText = panelTransform.Find("JokerBonusText")?.GetComponent<Text>();
             _nextLevelButton = panelTransform.Find(NextLevelButtonName)?.GetComponent<Button>();
         }
 
@@ -203,6 +207,23 @@ namespace MahjongGame.UI
             if (_comboCountText != null)
             {
                 _comboCountText.text = "Combos: " + summary.TotalComboCount;
+            }
+
+            if (_jokerBonusText != null)
+            {
+                if (summary.JokerBonusTotal > 0)
+                {
+                    _jokerBonusText.gameObject.SetActive(true);
+                    _jokerBonusText.text = "Joker Bonus: +"
+                        + summary.JokerBonusTotal
+                        + " ("
+                        + summary.EarlyJokerMatchCount
+                        + ")";
+                }
+                else
+                {
+                    _jokerBonusText.gameObject.SetActive(false);
+                }
             }
 
             if (_panelRoot != null)

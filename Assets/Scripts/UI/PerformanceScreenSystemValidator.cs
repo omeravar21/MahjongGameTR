@@ -101,6 +101,26 @@ namespace MahjongGame.UI
                 ? "[PASS] LevelResultSummary type is present."
                 : "[FAIL] LevelResultSummary type is missing.");
 
+            if (typeof(LevelResultSummary).GetProperty(nameof(LevelResultSummary.EarlyJokerMatchCount)) == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] LevelResultSummary.EarlyJokerMatchCount property is missing.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] LevelResultSummary.EarlyJokerMatchCount property is present.");
+            }
+
+            if (typeof(LevelResultSummary).GetProperty(nameof(LevelResultSummary.JokerBonusTotal)) == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] LevelResultSummary.JokerBonusTotal property is missing.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] LevelResultSummary.JokerBonusTotal property is present.");
+            }
+
             passed &= ValidateEventExists(typeof(LevelResultEvents), nameof(LevelResultEvents.LevelResultReady), reportBuilder);
 
             return passed;

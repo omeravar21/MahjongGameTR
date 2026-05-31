@@ -4,6 +4,8 @@ namespace MahjongGame.Score
     {
         public const int BaseMatchScore = 1000;
 
+        public const int JokerEarlyMatchBonus = 2500;
+
         public static int ResolveComboBonus(int comboLevel)
         {
             switch (comboLevel)

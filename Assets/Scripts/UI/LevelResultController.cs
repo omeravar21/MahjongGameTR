@@ -47,9 +47,17 @@ namespace MahjongGame.UI
 
             int score = scoreController != null ? scoreController.CurrentScore : 0;
             int totalComboCount = comboController != null ? comboController.TotalComboCount : 0;
+            int earlyJokerMatchCount = scoreController != null ? scoreController.EarlyJokerMatchCount : 0;
+            int jokerBonusTotal = scoreController != null ? scoreController.JokerBonusTotal : 0;
             float completionTimeSeconds = timerController != null ? timerController.LastElapsedTimeSeconds : 0f;
 
-            return new LevelResultSummary(levelNumber, completionTimeSeconds, score, totalComboCount);
+            return new LevelResultSummary(
+                levelNumber,
+                completionTimeSeconds,
+                score,
+                totalComboCount,
+                earlyJokerMatchCount,
+                jokerBonusTotal);
         }
 
         private TimerController ResolveTimerController()

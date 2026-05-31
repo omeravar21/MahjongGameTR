@@ -10,6 +10,10 @@ namespace MahjongGame.Rewards
 
         public static event Action JokerRuntimeReset;
 
+        public static event Action<JokerEarlyMatchDetectedContext> JokerEarlyMatchDetected;
+
+        public static event Action<JokerLateMatchDetectedContext> JokerLateMatchDetected;
+
         internal static void RaiseJokerTileRegistered(JokerTileRegisteredContext context)
         {
             if (context == null)
@@ -33,6 +37,26 @@ namespace MahjongGame.Rewards
         internal static void RaiseJokerRuntimeReset()
         {
             JokerRuntimeReset?.Invoke();
+        }
+
+        internal static void RaiseJokerEarlyMatchDetected(JokerEarlyMatchDetectedContext context)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            JokerEarlyMatchDetected?.Invoke(context);
+        }
+
+        internal static void RaiseJokerLateMatchDetected(JokerLateMatchDetectedContext context)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            JokerLateMatchDetected?.Invoke(context);
         }
     }
 }

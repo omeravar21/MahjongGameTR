@@ -1,5 +1,6 @@
 using MahjongGame.Combo;
 using MahjongGame.Matching;
+using MahjongGame.Rewards;
 using MahjongGame.Session;
 using UnityEngine;
 
@@ -10,7 +11,9 @@ namespace MahjongGame.Score
         private int _currentScore;
         private int _matchScoreTotal;
         private int _comboScoreTotal;
+        private int _jokerBonusTotal;
         private int _matchCount;
+        private int _earlyJokerMatchCount;
 
         public int CurrentScore => _currentScore;
 
@@ -18,13 +21,18 @@ namespace MahjongGame.Score
 
         public int ComboScoreTotal => _comboScoreTotal;
 
+        public int JokerBonusTotal => _jokerBonusTotal;
+
         public int MatchCount => _matchCount;
+
+        public int EarlyJokerMatchCount => _earlyJokerMatchCount;
 
         private void OnEnable()
         {
             SessionEvents.SessionStarted += HandleSessionStarted;
             MatchEvents.MatchCleanedUp += HandleMatchCleanedUp;
             ComboEvents.ComboIncreased += HandleComboIncreased;
+            JokerEvents.JokerEarlyMatchDetected += HandleJokerEarlyMatchDetected;
         }
 
         private void OnDisable()
@@ -32,11 +40,17 @@ namespace MahjongGame.Score
             SessionEvents.SessionStarted -= HandleSessionStarted;
             MatchEvents.MatchCleanedUp -= HandleMatchCleanedUp;
             ComboEvents.ComboIncreased -= HandleComboIncreased;
+            JokerEvents.JokerEarlyMatchDetected -= HandleJokerEarlyMatchDetected;
         }
 
         internal void AwardComboBonusForValidation(int comboLevel)
         {
             AwardComboBonus(comboLevel);
+        }
+
+        internal void AwardJokerBonusForValidation(int jokerTileId)
+        {
+            AwardJokerBonus(jokerTileId);
         }
 
         private void HandleComboIncreased(ComboIncreasedContext context)
@@ -52,6 +66,39 @@ namespace MahjongGame.Score
             }
 
             AwardComboBonus(context.ComboLevel);
+        }
+
+        private void HandleJokerEarlyMatchDetected(JokerEarlyMatchDetectedContext context)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            if (!SessionDirector.HasInstance || !SessionDirector.Instance.IsSessionActive)
+            {
+                return;
+            }
+
+            AwardJokerBonus(context.JokerTileId);
+        }
+
+        private void AwardJokerBonus(int jokerTileId)
+        {
+            int bonusPoints = ScoreDefinition.JokerEarlyMatchBonus;
+            if (bonusPoints <= 0)
+            {
+                return;
+            }
+
+            _earlyJokerMatchCount++;
+            _jokerBonusTotal += bonusPoints;
+            ApplyScoreDelta(bonusPoints);
+            ScoreEvents.RaiseJokerBonusAwarded(new JokerBonusAwardedContext(
+                bonusPoints,
+                jokerTileId,
+                _earlyJokerMatchCount,
+                _jokerBonusTotal));
         }
 
         private void AwardComboBonus(int comboLevel)
@@ -109,7 +156,9 @@ namespace MahjongGame.Score
             _currentScore = 0;
             _matchScoreTotal = 0;
             _comboScoreTotal = 0;
+            _jokerBonusTotal = 0;
             _matchCount = 0;
+            _earlyJokerMatchCount = 0;
 
             if (previousScore != 0)
             {

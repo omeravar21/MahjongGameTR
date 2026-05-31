@@ -26,13 +26,15 @@ namespace MahjongGame.Rewards
 
             RewardDirector rewardDirector = gameplayRoot.GetComponent<RewardDirector>();
             JokerTileController jokerTileController = gameplayRoot.GetComponent<JokerTileController>();
+            JokerTimerController jokerTimerController = gameplayRoot.GetComponent<JokerTimerController>();
 
-            passed &= ValidateComponents(rewardDirector, jokerTileController, reportBuilder);
+            passed &= ValidateComponents(rewardDirector, jokerTileController, jokerTimerController, reportBuilder);
             passed &= ValidateTypesAndEvents(reportBuilder);
             passed &= ValidateDefinition(reportBuilder);
             passed &= ValidateRegistryBehavior(jokerTileController, reportBuilder);
             passed &= ValidateRewardDirectorWiring(rewardDirector, jokerTileController, reportBuilder);
             passed &= ValidatePipelineJokerAssignments(reportBuilder);
+            passed &= ValidateEarlyMatchDetection(rewardDirector, reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Joker system validation completed successfully."
@@ -44,6 +46,7 @@ namespace MahjongGame.Rewards
         private static bool ValidateComponents(
             RewardDirector rewardDirector,
             JokerTileController jokerTileController,
+            JokerTimerController jokerTimerController,
             StringBuilder reportBuilder)
         {
             bool passed = true;
@@ -66,6 +69,16 @@ namespace MahjongGame.Rewards
             else
             {
                 AppendLine(reportBuilder, "[PASS] JokerTileController is present on GameplayRoot.");
+            }
+
+            if (jokerTimerController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] JokerTimerController is missing on GameplayRoot.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] JokerTimerController is present on GameplayRoot.");
             }
 
             return passed;
@@ -98,6 +111,14 @@ namespace MahjongGame.Rewards
             passed &= ValidateEventExists(
                 typeof(JokerEvents),
                 nameof(JokerEvents.JokerRuntimeReset),
+                reportBuilder);
+            passed &= ValidateEventExists(
+                typeof(JokerEvents),
+                nameof(JokerEvents.JokerEarlyMatchDetected),
+                reportBuilder);
+            passed &= ValidateEventExists(
+                typeof(JokerEvents),
+                nameof(JokerEvents.JokerLateMatchDetected),
                 reportBuilder);
 
             return passed;
@@ -196,8 +217,80 @@ namespace MahjongGame.Rewards
                 return false;
             }
 
+            JokerTimerController jokerTimerController = rewardDirector.GetJokerTimerController();
+            if (jokerTimerController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] RewardDirector is not wired to JokerTimerController.");
+                return false;
+            }
+
             AppendLine(reportBuilder, "[PASS] RewardDirector is wired to JokerTileController.");
+            AppendLine(reportBuilder, "[PASS] RewardDirector is wired to JokerTimerController.");
             return true;
+        }
+
+        private static bool ValidateEarlyMatchDetection(
+            RewardDirector rewardDirector,
+            StringBuilder reportBuilder)
+        {
+            if (rewardDirector == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] RewardDirector is unavailable for early match validation.");
+                return false;
+            }
+
+            JokerTimerController jokerTimerController = rewardDirector.GetJokerTimerController();
+            if (jokerTimerController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] JokerTimerController is unavailable for early match validation.");
+                return false;
+            }
+
+            bool earlyDetected = false;
+            bool lateDetected = false;
+            JokerEvents.JokerEarlyMatchDetected += HandleEarlyDetected;
+            JokerEvents.JokerLateMatchDetected += HandleLateDetected;
+
+            try
+            {
+                rewardDirector.ResetJokerRuntimeState();
+                jokerTimerController.StartSessionForValidation();
+                jokerTimerController.AdvanceElapsedTimeForValidation(59f);
+                rewardDirector.TryEvaluateJokerMatchForValidation(700, 59f);
+
+                jokerTimerController.AdvanceElapsedTimeForValidation(2f);
+                rewardDirector.TryEvaluateJokerMatchForValidation(701, 61f);
+            }
+            finally
+            {
+                JokerEvents.JokerEarlyMatchDetected -= HandleEarlyDetected;
+                JokerEvents.JokerLateMatchDetected -= HandleLateDetected;
+            }
+
+            if (!earlyDetected || !lateDetected)
+            {
+                AppendLine(reportBuilder, "[FAIL] Joker early/late match detection validation failed.");
+                return false;
+            }
+
+            if (rewardDirector.EarlyJokerMatchCount != 1 || rewardDirector.LateJokerMatchCount != 1)
+            {
+                AppendLine(reportBuilder, "[FAIL] Joker match counters are incorrect after validation.");
+                return false;
+            }
+
+            AppendLine(reportBuilder, "[PASS] Joker early and late match detection behave correctly.");
+            return true;
+
+            void HandleEarlyDetected(JokerEarlyMatchDetectedContext context)
+            {
+                earlyDetected = context != null && context.ElapsedSessionSeconds <= JokerDefinition.EarlyMatchWindowSeconds;
+            }
+
+            void HandleLateDetected(JokerLateMatchDetectedContext context)
+            {
+                lateDetected = context != null && context.ElapsedSessionSeconds > JokerDefinition.EarlyMatchWindowSeconds;
+            }
         }
 
         private static bool ValidatePipelineJokerAssignments(StringBuilder reportBuilder)
