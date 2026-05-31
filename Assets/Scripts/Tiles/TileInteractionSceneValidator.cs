@@ -39,7 +39,7 @@ namespace MahjongGame.Tiles
                 AppendLine(reportBuilder, "[PASS] BoardRoot hierarchy is present.");
             }
 
-            Transform trayRoot = gameplayRoot.Find("TrayRoot");
+            Transform trayRoot = gameplayRoot.Find(TrayRootDefinition.TrayRootName);
             if (trayRoot == null)
             {
                 AppendLine(reportBuilder, "[FAIL] TrayRoot is missing.");
@@ -47,7 +47,7 @@ namespace MahjongGame.Tiles
             }
             else
             {
-                passed &= ValidateTrayAnchors(trayRoot, reportBuilder);
+                passed &= ValidateTrayRoot(trayRoot, reportBuilder);
             }
 
             if (boardRoot != null)
@@ -75,29 +75,38 @@ namespace MahjongGame.Tiles
             return false;
         }
 
-        private static bool ValidateTrayAnchors(Transform trayRoot, StringBuilder reportBuilder)
+        private static bool ValidateTrayRoot(Transform trayRoot, StringBuilder reportBuilder)
         {
-            Transform trayContainer = trayRoot.Find(TrayMovementLayout.TrayContainerName);
-            if (trayContainer == null)
-            {
-                AppendLine(reportBuilder, "[FAIL] TrayContainer is missing under TrayRoot.");
-                return false;
-            }
-
             bool passed = true;
-            for (int slotIndex = 0; slotIndex < TrayMovementLayout.SlotCount; slotIndex++)
+
+            if (trayRoot.GetComponent<TrayRootController>() == null)
             {
-                Transform slotTransform = trayContainer.Find(TrayMovementLayout.GetSlotName(slotIndex));
-                if (slotTransform == null)
-                {
-                    AppendLine(reportBuilder, "[FAIL] Missing " + TrayMovementLayout.GetSlotName(slotIndex) + ".");
-                    passed = false;
-                }
+                AppendLine(reportBuilder, "[FAIL] TrayRootController is missing on TrayRoot.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] TrayRootController is present.");
             }
 
-            if (passed)
+            if (!TrayRootController.HasRequiredTrayHierarchy(trayRoot))
             {
-                AppendLine(reportBuilder, "[PASS] Tray slot anchors are present.");
+                AppendLine(reportBuilder, "[FAIL] TrayRoot hierarchy is incomplete.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] TrayRoot hierarchy is present.");
+            }
+
+            if (!TrayFrameVisualController.HasRequiredFrameVisual(trayRoot))
+            {
+                AppendLine(reportBuilder, "[FAIL] Tray frame visual is missing.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] Tray frame visual is present.");
             }
 
             return passed;

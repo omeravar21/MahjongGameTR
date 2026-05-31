@@ -158,9 +158,9 @@ namespace MahjongGame.Tiles
                 return false;
             }
 
-            for (int i = 0; i < TrayMovementLayout.SlotCount; i++)
+            for (int i = 0; i < TrayRootDefinition.SlotCount; i++)
             {
-                Transform candidateSlot = trayContainer.Find(TrayMovementLayout.GetSlotName(i));
+                Transform candidateSlot = trayContainer.Find(TrayRootDefinition.GetSlotName(i));
                 if (candidateSlot == null)
                 {
                     continue;
@@ -206,7 +206,17 @@ namespace MahjongGame.Tiles
                 return null;
             }
 
-            Transform trayContainer = trayRoot.Find(TrayMovementLayout.TrayContainerName);
+            TrayRootController trayRootController = trayRoot.GetComponent<TrayRootController>();
+            if (trayRootController != null)
+            {
+                Transform container = trayRootController.GetTrayContainer();
+                if (container != null)
+                {
+                    return container;
+                }
+            }
+
+            Transform trayContainer = trayRoot.Find(TrayRootDefinition.TrayContainerName);
             return trayContainer != null ? trayContainer : trayRoot;
         }
 
