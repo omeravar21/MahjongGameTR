@@ -202,6 +202,20 @@ namespace MahjongGame.Session
                     + ", seed="
                     + gridMask.Seed
                     + ".");
+
+                if (LevelRecipeGenerator.HasInstance)
+                {
+                    LevelRecipe recipe = LevelRecipeGenerator.Instance.GenerateRecipe(levelNumber);
+                    ArchetypeLayout archetypeLayout = ArchetypeSelector.Apply(gridMask, recipe);
+                    Debug.Log(
+                        "[SessionDirector] Archetype layout applied: archetype="
+                        + archetypeLayout.ArchetypeId
+                        + ", activeCells="
+                        + archetypeLayout.ActiveCellCount
+                        + ", seed="
+                        + archetypeLayout.Seed
+                        + ".");
+                }
             }
         }
 

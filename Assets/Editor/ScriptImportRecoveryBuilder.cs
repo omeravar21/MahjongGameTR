@@ -53,6 +53,10 @@ namespace MahjongGame.Editor
             "Assets/Scripts/BoardGeneration/GridMaskDefinition.cs",
             "Assets/Scripts/BoardGeneration/GridMaskGenerator.cs",
             "Assets/Scripts/BoardGeneration/GridMaskSystemValidator.cs",
+            "Assets/Scripts/BoardGeneration/ArchetypeLayout.cs",
+            "Assets/Scripts/BoardGeneration/ArchetypePatternDefinition.cs",
+            "Assets/Scripts/BoardGeneration/ArchetypeSelector.cs",
+            "Assets/Scripts/BoardGeneration/ArchetypeSystemValidator.cs",
             "Assets/Scripts/UI/DoorTransitionController.cs",
             "Assets/Scripts/UI/MainMenuNavigationController.cs",
         };
