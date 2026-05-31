@@ -136,6 +136,8 @@ namespace MahjongGame.Editor
             "Assets/Scripts/Boosters/BoosterController.cs",
             "Assets/Scripts/Boosters/UndoMoveRecord.cs",
             "Assets/Scripts/Boosters/UndoBooster.cs",
+            "Assets/Scripts/Boosters/HintPresentationContext.cs",
+            "Assets/Scripts/Boosters/HintBooster.cs",
             "Assets/Editor/BoosterControllerBuilder.cs",
             "Assets/Editor/EmergencyFallbackValidationBuilder.cs",
             "Assets/Editor/BoardQualityValidationBuilder.cs",

@@ -7,6 +7,7 @@ namespace MahjongGame.Boosters
         [SerializeField] private BoosterEconomyDirector economyDirector;
         [SerializeField] private ShuffleBooster shuffleBooster;
         [SerializeField] private UndoBooster undoBooster;
+        [SerializeField] private HintBooster hintBooster;
 
         private void Awake()
         {
@@ -29,6 +30,12 @@ namespace MahjongGame.Boosters
         {
             ResolveComponents();
             return undoBooster;
+        }
+
+        public HintBooster GetHintBooster()
+        {
+            ResolveComponents();
+            return hintBooster;
         }
 
         public bool TryExecuteShuffle()
@@ -75,6 +82,28 @@ namespace MahjongGame.Boosters
             return false;
         }
 
+        public bool TryExecuteHint()
+        {
+            ResolveComponents();
+            if (economyDirector == null || hintBooster == null)
+            {
+                return false;
+            }
+
+            if (!economyDirector.TryConsume(BoosterType.Hint))
+            {
+                return false;
+            }
+
+            if (hintBooster.TryExecuteHint())
+            {
+                return true;
+            }
+
+            economyDirector.TryGrant(BoosterType.Hint, 1);
+            return false;
+        }
+
         private void ResolveComponents()
         {
             if (economyDirector == null)
@@ -90,6 +119,11 @@ namespace MahjongGame.Boosters
             if (undoBooster == null)
             {
                 undoBooster = GetComponent<UndoBooster>();
+            }
+
+            if (hintBooster == null)
+            {
+                hintBooster = GetComponent<HintBooster>();
             }
         }
     }

@@ -9,11 +9,15 @@ namespace MahjongGame.Tiles
         private static readonly Color DefaultSymbolColor = new Color(0.35f, 0.28f, 0.22f, 1f);
         private static readonly Color DefaultClosedOverlayColor = new Color(0.45f, 0.35f, 0.28f, 0.85f);
         private static readonly Color DefaultJokerSymbolColor = new Color(0.85f, 0.65f, 0.15f, 1f);
+        private static readonly Color HintHighlightFaceColor = new Color(1f, 0.95f, 0.78f, 1f);
         private const float DefaultSymbolScale = 0.6f;
 
         [SerializeField] private SpriteRenderer tileFaceRenderer;
         [SerializeField] private SpriteRenderer tileSymbolRenderer;
         [SerializeField] private SpriteRenderer closedOverlayRenderer;
+
+        private bool _hintHighlightActive;
+        private Color _savedFaceColor;
 
         public SpriteRenderer TileFaceRenderer => tileFaceRenderer;
         public SpriteRenderer TileSymbolRenderer => tileSymbolRenderer;
@@ -98,7 +102,9 @@ namespace MahjongGame.Tiles
 
             if (tileFaceRenderer != null)
             {
-                tileFaceRenderer.color = ScaleColorBrightness(DefaultFaceColor, shadowScale);
+                tileFaceRenderer.color = _hintHighlightActive
+                    ? HintHighlightFaceColor
+                    : ScaleColorBrightness(DefaultFaceColor, shadowScale);
             }
 
             if (tileSymbolRenderer != null)
@@ -112,6 +118,34 @@ namespace MahjongGame.Tiles
                 overlayColor.a *= shadowScale;
                 closedOverlayRenderer.color = overlayColor;
             }
+        }
+
+        public void ApplyHintHighlight(bool active)
+        {
+            CacheReferencesFromHierarchy();
+            if (tileFaceRenderer == null)
+            {
+                return;
+            }
+
+            if (active)
+            {
+                if (!_hintHighlightActive)
+                {
+                    _savedFaceColor = tileFaceRenderer.color;
+                }
+
+                _hintHighlightActive = true;
+                tileFaceRenderer.color = HintHighlightFaceColor;
+                return;
+            }
+
+            if (_hintHighlightActive)
+            {
+                tileFaceRenderer.color = _savedFaceColor;
+            }
+
+            _hintHighlightActive = false;
         }
 
         private static Color ScaleColorBrightness(Color baseColor, float scale)
