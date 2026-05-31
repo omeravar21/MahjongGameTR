@@ -51,6 +51,7 @@ namespace MahjongGame.Tiles
 
             tileView.CacheReferencesFromHierarchy();
             tileView.ApplyVisualState(State, Type);
+            EnsureSelectionCollider();
         }
 
         public static bool HasRequiredTileHierarchy(Transform tileRoot)
@@ -78,6 +79,30 @@ namespace MahjongGame.Tiles
                 BoardGridDefinition.DefaultCellWidth,
                 BoardGridDefinition.DefaultCellHeight,
                 GetSharedTileSprite());
+
+            EnsureSelectionCollider(tileRoot);
+        }
+
+        public static void EnsureSelectionCollider(Transform tileRoot)
+        {
+            if (tileRoot == null)
+            {
+                return;
+            }
+
+            BoxCollider2D collider = tileRoot.GetComponent<BoxCollider2D>();
+            if (collider == null)
+            {
+                collider = tileRoot.gameObject.AddComponent<BoxCollider2D>();
+            }
+
+            collider.size = Vector2.one;
+            collider.offset = Vector2.zero;
+        }
+
+        private void EnsureSelectionCollider()
+        {
+            EnsureSelectionCollider(transform);
         }
 
         public TileIdentity GetIdentity()

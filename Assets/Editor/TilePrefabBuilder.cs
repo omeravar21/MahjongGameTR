@@ -29,6 +29,7 @@ namespace MahjongGame.Editor
                     0,
                     TileType.Normal);
                 tileComponent.Initialize(previewData);
+                Tile.EnsureSelectionCollider(tileObject.transform);
 
                 PrefabUtility.SaveAsPrefabAsset(tileObject, TilePrefabPath);
                 AssetDatabase.SaveAssets();
