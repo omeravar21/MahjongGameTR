@@ -237,6 +237,26 @@ namespace MahjongGame.Tray
             }
         }
 
+        internal bool TryRestoreStoredTile(Tile tile, int slotIndex, Transform slotTransform)
+        {
+            if (tile == null || !TrayRootDefinition.IsValidSlotIndex(slotIndex) || slotTransform == null)
+            {
+                return false;
+            }
+
+            _pendingAdmissions.Remove(tile);
+            _tilesBySlot[slotIndex] = tile;
+            tile.SetState(TileState.InTray);
+            tile.SetColliderEnabled(false);
+            tile.transform.SetParent(slotTransform, false);
+            tile.transform.localPosition = Vector3.zero;
+            tile.transform.localScale = Vector3.one;
+            tile.ApplyTraySorting(slotIndex);
+            TrayEvents.RaiseTrayTileStored(
+                new TrayTileStoredContext(tile, slotIndex, StoredTileCount));
+            return true;
+        }
+
         private static void DestroyRuntimeTile(Tile tile)
         {
             if (tile == null)

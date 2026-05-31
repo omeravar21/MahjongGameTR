@@ -100,6 +100,122 @@ namespace MahjongGame.Board
             return spawnedCount == boardData.TileCount;
         }
 
+        public bool RestoreBoardTiles(SavedBoardState boardState)
+        {
+            if (boardState == null || boardState.tiles == null || boardState.tiles.Length == 0)
+            {
+                Debug.LogWarning("[BoardSpawner] Saved board state is not available.");
+                return false;
+            }
+
+            if (tilePrefab == null)
+            {
+                Debug.LogWarning("[BoardSpawner] Tile prefab is not configured.");
+                return false;
+            }
+
+            Transform boardRoot = transform;
+            BoardLayerVisualController layerVisualController = boardRoot.GetComponent<BoardLayerVisualController>();
+            if (layerVisualController == null)
+            {
+                Debug.LogWarning("[BoardSpawner] BoardLayerVisualController is missing on BoardRoot.");
+                return false;
+            }
+
+            ClearRuntimeTiles(boardRoot);
+            BoardLayerVisualController.EnforceLayerContainerOrder(boardRoot);
+
+            int restoredCount = 0;
+            for (int index = 0; index < boardState.tiles.Length; index++)
+            {
+                SavedTileState savedTile = boardState.tiles[index];
+                Tile tile = SpawnSingleTile(savedTile, boardRoot, layerVisualController);
+                if (tile != null)
+                {
+                    restoredCount++;
+                }
+            }
+
+            Debug.Log("[BoardSpawner] Restored runtime board from save: tiles=" + restoredCount + ".");
+            return restoredCount == boardState.tiles.Length;
+        }
+
+        public Tile SpawnSingleTile(SavedTileState savedTile)
+        {
+            Transform boardRoot = transform;
+            BoardLayerVisualController layerVisualController = boardRoot.GetComponent<BoardLayerVisualController>();
+            if (layerVisualController == null)
+            {
+                return null;
+            }
+
+            return SpawnSingleTile(savedTile, boardRoot, layerVisualController);
+        }
+
+        private Tile SpawnSingleTile(
+            SavedTileState savedTile,
+            Transform boardRoot,
+            BoardLayerVisualController layerVisualController)
+        {
+            if (savedTile == null || tilePrefab == null || layerVisualController == null)
+            {
+                return null;
+            }
+
+            BoardGridCoordinate gridCoordinate = new BoardGridCoordinate(savedTile.column, savedTile.row);
+            if (!gridCoordinate.IsValid || !BoardLayerDefinition.IsValidLayerIndex(savedTile.layerIndex))
+            {
+                return null;
+            }
+
+            GameObject tileObject = Instantiate(tilePrefab);
+            if (tileObject == null)
+            {
+                return null;
+            }
+
+            tileObject.name = "Tile_"
+                + savedTile.tileId
+                + "_L"
+                + savedTile.layerIndex
+                + "_"
+                + savedTile.column
+                + "_"
+                + savedTile.row;
+
+            Tile tile = tileObject.GetComponent<Tile>();
+            if (tile == null)
+            {
+                DestroyTileObject(tileObject);
+                return null;
+            }
+
+            TileType tileType = savedTile.isClosed
+                ? TileType.Closed
+                : savedTile.isJoker
+                    ? TileType.Joker
+                    : TileType.Normal;
+            TileData tileData = new TileData(
+                savedTile.tileId,
+                gridCoordinate,
+                savedTile.layerIndex,
+                tileType,
+                isClosed: savedTile.isClosed,
+                isJoker: savedTile.isJoker,
+                symbolId: savedTile.symbolId);
+            tile.Initialize(tileData);
+
+            TileState restoredState = (TileState)savedTile.tileState;
+            if (restoredState == TileState.InTray || restoredState == TileState.MovingToTray)
+            {
+                restoredState = TileState.OnBoard;
+            }
+
+            tile.SetState(restoredState);
+            layerVisualController.PlaceTile(tile, savedTile.layerIndex, gridCoordinate);
+            return tile;
+        }
+
         public void ClearRuntimeTiles(Transform boardRoot)
         {
             if (boardRoot == null)
