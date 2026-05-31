@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using MahjongGame.Board;
 using MahjongGame.Matching;
+using MahjongGame.Session;
 using MahjongGame.Tray;
 using UnityEngine;
 
@@ -29,6 +30,7 @@ namespace MahjongGame.Tiles
             passed &= ValidateRequiredComponent<TileMovementController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<TrayController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<MatchController>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<SessionDirector>(gameplayRoot, reportBuilder);
             passed &= ValidateMatchExecutionEvents(reportBuilder);
             passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
 

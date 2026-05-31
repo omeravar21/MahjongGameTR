@@ -380,6 +380,7 @@ GameObject:
   - component: {fileID: 800000039}
   - component: {fileID: 800000042}
   - component: {fileID: 800000043}
+  - component: {fileID: 800000044}
   m_Layer: 0
   m_Name: GameplayRoot
   m_TagString: Untagged
@@ -491,6 +492,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trayController: {fileID: 800000042}
+--- !u!114 &800000044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800000012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6789012345678abcd1044, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &800000000
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,7 +552,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 800000000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d245678901abcdef0123456789abcd023, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a56e31ec29a4571942a940965163763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boardRootTransform: {fileID: 800000001}
@@ -553,7 +566,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 800000000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f789012345abcdef0123456789abcd078, type: 3}
+  m_Script: {fileID: 11500000, guid: 76ce6682d2794d5486c976f924d5adb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boardRootTransform: {fileID: 800000001}
