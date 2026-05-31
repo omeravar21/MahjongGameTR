@@ -12,6 +12,7 @@ namespace MahjongGame.Core.Save
         public int highestLevel = 1;
         public long globalPerformanceScore;
         public int highestGlobalRank;
+        public int totalLevelsCompleted;
         public string activeSymbolSetId = string.Empty;
         public BoosterCountsSaveData boosterCounts = new BoosterCountsSaveData();
         public GameSettingsSaveData settings = new GameSettingsSaveData();
