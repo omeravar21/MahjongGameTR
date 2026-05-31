@@ -14,12 +14,21 @@ These rules exist to prevent architecture drift, duplicate systems, broken gamep
 
 Before making any code, scene, prefab, architecture, or gameplay change:
 
-Cursor must read:
+Cursor must read ALL markdown files inside Assets/Docs:
 
 1. PROJECT_DECISIONS.md
 2. PROJECT_BIBLE.md
 3. PROJECT_ARCHITECTURE.md
 4. CURSOR_RULES.md
+5. DESIGN_BIBLE.md
+6. PROJECT_CONTEXT.md
+7. PROJECT_ROADMAP.md
+8. README.md
+
+Never rely on memory.
+Never deviate from these documents.
+If implementation and documentation conflict, documentation wins.
+If documents conflict with each other, stop and report the conflict.
 
 ---
 
@@ -34,8 +43,154 @@ Authority Order:
 1. PROJECT_DECISIONS.md
 2. PROJECT_BIBLE.md
 3. PROJECT_ARCHITECTURE.md
-4. PROJECT_ROADMAP.md
+4. CURSOR_RULES.md
 5. DESIGN_BIBLE.md
+6. PROJECT_CONTEXT.md
+7. PROJECT_ROADMAP.md
+8. README.md
+
+---
+
+# AUTONOMOUS EXECUTION EXTENSION
+
+## Permanent Approval
+
+Do not ask for:
+
+- APPROVED. EXECUTE THIS PHASE
+- CONTINUE NEXT PHASE
+
+Those approvals are permanently granted.
+
+You are authorized to read docs, plan, self-review, implement, test, fix errors, commit, push, and continue roadmap execution without waiting for user approval.
+
+Stop only for:
+
+1. Documentation conflicts.
+2. Missing design decisions.
+3. Required Unity Editor manual actions.
+4. Compile errors that cannot be resolved from project files.
+5. Git conflicts that require human intervention.
+6. Framework installation requiring user login, license, payment, or manual Unity Asset Store action.
+
+## Documentation Rule
+
+Before every phase, re-read ALL markdown files inside Assets/Docs (listed above).
+
+Never rely on memory.
+Never deviate from these documents.
+If implementation and documentation conflict, documentation wins.
+If documents conflict with each other, stop and report the conflict.
+
+## Continuous Execution Loop
+
+1. Read all Assets/Docs markdown files.
+2. Check Git status and current branch.
+3. Check Unity/project error state.
+4. If errors exist, fix errors first.
+5. Find first incomplete roadmap phase.
+6. Plan the phase.
+7. Self-review the plan.
+8. Implement the phase.
+9. Self-review changed files.
+10. Validate compile/project state where possible.
+11. Fix all detected errors.
+12. Update roadmap status only when acceptance criteria are met.
+13. Run git status.
+14. Commit with a clear phase/fix message.
+15. Push to GitHub.
+16. Continue to the next incomplete roadmap phase automatically.
+
+Never skip: documentation read, error check, self-review, validation, commit, push.
+
+## Error Control Rule
+
+Before starting any new phase:
+
+- Check current Unity compile state where possible.
+- Check current known errors.
+- Check broken serialized references.
+- Check missing scripts.
+- Check architecture violations.
+- Check Git working tree.
+
+If errors exist:
+
+- Fix errors first.
+- Do not start new feature work.
+- Do not continue roadmap.
+- Do not commit broken code.
+- Do not create workaround systems.
+- Fix the root cause.
+- Validate again.
+- Then commit and push the fix.
+
+## Framework Rule
+
+Use approved helper frameworks only when appropriate for the current roadmap phase.
+
+Approved frameworks:
+
+- DOTween / DOTween Pro for animation, UI transitions, tile movement, match effects, door animation.
+- Unity Addressables for scalable assets, tile sets, themes, VFX, audio packs.
+- Unity Localization for Turkish/English UI text and menu localization.
+- Unity Test Framework for generation checks, validators, deadlock/opening-move tests.
+- Google AdMob Unity Plugin for rewarded ads when booster ad flow is implemented.
+- Firebase Analytics / Unity Gaming Services Analytics before external testing or soft launch.
+- Firebase Crashlytics before external testing or soft launch.
+- Unity Audio Mixer for music/SFX settings.
+- Unity Particle System/VFX packs for match, shatter, joker, win/lose polish.
+- Nice Vibrations or custom haptics during polish.
+- Lean Pool or custom pooling when performance requires it.
+- Odin Inspector only if editor tooling complexity justifies it.
+
+Do not install or use:
+
+- Ready-made Mahjong generators.
+- Ready match-game templates.
+- Ready level generators.
+- Third-party systems replacing BoardGenerationPipeline.
+- Systems replacing Tile, Tray, Match, Booster, League, or core gameplay architecture.
+
+Framework installation rules:
+
+- Do not install a framework just because it exists.
+- Install only when the current phase requires it.
+- If a framework can be installed via Unity Package Manager or manifest safely, do it.
+- If installation requires Asset Store, login, license, or manual action, stop and give exact manual instructions.
+- After installation, commit and push a separate framework checkpoint.
+
+## MCP/Tool Rule
+
+Use available MCP/tools only when they support the current phase and do not violate documentation.
+
+Allowed MCP/tool usage:
+
+- Unity MCP/tools for scene/object setup, project inspection, compile checks, and safe editor automation.
+- Git/GitHub terminal commands for status, commits, pushes, branch checks.
+- UI/UX MCP or design tools only for menu, HUD, visual hierarchy, layout, and usability planning.
+- Documentation/search tools only to read project docs and verify consistency.
+- Test/validation tools only to confirm implementation quality.
+
+Do not use MCP/tools to:
+
+- Bypass project documentation.
+- Create alternative systems.
+- Replace the custom BoardGenerationPipeline.
+- Auto-generate gameplay architecture not defined in docs.
+- Install unknown frameworks.
+- Introduce template/game-kit dependencies.
+
+Superpowers workflow:
+
+Use available Superpowers skills when useful:
+
+- brainstorming
+- writing-plans
+- executing-plans
+- systematic-debugging
+- test-driven-development
+- verification-before-completion
 
 ---
 
