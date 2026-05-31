@@ -149,6 +149,14 @@ namespace MahjongGame.Tiles
             tileView?.ApplyVisualState(State, Type);
         }
 
+        public void SetSymbolId(int symbolId)
+        {
+            if (_data != null)
+            {
+                _data.SymbolId = symbolId;
+            }
+        }
+
         public void ApplySortingOrder(int layerIndex, int row, int column)
         {
             TileSortingController.ApplySorting(tileView, layerIndex, row, column);
