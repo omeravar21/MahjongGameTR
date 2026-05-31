@@ -42,6 +42,8 @@ namespace MahjongGame.Boosters
 
         public static event Action<ShuffleExecutedContext> ShuffleExecuted;
 
+        public static event Action<BoosterType> BoosterUsedInSession;
+
         internal static void RaiseBoosterCountsChanged(BoosterCountsChangedContext context)
         {
             if (context == null)
@@ -75,6 +77,11 @@ namespace MahjongGame.Boosters
             }
 
             ShuffleExecuted?.Invoke(context);
+        }
+
+        internal static void RaiseBoosterUsedInSession(BoosterType boosterType)
+        {
+            BoosterUsedInSession?.Invoke(boosterType);
         }
     }
 }

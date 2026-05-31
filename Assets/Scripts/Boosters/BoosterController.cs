@@ -53,6 +53,7 @@ namespace MahjongGame.Boosters
 
             if (shuffleBooster.TryExecuteShuffle(out _))
             {
+                BoosterEvents.RaiseBoosterUsedInSession(BoosterType.Shuffle);
                 return true;
             }
 
@@ -75,6 +76,7 @@ namespace MahjongGame.Boosters
 
             if (undoBooster.TryExecuteUndo())
             {
+                BoosterEvents.RaiseBoosterUsedInSession(BoosterType.Undo);
                 return true;
             }
 
@@ -97,6 +99,7 @@ namespace MahjongGame.Boosters
 
             if (hintBooster.TryExecuteHint())
             {
+                BoosterEvents.RaiseBoosterUsedInSession(BoosterType.Hint);
                 return true;
             }
 

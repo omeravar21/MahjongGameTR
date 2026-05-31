@@ -38,6 +38,8 @@ namespace MahjongGame.Session
 
         public bool IsSessionActive => _currentState == LevelSessionState.Active;
 
+        public int LastBoardSeed { get; private set; }
+
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -116,7 +118,35 @@ namespace MahjongGame.Session
                 return;
             }
 
+            if (ActiveLevelSaveDirector.HasInstance
+                && ActiveLevelSaveDirector.Instance.HasPersistedActiveSession()
+                && ActiveLevelSaveDirector.Instance.TryRestoreActiveSession())
+            {
+                return;
+            }
+
             TryStartSession(out _);
+        }
+
+        public bool TryStartSessionFromRestore(int levelNumber, int boardSeed, out SessionData session)
+        {
+            session = null;
+
+            if (_currentState == LevelSessionState.Starting || _currentState == LevelSessionState.Active)
+            {
+                return false;
+            }
+
+            LastBoardSeed = boardSeed;
+            int sessionId = _nextSessionId++;
+
+            SetState(LevelSessionState.Starting);
+            SetState(LevelSessionState.Active);
+
+            _currentSession = new SessionData(sessionId, levelNumber, _currentState);
+            SessionEvents.RaiseSessionStarted(new SessionStartedContext(_currentSession, isResumeSession: true));
+            session = _currentSession;
+            return true;
         }
 
         private int ResolveLevelNumber()
@@ -242,6 +272,12 @@ namespace MahjongGame.Session
             {
                 Debug.LogWarning("[SessionDirector] BoardSpawner failed to spawn runtime board for level " + levelNumber + ".");
                 return;
+            }
+
+            LastBoardSeed = boardData.Seed;
+            if (ActiveLevelSaveDirector.HasInstance)
+            {
+                ActiveLevelSaveDirector.Instance.NotifyBoardSeed(boardData.Seed);
             }
 
             RegisterSpawnedClosedTiles(boardRoot);
