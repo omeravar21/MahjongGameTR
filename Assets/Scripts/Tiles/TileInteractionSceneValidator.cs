@@ -31,6 +31,7 @@ namespace MahjongGame.Tiles
             passed &= ValidateRequiredComponent<TrayController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<MatchController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<SessionDirector>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<WinConditionController>(gameplayRoot, reportBuilder);
             passed &= ValidateMatchExecutionEvents(reportBuilder);
             passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
 
