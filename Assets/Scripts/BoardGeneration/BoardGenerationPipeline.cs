@@ -12,6 +12,11 @@ namespace MahjongGame.BoardGeneration
                 return CreateEmptyBoardData();
             }
 
+            return GenerateValidatedBoardData(baseRecipe);
+        }
+
+        private static BoardData GenerateValidatedBoardData(LevelRecipe baseRecipe)
+        {
             BoardData lastCandidate = null;
             int maxAttempts = baseRecipe.MaxRegenerationAttempts;
             for (int attemptIndex = 0; attemptIndex < maxAttempts; attemptIndex++)
@@ -27,9 +32,7 @@ namespace MahjongGame.BoardGeneration
                 }
             }
 
-            return lastCandidate != null
-                ? lastCandidate.WithValidationFlag(false)
-                : CreateEmptyBoardData();
+            return EmergencyFallbackRecipeDefinition.GenerateFallbackBoardData(baseRecipe);
         }
 
         public static BoardData GenerateCandidateBoardData(LevelRecipe recipe)

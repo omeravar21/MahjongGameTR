@@ -98,6 +98,7 @@ namespace MahjongGame.Tiles
             passed &= OpeningMoveCheckerSystemValidator.Validate(reportBuilder);
             passed &= DeadlockRiskCheckerSystemValidator.Validate(reportBuilder);
             passed &= BoardQualityCheckerSystemValidator.Validate(reportBuilder);
+            passed &= EmergencyFallbackSystemValidator.Validate(reportBuilder);
 
             Transform boardRootForSpawner = gameplayRoot != null ? gameplayRoot.Find("BoardRoot") : null;
             if (boardRootForSpawner != null)
