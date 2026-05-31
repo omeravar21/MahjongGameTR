@@ -227,6 +227,20 @@ namespace MahjongGame.Session
                         + ", seed="
                         + variationLayout.Seed
                         + ".");
+
+                    HolePatternLayout holePatternLayout = HolePatternSelector.Apply(variationLayout, recipe);
+                    Debug.Log(
+                        "[SessionDirector] Hole pattern layout applied: holePattern="
+                        + holePatternLayout.HolePatternId
+                        + ", archetype="
+                        + holePatternLayout.ArchetypeId
+                        + ", variation="
+                        + holePatternLayout.VariationIndex
+                        + ", activeCells="
+                        + holePatternLayout.ActiveCellCount
+                        + ", seed="
+                        + holePatternLayout.Seed
+                        + ".");
                 }
             }
         }

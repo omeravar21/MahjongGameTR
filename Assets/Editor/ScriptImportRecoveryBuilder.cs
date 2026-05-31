@@ -61,7 +61,12 @@ namespace MahjongGame.Editor
             "Assets/Scripts/BoardGeneration/VariationPatternDefinition.cs",
             "Assets/Scripts/BoardGeneration/VariationSelector.cs",
             "Assets/Scripts/BoardGeneration/VariationSystemValidator.cs",
+            "Assets/Scripts/BoardGeneration/HolePatternLayout.cs",
+            "Assets/Scripts/BoardGeneration/HolePatternDefinition.cs",
+            "Assets/Scripts/BoardGeneration/HolePatternSelector.cs",
+            "Assets/Scripts/BoardGeneration/HolePatternSystemValidator.cs",
             "Assets/Editor/VariationValidationBuilder.cs",
+            "Assets/Editor/HolePatternValidationBuilder.cs",
             "Assets/Scripts/UI/DoorTransitionController.cs",
             "Assets/Scripts/UI/MainMenuNavigationController.cs",
         };
