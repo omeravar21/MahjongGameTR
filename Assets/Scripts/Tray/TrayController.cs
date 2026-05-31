@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MahjongGame.Matching;
 using MahjongGame.Tiles;
 using UnityEngine;
 
@@ -97,6 +98,39 @@ namespace MahjongGame.Tray
         {
             TrayCapacityController capacityController = ResolveTrayCapacityController();
             return capacityController != null && capacityController.HasAvailableSlot();
+        }
+
+        public bool TryReleaseMatchedTiles(MatchRequest matchRequest)
+        {
+            if (matchRequest == null)
+            {
+                return false;
+            }
+
+            int firstSlotIndex = matchRequest.FirstSlotIndex;
+            int secondSlotIndex = matchRequest.SecondSlotIndex;
+            if (!TrayRootDefinition.IsValidSlotIndex(firstSlotIndex)
+                || !TrayRootDefinition.IsValidSlotIndex(secondSlotIndex))
+            {
+                return false;
+            }
+
+            Tile firstTile = matchRequest.FirstTile;
+            Tile secondTile = matchRequest.SecondTile;
+            if (firstTile == null || secondTile == null)
+            {
+                return false;
+            }
+
+            if (_tilesBySlot[firstSlotIndex] != firstTile
+                || _tilesBySlot[secondSlotIndex] != secondTile)
+            {
+                return false;
+            }
+
+            _tilesBySlot[firstSlotIndex] = null;
+            _tilesBySlot[secondSlotIndex] = null;
+            return true;
         }
 
         private void HandleTileMovementCompleted(TileMovementRequest request)

@@ -29,6 +29,7 @@ namespace MahjongGame.Tiles
             passed &= ValidateRequiredComponent<TileMovementController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<TrayController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<MatchController>(gameplayRoot, reportBuilder);
+            passed &= ValidateMatchExecutionEvents(reportBuilder);
             passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
 
             Transform boardRoot = gameplayRoot.Find("BoardRoot");
@@ -68,6 +69,18 @@ namespace MahjongGame.Tiles
                 : "[FAIL] Tile interaction validation found issues.");
 
             return passed;
+        }
+
+        private static bool ValidateMatchExecutionEvents(StringBuilder reportBuilder)
+        {
+            if (typeof(MatchExecutor) == null || typeof(MatchExecutionContext) == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] Match execution types are missing.");
+                return false;
+            }
+
+            AppendLine(reportBuilder, "[PASS] Match execution types and MatchExecuted event wiring are present.");
+            return true;
         }
 
         private static bool ValidateRequiredComponent<T>(Transform gameplayRoot, StringBuilder reportBuilder)

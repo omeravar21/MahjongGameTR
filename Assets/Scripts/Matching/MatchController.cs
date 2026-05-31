@@ -123,6 +123,12 @@ namespace MahjongGame.Matching
                 yield return new WaitForSeconds(MatchDefinition.MatchDelaySeconds);
                 _activeMatchRequest = null;
                 MatchEvents.RaiseMatchDelayCompleted(matchRequest);
+
+                TrayController resolvedTrayController = ResolveTrayController();
+                if (MatchExecutor.ExecuteMatch(matchRequest, resolvedTrayController))
+                {
+                    MatchEvents.RaiseMatchExecuted(new MatchExecutionContext(matchRequest));
+                }
             }
 
             _processingCoroutine = null;
