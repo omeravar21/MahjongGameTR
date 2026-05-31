@@ -179,6 +179,12 @@ namespace MahjongGame.Tiles
             return trayRootTransform;
         }
 
+        public void ResetMovementState()
+        {
+            StopAllCoroutines();
+            _tilesInFlight.Clear();
+        }
+
         private static float EaseOutQuad(float normalizedTime)
         {
             float inverted = 1f - normalizedTime;

@@ -383,6 +383,7 @@ GameObject:
   - component: {fileID: 800000044}
   - component: {fileID: 800000045}
   - component: {fileID: 800000046}
+  - component: {fileID: 800000047}
   m_Layer: 0
   m_Name: GameplayRoot
   m_TagString: Untagged
@@ -531,6 +532,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6789012345678abcd1049, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &800000047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800000012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6789012345678abcd1054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &800000000
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,6 +557,7 @@ GameObject:
   - component: {fileID: 800000015}
   - component: {fileID: 800000016}
   - component: {fileID: 800000017}
+  - component: {fileID: 800000048}
   m_Layer: 0
   m_Name: BoardRoot
   m_TagString: Untagged
@@ -626,6 +640,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardRootTransform: {fileID: 800000001}
+--- !u!114 &800000048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6789012345678abcd1052, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilePrefab: {fileID: 100100000, guid: b7c8d9e0f1a2345678901234abcdef03, type: 3}
 --- !u!1 &800000020
 GameObject:
   m_ObjectHideFlags: 0

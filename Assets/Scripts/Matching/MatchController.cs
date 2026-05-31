@@ -139,6 +139,11 @@ namespace MahjongGame.Matching
             _processingCoroutine = null;
         }
 
+        public void ResetProcessingState()
+        {
+            StopQueueProcessing();
+        }
+
         private void StopQueueProcessing()
         {
             if (_processingCoroutine != null)

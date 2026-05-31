@@ -12,26 +12,6 @@ namespace MahjongGame.Editor
     {
         private const string GameScenePath = "Assets/Scenes/GameScene.unity";
         private const string TilePrefabPath = "Assets/Prefabs/Tiles/Tile.prefab";
-        private const string PreviewNamePrefix = "LayerPreview_";
-
-        private struct PreviewTileSpec
-        {
-            public int LayerIndex;
-            public int Column;
-            public int Row;
-            public int TileId;
-        }
-
-        private static readonly PreviewTileSpec[] PreviewTiles =
-        {
-            new PreviewTileSpec { LayerIndex = 0, Column = 2, Row = 3, TileId = 100 },
-            new PreviewTileSpec { LayerIndex = 1, Column = 2, Row = 3, TileId = 101 },
-            new PreviewTileSpec { LayerIndex = 2, Column = 2, Row = 3, TileId = 102 },
-            new PreviewTileSpec { LayerIndex = 3, Column = 2, Row = 3, TileId = 103 },
-            new PreviewTileSpec { LayerIndex = 0, Column = 0, Row = 1, TileId = 110 },
-            new PreviewTileSpec { LayerIndex = 1, Column = 4, Row = 2, TileId = 111 },
-            new PreviewTileSpec { LayerIndex = 2, Column = 5, Row = 5, TileId = 112 },
-        };
 
         [MenuItem("MahjongGame/Build Layer Preview")]
         public static void BuildLayerPreview()
@@ -63,13 +43,24 @@ namespace MahjongGame.Editor
                 boardRoot.gameObject.AddComponent<BoardLayerVisualController>();
             }
 
+            BoardPreviewSpawner previewSpawner = boardRoot.GetComponent<BoardPreviewSpawner>();
+            if (previewSpawner == null)
+            {
+                previewSpawner = boardRoot.gameObject.AddComponent<BoardPreviewSpawner>();
+            }
+
+            SerializedObject spawnerObject = new SerializedObject(previewSpawner);
+            spawnerObject.FindProperty("tilePrefab").objectReferenceValue = tilePrefab;
+            spawnerObject.ApplyModifiedPropertiesWithoutUndo();
+
             BoardLayerVisualController layerVisualController = boardRoot.GetComponent<BoardLayerVisualController>();
-            ClearPreviewTiles(boardRoot);
+            previewSpawner.DestroyAllRuntimeTiles(boardRoot);
             BoardLayerVisualController.EnforceLayerContainerOrder(boardRoot);
 
-            for (int i = 0; i < PreviewTiles.Length; i++)
+            BoardPreviewTileSpec[] previewTiles = BoardPreviewLayoutDefinition.DefaultTiles;
+            for (int i = 0; i < previewTiles.Length; i++)
             {
-                PreviewTileSpec spec = PreviewTiles[i];
+                BoardPreviewTileSpec spec = previewTiles[i];
                 GameObject tileObject = PrefabUtility.InstantiatePrefab(tilePrefab) as GameObject;
                 if (tileObject == null)
                 {
@@ -77,7 +68,7 @@ namespace MahjongGame.Editor
                     continue;
                 }
 
-                tileObject.name = PreviewNamePrefix + spec.LayerIndex + "_" + spec.Column + "_" + spec.Row;
+                tileObject.name = BoardPreviewLayoutDefinition.GetPreviewTileName(spec);
                 Tile tile = tileObject.GetComponent<Tile>();
                 if (tile == null)
                 {
@@ -120,27 +111,6 @@ namespace MahjongGame.Editor
             }
 
             return null;
-        }
-
-        private static void ClearPreviewTiles(Transform boardRoot)
-        {
-            for (int layerIndex = 0; layerIndex < BoardLayerDefinition.MaxLayerCount; layerIndex++)
-            {
-                Transform layerContainer = boardRoot.Find(BoardRootController.GetLayerContainerName(layerIndex));
-                if (layerContainer == null)
-                {
-                    continue;
-                }
-
-                for (int childIndex = layerContainer.childCount - 1; childIndex >= 0; childIndex--)
-                {
-                    Transform child = layerContainer.GetChild(childIndex);
-                    if (child.name.StartsWith(PreviewNamePrefix))
-                    {
-                        Object.DestroyImmediate(child.gameObject);
-                    }
-                }
-            }
         }
     }
 }

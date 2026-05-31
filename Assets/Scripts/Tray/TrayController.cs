@@ -195,6 +195,48 @@ namespace MahjongGame.Tray
             TrayEvents.RaiseTrayCapacityOverflowDetected(context);
         }
 
+        public void ResetRuntimeState()
+        {
+            for (int slotIndex = 0; slotIndex < TrayRootDefinition.SlotCount; slotIndex++)
+            {
+                DestroyRuntimeTile(_tilesBySlot[slotIndex]);
+                _tilesBySlot[slotIndex] = null;
+            }
+
+            if (_pendingAdmissions.Count > 0)
+            {
+                foreach (Tile pendingTile in _pendingAdmissions.Keys)
+                {
+                    DestroyRuntimeTile(pendingTile);
+                }
+
+                _pendingAdmissions.Clear();
+            }
+        }
+
+        private static void DestroyRuntimeTile(Tile tile)
+        {
+            if (tile == null)
+            {
+                return;
+            }
+
+            GameObject tileObject = tile.gameObject;
+            if (tileObject == null)
+            {
+                return;
+            }
+
+            if (Application.isPlaying)
+            {
+                Object.Destroy(tileObject);
+            }
+            else
+            {
+                Object.DestroyImmediate(tileObject);
+            }
+        }
+
         private int CountStoredTiles()
         {
             int storedCount = 0;

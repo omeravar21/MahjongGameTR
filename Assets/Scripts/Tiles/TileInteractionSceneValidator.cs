@@ -33,6 +33,7 @@ namespace MahjongGame.Tiles
             passed &= ValidateRequiredComponent<SessionDirector>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<WinConditionController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<LoseConditionController>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<SessionRestartController>(gameplayRoot, reportBuilder);
             passed &= ValidateMatchExecutionEvents(reportBuilder);
             passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
 
@@ -45,6 +46,7 @@ namespace MahjongGame.Tiles
             else
             {
                 AppendLine(reportBuilder, "[PASS] BoardRoot hierarchy is present.");
+                passed &= ValidateRequiredComponent<BoardPreviewSpawner>(boardRoot, reportBuilder);
             }
 
             Transform trayRoot = gameplayRoot.Find(TrayRootDefinition.TrayRootName);
