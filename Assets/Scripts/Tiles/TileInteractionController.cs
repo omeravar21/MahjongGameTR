@@ -68,13 +68,6 @@ namespace MahjongGame.Tiles
                 return true;
             }
 
-            if (closedTileController != null && closedTileController.RequiresTrayMove(tile))
-            {
-                result = TileInteractionResult.Rejected(TileInteractionBlockReason.ClosedTileAwaitingSecondTap);
-                TileInteractionEvents.RaiseTileInteractionRejected(tile, result);
-                return false;
-            }
-
             if (movementController == null)
             {
                 result = TileInteractionResult.Rejected(TileInteractionBlockReason.MissingSceneWiring);

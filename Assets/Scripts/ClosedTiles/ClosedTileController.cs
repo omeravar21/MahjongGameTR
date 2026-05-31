@@ -28,11 +28,13 @@ namespace MahjongGame.ClosedTiles
         private void OnEnable()
         {
             SessionEvents.SessionStarted += HandleSessionStarted;
+            TileMovementEvents.TileMovementStarted += HandleTileMovementStarted;
         }
 
         private void OnDisable()
         {
             SessionEvents.SessionStarted -= HandleSessionStarted;
+            TileMovementEvents.TileMovementStarted -= HandleTileMovementStarted;
         }
 
         public int GetRegisteredClosedTileCount()
@@ -170,6 +172,31 @@ namespace MahjongGame.ClosedTiles
         private void HandleSessionStarted(SessionStartedContext context)
         {
             ResetRuntimeState();
+        }
+
+        private void HandleTileMovementStarted(TileMovementRequest request)
+        {
+            if (request == null || request.Tile == null)
+            {
+                return;
+            }
+
+            int tileId = request.Tile.TileId;
+            if (!IsClosedTile(tileId))
+            {
+                return;
+            }
+
+            if (TryGetClosedTileState(tileId, out ClosedTileState state)
+                && state == ClosedTileState.Revealed)
+            {
+                TryUnregisterClosedTileLeavingBoard(tileId);
+            }
+        }
+
+        private void TryUnregisterClosedTileLeavingBoard(int tileId)
+        {
+            _registeredClosedTiles.Remove(tileId);
         }
     }
 }

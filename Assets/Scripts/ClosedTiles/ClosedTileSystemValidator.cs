@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using MahjongGame.Board;
 using MahjongGame.Tiles;
+using MahjongGame.Tray;
 using UnityEngine;
 
 namespace MahjongGame.ClosedTiles
@@ -30,6 +31,7 @@ namespace MahjongGame.ClosedTiles
             passed &= ValidateDefinition(reportBuilder);
             passed &= ValidateRegistryBehavior(closedTileController, reportBuilder);
             passed &= ValidateRevealBehavior(closedTileController, reportBuilder);
+            passed &= ValidateSecondTapTrayMove(gameplayRoot, closedTileController, reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Closed tile system validation completed successfully."
@@ -247,6 +249,104 @@ namespace MahjongGame.ClosedTiles
             AppendLine(reportBuilder, passed
                 ? "[PASS] Closed tile reveal behavior is valid."
                 : "[FAIL] Closed tile reveal behavior validation failed.");
+
+            return passed;
+        }
+
+        private static bool ValidateSecondTapTrayMove(
+            Transform gameplayRoot,
+            ClosedTileController closedTileController,
+            StringBuilder reportBuilder)
+        {
+            if (closedTileController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] ClosedTileController is unavailable for second-tap validation.");
+                return false;
+            }
+
+            TileInteractionController interactionController = gameplayRoot.GetComponent<TileInteractionController>();
+            TileMovementController movementController = gameplayRoot.GetComponent<TileMovementController>();
+            TrayController trayController = gameplayRoot.GetComponent<TrayController>();
+
+            if (interactionController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] TileInteractionController is missing for second-tap validation.");
+                return false;
+            }
+
+            if (movementController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] TileMovementController is missing for second-tap validation.");
+                return false;
+            }
+
+            if (trayController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] TrayController is missing for second-tap validation.");
+                return false;
+            }
+
+            closedTileController.ResetRuntimeState();
+            trayController.ResetRuntimeState();
+            movementController.ResetMovementState();
+
+            GameObject tempTileObject = new GameObject("ClosedTileSecondTapValidationTile");
+            Tile tile = tempTileObject.AddComponent<Tile>();
+            TileData tileData = new TileData(
+                502,
+                new BoardGridCoordinate(3, 3),
+                0,
+                TileType.Closed,
+                isClosed: true,
+                symbolId: 7);
+            tile.Initialize(tileData);
+
+            bool passed = true;
+
+            if (!closedTileController.TryRegisterClosedTile(tile)
+                || !closedTileController.TryRevealClosedTile(tile)
+                || tile.State != TileState.Revealed)
+            {
+                AppendLine(reportBuilder, "[FAIL] Closed tile setup for second-tap validation failed.");
+                passed = false;
+            }
+
+            if (passed && !interactionController.TryHandleInteraction(tile, out TileInteractionResult result))
+            {
+                AppendLine(reportBuilder, "[FAIL] Second tap on revealed closed tile was rejected.");
+                passed = false;
+            }
+
+            if (passed && !result.IsAccepted)
+            {
+                AppendLine(reportBuilder, "[FAIL] Second tap on revealed closed tile did not accept tray movement.");
+                passed = false;
+            }
+
+            if (passed
+                && (closedTileController.IsClosedTile(502)
+                    || closedTileController.HasRevealedClosedTile))
+            {
+                AppendLine(reportBuilder, "[FAIL] Closed tile registry was not cleared when movement started.");
+                passed = false;
+            }
+
+            if (passed
+                && tile.State != TileState.MovingToTray
+                && tile.State != TileState.InTray)
+            {
+                AppendLine(reportBuilder, "[FAIL] Revealed closed tile did not enter tray movement state.");
+                passed = false;
+            }
+
+            trayController.ResetRuntimeState();
+            movementController.ResetMovementState();
+            closedTileController.ResetRuntimeState();
+            Object.DestroyImmediate(tempTileObject);
+
+            AppendLine(reportBuilder, passed
+                ? "[PASS] Closed tile second-tap tray movement is valid."
+                : "[FAIL] Closed tile second-tap tray movement validation failed.");
 
             return passed;
         }
