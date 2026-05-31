@@ -120,6 +120,27 @@ namespace MahjongGame.Tiles
                 AppendLine(reportBuilder, "[PASS] All four tray slot visuals are present.");
             }
 
+            if (trayRoot.GetComponent<TrayCapacityController>() == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] TrayCapacityController is missing on TrayRoot.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] TrayCapacityController is present.");
+            }
+
+            TrayCapacityController capacityController = trayRoot.GetComponent<TrayCapacityController>();
+            if (capacityController != null && capacityController.Capacity != TrayRootDefinition.Capacity)
+            {
+                AppendLine(reportBuilder, "[FAIL] Tray capacity does not match project rule of 4.");
+                passed = false;
+            }
+            else if (capacityController != null)
+            {
+                AppendLine(reportBuilder, "[PASS] Tray capacity is configured to 4.");
+            }
+
             return passed;
         }
 

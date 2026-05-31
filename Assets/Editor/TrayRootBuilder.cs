@@ -59,6 +59,11 @@ namespace MahjongGame.Editor
                 trayRoot.gameObject.AddComponent<TrayRootController>();
             }
 
+            if (trayRoot.GetComponent<TrayCapacityController>() == null)
+            {
+                trayRoot.gameObject.AddComponent<TrayCapacityController>();
+            }
+
             TrayRootController.BuildTrayHierarchy(trayRoot);
 
             Transform trayContainer = trayRoot.Find(TrayRootDefinition.TrayContainerName);

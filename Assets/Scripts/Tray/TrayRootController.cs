@@ -33,6 +33,11 @@ namespace MahjongGame.Tray
             }
 
             EnforceTrayHierarchyOrder(trayRootTransform);
+
+            if (GetComponent<TrayCapacityController>() == null)
+            {
+                gameObject.AddComponent<TrayCapacityController>();
+            }
         }
 
         public static bool HasRequiredTrayHierarchy(Transform trayRoot)

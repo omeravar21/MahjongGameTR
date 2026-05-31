@@ -44,13 +44,13 @@ namespace MahjongGame.Tiles
                 return false;
             }
 
-            if (ResolveTrayContainerTransform() == null)
+            if (ResolveTrayRootTransform() == null)
             {
                 blockReason = TileInteractionBlockReason.MissingSceneWiring;
                 return false;
             }
 
-            if (!TryFindAvailableSlot(out int slotIndex, out Transform slotTransform))
+            if (!TrayCapacityController.TryReserveSlot(ResolveTrayRootTransform(), tile, out int slotIndex, out Transform slotTransform))
             {
                 blockReason = TileInteractionBlockReason.NoTraySlotAvailable;
                 return false;
@@ -145,79 +145,6 @@ namespace MahjongGame.Tiles
             tile.SetState(TileState.InTray);
             tile.SetColliderEnabled(false);
             TileMovementEvents.RaiseTileMovementCompleted(request);
-        }
-
-        private bool TryFindAvailableSlot(out int slotIndex, out Transform slotTransform)
-        {
-            slotIndex = -1;
-            slotTransform = null;
-
-            Transform trayContainer = ResolveTrayContainerTransform();
-            if (trayContainer == null)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < TrayRootDefinition.SlotCount; i++)
-            {
-                Transform candidateSlot = trayContainer.Find(TrayRootDefinition.GetSlotName(i));
-                if (candidateSlot == null)
-                {
-                    continue;
-                }
-
-                if (SlotHasOccupyingTile(candidateSlot))
-                {
-                    continue;
-                }
-
-                slotIndex = i;
-                slotTransform = candidateSlot;
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool SlotHasOccupyingTile(Transform slotTransform)
-        {
-            for (int childIndex = 0; childIndex < slotTransform.childCount; childIndex++)
-            {
-                Tile tile = slotTransform.GetChild(childIndex).GetComponent<Tile>();
-                if (tile == null)
-                {
-                    continue;
-                }
-
-                if (tile.State == TileState.InTray || tile.State == TileState.MovingToTray)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private Transform ResolveTrayContainerTransform()
-        {
-            Transform trayRoot = ResolveTrayRootTransform();
-            if (trayRoot == null)
-            {
-                return null;
-            }
-
-            TrayRootController trayRootController = trayRoot.GetComponent<TrayRootController>();
-            if (trayRootController != null)
-            {
-                Transform container = trayRootController.GetTrayContainer();
-                if (container != null)
-                {
-                    return container;
-                }
-            }
-
-            Transform trayContainer = trayRoot.Find(TrayRootDefinition.TrayContainerName);
-            return trayContainer != null ? trayContainer : trayRoot;
         }
 
         private Transform ResolveTrayRootTransform()
