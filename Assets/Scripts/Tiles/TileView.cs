@@ -8,6 +8,7 @@ namespace MahjongGame.Tiles
         private static readonly Color DefaultFaceColor = new Color(0.96f, 0.93f, 0.86f, 1f);
         private static readonly Color DefaultSymbolColor = new Color(0.35f, 0.28f, 0.22f, 1f);
         private static readonly Color DefaultClosedOverlayColor = new Color(0.45f, 0.35f, 0.28f, 0.85f);
+        private static readonly Color DefaultJokerSymbolColor = new Color(0.85f, 0.65f, 0.15f, 1f);
         private const float DefaultSymbolScale = 0.6f;
 
         [SerializeField] private SpriteRenderer tileFaceRenderer;
@@ -67,6 +68,9 @@ namespace MahjongGame.Tiles
             if (tileSymbolRenderer != null)
             {
                 tileSymbolRenderer.enabled = showSymbol;
+                tileSymbolRenderer.color = type == TileType.Joker
+                    ? DefaultJokerSymbolColor
+                    : DefaultSymbolColor;
             }
         }
 

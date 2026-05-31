@@ -1,6 +1,7 @@
 using MahjongGame.Board;
 using MahjongGame.BoardGeneration;
 using MahjongGame.ClosedTiles;
+using MahjongGame.Rewards;
 using MahjongGame.Core;
 using MahjongGame.Progression;
 using MahjongGame.Tiles;
@@ -244,6 +245,34 @@ namespace MahjongGame.Session
             }
 
             RegisterSpawnedClosedTiles(boardRoot);
+            RegisterSpawnedJokerTiles(boardRoot);
+        }
+
+        private void RegisterSpawnedJokerTiles(Transform boardRoot)
+        {
+            RewardDirector rewardDirector = GetComponent<RewardDirector>();
+            if (rewardDirector == null)
+            {
+                return;
+            }
+
+            JokerTileController jokerTileController = rewardDirector.GetJokerTileController();
+            if (jokerTileController == null)
+            {
+                return;
+            }
+
+            jokerTileController.ResetRuntimeState();
+
+            System.Collections.Generic.List<Tile> occupyingTiles = BoardTileOccupancyQuery.CollectOccupyingTiles(boardRoot);
+            for (int index = 0; index < occupyingTiles.Count; index++)
+            {
+                Tile tile = occupyingTiles[index];
+                if (tile != null && tile.IsJoker)
+                {
+                    jokerTileController.TryRegisterJokerTile(tile);
+                }
+            }
         }
 
         private void RegisterSpawnedClosedTiles(Transform boardRoot)

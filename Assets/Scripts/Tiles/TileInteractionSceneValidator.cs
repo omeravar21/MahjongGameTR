@@ -5,6 +5,7 @@ using MahjongGame.BoardGeneration;
 using MahjongGame.Matching;
 using MahjongGame.Combo;
 using MahjongGame.ClosedTiles;
+using MahjongGame.Rewards;
 using MahjongGame.Score;
 using MahjongGame.Session;
 using MahjongGame.Timer;
@@ -85,6 +86,7 @@ namespace MahjongGame.Tiles
             passed &= ScoreSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= ComboSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= ClosedTileSystemValidator.Validate(gameplayRoot, reportBuilder);
+            passed &= JokerSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= PerformanceScreenSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= SessionSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= DifficultySystemValidator.Validate(reportBuilder);
@@ -97,6 +99,7 @@ namespace MahjongGame.Tiles
             passed &= LayerBuilderSystemValidator.Validate(reportBuilder);
             passed &= TilePairDistributorSystemValidator.Validate(reportBuilder);
             passed &= ClosedTilePatternSystemValidator.Validate(reportBuilder);
+            passed &= RewardJokerPatternSystemValidator.Validate(reportBuilder);
             passed &= BoardGenerationPipelineSystemValidator.Validate(reportBuilder);
             passed &= OpeningMoveCheckerSystemValidator.Validate(reportBuilder);
             passed &= DeadlockRiskCheckerSystemValidator.Validate(reportBuilder);

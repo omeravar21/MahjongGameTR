@@ -289,8 +289,33 @@ namespace MahjongGame.BoardGeneration
                 return true;
             }
 
-            failureReason = "Joker accessibility checks are deferred until Phase 12.";
-            return false;
+            int jokerAssignmentCount = CountJokerAssignments(boardData.TileAssignments);
+            if (jokerAssignmentCount != boardData.JokerCount)
+            {
+                failureReason = "Joker assignment count does not match recipe joker count.";
+                return false;
+            }
+
+            return true;
+        }
+
+        private static int CountJokerAssignments(IReadOnlyList<TileSymbolAssignment> assignments)
+        {
+            if (assignments == null)
+            {
+                return 0;
+            }
+
+            int count = 0;
+            for (int index = 0; index < assignments.Count; index++)
+            {
+                if (assignments[index].IsJoker)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         private static BoardQualityCheckResult CreateResult(

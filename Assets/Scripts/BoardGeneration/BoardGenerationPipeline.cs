@@ -54,7 +54,9 @@ namespace MahjongGame.BoardGeneration
 
             ClosedBoardLayout closedBoardLayout = ClosedTilePatternSelector.Apply(distributedBoardLayout, recipe);
 
-            return CreateBoardData(recipe, closedBoardLayout);
+            JokerBoardLayout jokerBoardLayout = RewardJokerPatternSelector.Apply(closedBoardLayout, recipe);
+
+            return CreateBoardData(recipe, jokerBoardLayout);
         }
 
         private static LevelRecipe ResolveBaseRecipe(int levelNumber)
@@ -67,9 +69,9 @@ namespace MahjongGame.BoardGeneration
             return LevelRecipeDefinition.GenerateRecipe(levelNumber);
         }
 
-        private static BoardData CreateBoardData(LevelRecipe recipe, ClosedBoardLayout closedBoardLayout)
+        private static BoardData CreateBoardData(LevelRecipe recipe, JokerBoardLayout jokerBoardLayout)
         {
-            if (recipe == null || closedBoardLayout == null)
+            if (recipe == null || jokerBoardLayout == null)
             {
                 return CreateEmptyBoardData();
             }
@@ -77,21 +79,21 @@ namespace MahjongGame.BoardGeneration
             return new BoardData(
                 recipe.LevelNumber,
                 recipe.Seed,
-                closedBoardLayout.ArchetypeId,
-                closedBoardLayout.VariationIndex,
-                closedBoardLayout.HolePatternId,
-                closedBoardLayout.LayerDepth,
-                closedBoardLayout.EffectiveTileCount,
+                jokerBoardLayout.ArchetypeId,
+                jokerBoardLayout.VariationIndex,
+                jokerBoardLayout.HolePatternId,
+                jokerBoardLayout.LayerDepth,
+                jokerBoardLayout.EffectiveTileCount,
                 recipe.ClosedTileCount,
                 recipe.JokerCount,
                 false,
-                closedBoardLayout.Assignments);
+                jokerBoardLayout.Assignments);
         }
 
-        private static BoardData CreateBoardData(LevelRecipe recipe, DistributedBoardLayout distributedBoardLayout)
+        private static BoardData CreateBoardData(LevelRecipe recipe, ClosedBoardLayout closedBoardLayout)
         {
-            ClosedBoardLayout closedBoardLayout = ClosedTilePatternSelector.Apply(distributedBoardLayout, recipe);
-            return CreateBoardData(recipe, closedBoardLayout);
+            JokerBoardLayout jokerBoardLayout = RewardJokerPatternSelector.Apply(closedBoardLayout, recipe);
+            return CreateBoardData(recipe, jokerBoardLayout);
         }
 
         private static BoardData CreateEmptyBoardData()
