@@ -54,6 +54,11 @@ namespace MahjongGame.Core
             {
                 gameObject.AddComponent<LevelRecipeGenerator>();
             }
+
+            if (GetComponent<GridMaskGenerator>() == null)
+            {
+                gameObject.AddComponent<GridMaskGenerator>();
+            }
         }
 
         private void Start()

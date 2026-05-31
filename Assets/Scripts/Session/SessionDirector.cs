@@ -190,6 +190,19 @@ namespace MahjongGame.Session
                     + recipe.MaxRegenerationAttempts
                     + ".");
             }
+
+            if (GridMaskGenerator.HasInstance)
+            {
+                GridMask gridMask = GridMaskGenerator.Instance.GenerateMask(levelNumber);
+                Debug.Log(
+                    "[SessionDirector] Grid mask generated: activeCells="
+                    + gridMask.ActiveCellCount
+                    + ", totalCells="
+                    + gridMask.TotalCellCount
+                    + ", seed="
+                    + gridMask.Seed
+                    + ".");
+            }
         }
 
         private void SetState(LevelSessionState newState)
