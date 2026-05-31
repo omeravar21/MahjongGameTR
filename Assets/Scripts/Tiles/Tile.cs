@@ -98,8 +98,8 @@ namespace MahjongGame.Tiles
 
         public void ApplySortingOrder(int layerIndex, int row, int column)
         {
-            int baseOrder = layerIndex * 100 + row * 10 + column;
-            tileView?.ApplySorting(baseOrder);
+            TileSortingController.ApplySorting(tileView, layerIndex, row, column);
+            tileView?.ApplyLayerDepthVisuals(layerIndex);
         }
 
         private static Sprite _sharedTileSprite;

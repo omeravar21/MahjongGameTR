@@ -399,6 +399,7 @@ GameObject:
   - component: {fileID: 800000001}
   - component: {fileID: 800000014}
   - component: {fileID: 800000015}
+  - component: {fileID: 800000016}
   m_Layer: 0
   m_Name: BoardRoot
   m_TagString: Untagged
@@ -455,6 +456,19 @@ MonoBehaviour:
   cellWidth: 1.2
   cellHeight: 1.2
   cellColor: {r: 0.35, g: 0.28, b: 0.22, a: 0.35}
+--- !u!114 &800000016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1d2e3f4a5b6789012345678abcd0303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardRootTransform: {fileID: 800000001}
 --- !u!1 &800000020
 GameObject:
   m_ObjectHideFlags: 0

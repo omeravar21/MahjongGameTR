@@ -1,3 +1,4 @@
+using MahjongGame.Board;
 using UnityEngine;
 
 namespace MahjongGame.Tiles
@@ -84,6 +85,37 @@ namespace MahjongGame.Tiles
             {
                 closedOverlayRenderer.sortingOrder = baseOrder + 2;
             }
+        }
+
+        public void ApplyLayerDepthVisuals(int layerIndex)
+        {
+            float shadowScale = BoardLayerDefinition.GetLayerShadowScale(layerIndex);
+
+            if (tileFaceRenderer != null)
+            {
+                tileFaceRenderer.color = ScaleColorBrightness(DefaultFaceColor, shadowScale);
+            }
+
+            if (tileSymbolRenderer != null)
+            {
+                tileSymbolRenderer.color = ScaleColorBrightness(DefaultSymbolColor, shadowScale);
+            }
+
+            if (closedOverlayRenderer != null)
+            {
+                Color overlayColor = DefaultClosedOverlayColor;
+                overlayColor.a *= shadowScale;
+                closedOverlayRenderer.color = overlayColor;
+            }
+        }
+
+        private static Color ScaleColorBrightness(Color baseColor, float scale)
+        {
+            return new Color(
+                baseColor.r * scale,
+                baseColor.g * scale,
+                baseColor.b * scale,
+                baseColor.a);
         }
 
         private static Transform CreateChildRenderer(

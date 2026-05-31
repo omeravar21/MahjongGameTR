@@ -42,6 +42,11 @@ namespace MahjongGame.Editor
                 boardRoot.gameObject.AddComponent<BoardGridVisualController>();
             }
 
+            if (boardRoot.GetComponent<BoardLayerVisualController>() == null)
+            {
+                boardRoot.gameObject.AddComponent<BoardLayerVisualController>();
+            }
+
             BoardGridVisualController.BuildGridVisual(
                 boardRoot,
                 BoardGridDefinition.DefaultCellWidth,
