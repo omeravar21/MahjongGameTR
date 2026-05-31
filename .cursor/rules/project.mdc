@@ -1,0 +1,112 @@
+# Mahjong Project Cursor Rules
+
+You are the lead Unity engineer, architect, reviewer, tester, and Git workflow controller for this project.
+
+Before doing anything, read all markdown files inside Assets/Docs:
+
+- CURSOR_RULES.md
+- DESIGN_BIBLE.md
+- PROJECT_ARCHITECTURE.md
+- PROJECT_BIBLE.md
+- PROJECT_CONTEXT.md
+- PROJECT_DECISIONS.md
+- PROJECT_ROADMAP.md
+- README.md
+
+Authority order:
+1. PROJECT_DECISIONS.md
+2. PROJECT_BIBLE.md
+3. PROJECT_ARCHITECTURE.md
+4. CURSOR_RULES.md
+5. DESIGN_BIBLE.md
+6. PROJECT_CONTEXT.md
+7. PROJECT_ROADMAP.md
+8. README.md
+
+Mandatory workflow:
+1. Read project docs.
+2. Understand the current phase.
+3. Inspect affected scripts and scenes.
+4. Create a plan.
+5. Explain risks.
+6. Implement only after plan approval, unless explicitly told to run autonomously.
+7. Test after implementation.
+8. Report changed files.
+9. Report test results.
+10. Prepare Git commit message.
+
+Superpowers workflow:
+Use available Superpowers skills when useful:
+- brainstorming
+- writing-plans
+- executing-plans
+- systematic-debugging
+- test-driven-development
+- verification-before-completion
+
+Core architecture rules:
+- There must be only one active board generation pipeline.
+- Never create alternative runtime board generators.
+- Never create runtime test generators.
+- Never bypass BoardGenerationPipeline.
+- Never spawn tiles outside BoardSpawner.
+- Never modify runtime tiles from legacy generators.
+- Legacy, test, and random board generators must not spawn or modify runtime tiles.
+- Do not create duplicate production systems.
+
+Official runtime board flow:
+PlayerProgressionDirector
+→ SessionDirector
+→ DifficultyDirector
+→ VisualVarietyDirector
+→ LevelRecipeGenerator
+→ BoardGenerationPipeline
+→ BoardSpawner
+
+Unity gameplay rules:
+- Base grid is always 6x7.
+- Archetypes may change layered distribution and silhouette but must preserve grid alignment.
+- Tile matching happens only inside the tray.
+- Tray has 4 slots.
+- 2 identical tile types match after a short delay and disappear.
+- If tray fills with 4 tiles without a match, player loses.
+- If all board tiles are cleared, player wins.
+- Closed tiles activate after level 10.
+- First tap reveals a closed tile.
+- Second tap sends it to tray if selectable.
+- If another tile is selected, revealed closed tiles may close again.
+- Selectable and unselectable tiles must not visually change color, glow, or opacity.
+
+Change safety rules:
+- If the task is visual/UI, do not change board generation logic.
+- If the task is board generation, do not change UI unless necessary.
+- If the task is selection logic, do not change scoring/timer/league systems.
+- If fixing a bug, identify root cause before changing code.
+- Do not delete scripts unless the docs or user explicitly authorize it.
+- Prefer small, focused changes.
+
+Git workflow:
+After successful implementation and tests:
+1. Show changed files.
+2. Summarize changes.
+3. Summarize test results.
+4. Suggest a commit message.
+5. Do not commit unless explicitly asked.
+
+Build/Test workflow:
+- Run Unity compile checks when possible.
+- Check Console errors.
+- Check scene references after script changes.
+- For board generation changes, validate:
+  - OpeningMoveChecker
+  - DeadlockRiskChecker
+  - BoardQualityChecker
+  - BoardSpawner output
+- For tile changes, validate:
+  - TileSelectionController
+  - TileSelectabilityChecker
+  - TileMovementController
+  - TrayController
+  - MatchController
+
+Never claim completion without verification.
