@@ -29,6 +29,7 @@ namespace MahjongGame.ClosedTiles
             passed &= ValidateTypesAndEvents(reportBuilder);
             passed &= ValidateDefinition(reportBuilder);
             passed &= ValidateRegistryBehavior(closedTileController, reportBuilder);
+            passed &= ValidateRevealBehavior(closedTileController, reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Closed tile system validation completed successfully."
@@ -170,6 +171,84 @@ namespace MahjongGame.ClosedTiles
 
             AppendLine(reportBuilder, "[PASS] Closed tile registry registration and reset behave correctly.");
             return true;
+        }
+
+        private static bool ValidateRevealBehavior(
+            ClosedTileController closedTileController,
+            StringBuilder reportBuilder)
+        {
+            if (closedTileController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] ClosedTileController is unavailable for reveal validation.");
+                return false;
+            }
+
+            closedTileController.ResetRuntimeState();
+
+            GameObject tempTileObject = new GameObject("ClosedTileRevealValidationTile");
+            Tile tile = tempTileObject.AddComponent<Tile>();
+            TileData tileData = new TileData(
+                501,
+                new BoardGridCoordinate(2, 2),
+                0,
+                TileType.Closed,
+                isClosed: true,
+                symbolId: 5);
+            tile.Initialize(tileData);
+
+            bool passed = true;
+
+            if (!closedTileController.TryRegisterClosedTile(tile)
+                || closedTileController.GetRegisteredClosedTileCount() != 1
+                || tile.State != TileState.Closed)
+            {
+                AppendLine(reportBuilder, "[FAIL] Closed tile registration for reveal validation failed.");
+                passed = false;
+            }
+
+            if (passed && !closedTileController.TryRevealClosedTile(tile))
+            {
+                AppendLine(reportBuilder, "[FAIL] TryRevealClosedTile did not reveal a registered closed tile.");
+                passed = false;
+            }
+
+            if (passed
+                && (!closedTileController.TryGetClosedTileState(501, out ClosedTileState revealedState)
+                    || revealedState != ClosedTileState.Revealed
+                    || tile.State != TileState.Revealed
+                    || !closedTileController.HasRevealedClosedTile))
+            {
+                AppendLine(reportBuilder, "[FAIL] Closed tile reveal did not update registry and tile state.");
+                passed = false;
+            }
+
+            if (passed && closedTileController.TryRevealClosedTile(tile))
+            {
+                AppendLine(reportBuilder, "[FAIL] TryRevealClosedTile should not reveal an already revealed tile.");
+                passed = false;
+            }
+
+            if (passed && !closedTileController.RequiresTrayMove(tile))
+            {
+                AppendLine(reportBuilder, "[FAIL] RequiresTrayMove should be true for a revealed closed tile.");
+                passed = false;
+            }
+
+            closedTileController.ResetRuntimeState();
+            Object.DestroyImmediate(tempTileObject);
+
+            if (closedTileController.GetRegisteredClosedTileCount() != 0
+                || closedTileController.HasRevealedClosedTile)
+            {
+                AppendLine(reportBuilder, "[FAIL] Closed tile registry did not reset cleanly after reveal validation.");
+                passed = false;
+            }
+
+            AppendLine(reportBuilder, passed
+                ? "[PASS] Closed tile reveal behavior is valid."
+                : "[FAIL] Closed tile reveal behavior validation failed.");
+
+            return passed;
         }
 
         private static bool ValidateEventExists(

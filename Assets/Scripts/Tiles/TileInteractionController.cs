@@ -1,4 +1,5 @@
 using MahjongGame.Board;
+using MahjongGame.ClosedTiles;
 using UnityEngine;
 
 namespace MahjongGame.Tiles
@@ -7,6 +8,7 @@ namespace MahjongGame.Tiles
     {
         [SerializeField] private TileSelectabilityChecker selectabilityChecker;
         [SerializeField] private TileMovementController movementController;
+        [SerializeField] private ClosedTileController closedTileController;
 
         private void Awake()
         {
@@ -18,6 +20,11 @@ namespace MahjongGame.Tiles
             if (movementController == null)
             {
                 movementController = GetComponent<TileMovementController>();
+            }
+
+            if (closedTileController == null)
+            {
+                closedTileController = GetComponent<ClosedTileController>();
             }
         }
 
@@ -50,6 +57,20 @@ namespace MahjongGame.Tiles
             if (!TryValidateSelectability(boardRoot, tile, out TileInteractionBlockReason selectabilityReason))
             {
                 result = TileInteractionResult.Rejected(selectabilityReason);
+                TileInteractionEvents.RaiseTileInteractionRejected(tile, result);
+                return false;
+            }
+
+            if (closedTileController != null && closedTileController.TryRevealClosedTile(tile))
+            {
+                result = TileInteractionResult.Accepted();
+                TileInteractionEvents.RaiseTileInteractionAccepted(tile, result);
+                return true;
+            }
+
+            if (closedTileController != null && closedTileController.RequiresTrayMove(tile))
+            {
+                result = TileInteractionResult.Rejected(TileInteractionBlockReason.ClosedTileAwaitingSecondTap);
                 TileInteractionEvents.RaiseTileInteractionRejected(tile, result);
                 return false;
             }

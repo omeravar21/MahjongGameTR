@@ -55,8 +55,9 @@ namespace MahjongGame.Tiles
 
         public void ApplyVisualState(TileState state, TileType type)
         {
-            bool showClosedOverlay = state == TileState.Closed || type == TileType.Closed;
-            bool showSymbol = state != TileState.Closed && type != TileType.Closed;
+            bool showClosedOverlay = state == TileState.Closed;
+            bool showSymbol = state == TileState.Revealed
+                || (state != TileState.Closed && type != TileType.Closed);
 
             if (closedOverlayRenderer != null)
             {

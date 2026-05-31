@@ -9,6 +9,7 @@ namespace MahjongGame.Tiles
         BlockedByBothSides = 4,
         NoTraySlotAvailable = 5,
         AlreadyMoving = 6,
-        MissingSceneWiring = 7
+        MissingSceneWiring = 7,
+        ClosedTileAwaitingSecondTap = 8
     }
 }

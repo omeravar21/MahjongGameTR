@@ -89,7 +89,48 @@ namespace MahjongGame.ClosedTiles
             return true;
         }
 
+        public bool TryRevealClosedTile(Tile tile)
+        {
+            if (tile == null || tile.TileId < 0)
+            {
+                return false;
+            }
+
+            if (!IsClosedTile(tile.TileId))
+            {
+                return false;
+            }
+
+            if (!TryGetClosedTileState(tile.TileId, out ClosedTileState state)
+                || state != ClosedTileState.Closed)
+            {
+                return false;
+            }
+
+            return TryTransitionClosedTileState(tile.TileId, ClosedTileState.Revealed, tile);
+        }
+
+        public bool RequiresTrayMove(Tile tile)
+        {
+            if (tile == null || tile.TileId < 0)
+            {
+                return false;
+            }
+
+            return IsClosedTile(tile.TileId)
+                && TryGetClosedTileState(tile.TileId, out ClosedTileState state)
+                && state == ClosedTileState.Revealed;
+        }
+
         internal bool TrySetClosedTileStateForValidation(int tileId, ClosedTileState newState)
+        {
+            return TryTransitionClosedTileState(tileId, newState);
+        }
+
+        private bool TryTransitionClosedTileState(
+            int tileId,
+            ClosedTileState newState,
+            Tile tile = null)
         {
             if (!_registeredClosedTiles.TryGetValue(tileId, out ClosedTileData existingData))
             {
@@ -106,6 +147,12 @@ namespace MahjongGame.ClosedTiles
             _registeredClosedTiles[tileId] = updatedData;
             ClosedTileEvents.RaiseClosedTileStateChanged(
                 new ClosedTileStateChangedContext(tileId, previousState, newState));
+
+            if (tile != null && newState == ClosedTileState.Revealed)
+            {
+                tile.SetState(TileState.Revealed);
+            }
+
             return true;
         }
 
