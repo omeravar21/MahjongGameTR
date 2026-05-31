@@ -91,6 +91,8 @@ namespace MahjongGame.Tiles
             passed &= BoosterSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= PerformanceScreenSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= SessionSystemValidator.Validate(gameplayRoot, reportBuilder);
+            passed &= ActiveLevelSaveSystemValidator.Validate(gameplayRoot, reportBuilder);
+            passed &= SaveResumeSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= DifficultySystemValidator.Validate(reportBuilder);
             passed &= VisualVarietySystemValidator.Validate(reportBuilder);
             passed &= LevelRecipeSystemValidator.Validate(reportBuilder);
