@@ -22,20 +22,30 @@ namespace MahjongGame.Board
                 BoardRootController.BuildBoardContainers(boardRootTransform);
             }
 
-            EnforceLayerContainerOrder(boardRootTransform);
+            EnforceBoardVisualOrder(boardRootTransform);
         }
 
-        public static void EnforceLayerContainerOrder(Transform boardRoot)
+        public static void EnforceBoardVisualOrder(Transform boardRoot)
         {
             if (boardRoot == null)
             {
                 return;
             }
 
+            Transform frameRoot = boardRoot.Find(BoardPresentationDefinition.FrameRootName);
             Transform gridRoot = boardRoot.Find(BoardGridDefinition.GridRootName);
+            int nextSiblingIndex = 0;
+
+            if (frameRoot != null)
+            {
+                frameRoot.SetSiblingIndex(nextSiblingIndex);
+                nextSiblingIndex++;
+            }
+
             if (gridRoot != null)
             {
-                gridRoot.SetAsFirstSibling();
+                gridRoot.SetSiblingIndex(nextSiblingIndex);
+                nextSiblingIndex++;
             }
 
             for (int layerIndex = 0; layerIndex < BoardLayerDefinition.MaxLayerCount; layerIndex++)
@@ -43,9 +53,15 @@ namespace MahjongGame.Board
                 Transform layerContainer = boardRoot.Find(BoardRootController.GetLayerContainerName(layerIndex));
                 if (layerContainer != null)
                 {
-                    layerContainer.SetAsLastSibling();
+                    layerContainer.SetSiblingIndex(nextSiblingIndex);
+                    nextSiblingIndex++;
                 }
             }
+        }
+
+        public static void EnforceLayerContainerOrder(Transform boardRoot)
+        {
+            EnforceBoardVisualOrder(boardRoot);
         }
 
         public void PlaceTile(Tile tile, int layerIndex, BoardGridCoordinate coordinate)

@@ -53,6 +53,8 @@ namespace MahjongGame.Editor
                 BoardGridDefinition.DefaultCellHeight,
                 new Color(0.35f, 0.28f, 0.22f, 0.35f));
 
+            BoardPresentationBuilder.ApplyBoardPresentation(boardRoot, FindMainCamera(scene));
+
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
@@ -70,6 +72,23 @@ namespace MahjongGame.Editor
             }
 
             return null;
+        }
+
+        private static Camera FindMainCamera(Scene scene)
+        {
+            foreach (GameObject rootObject in scene.GetRootGameObjects())
+            {
+                if (rootObject.CompareTag("MainCamera"))
+                {
+                    Camera camera = rootObject.GetComponent<Camera>();
+                    if (camera != null)
+                    {
+                        return camera;
+                    }
+                }
+            }
+
+            return Camera.main;
         }
     }
 }
