@@ -148,6 +148,23 @@ namespace MahjongGame.Session
                     + profile.ComplexityTier
                     + ".");
             }
+
+            if (VisualVarietyDirector.HasInstance)
+            {
+                VisualVarietyProfile varietyProfile = VisualVarietyDirector.Instance.ResolveProfile(levelNumber);
+                Debug.Log(
+                    "[SessionDirector] Visual variety profile resolved: archetype="
+                    + varietyProfile.ArchetypeId
+                    + ", variation="
+                    + varietyProfile.VariationIndex
+                    + ", holePattern="
+                    + varietyProfile.HolePatternId
+                    + ", closedPattern="
+                    + varietyProfile.ClosedTilePatternId
+                    + ", seed="
+                    + varietyProfile.DeterministicSeed
+                    + ".");
+            }
         }
 
         private void SetState(LevelSessionState newState)

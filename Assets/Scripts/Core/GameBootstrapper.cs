@@ -44,6 +44,11 @@ namespace MahjongGame.Core
             {
                 gameObject.AddComponent<DifficultyDirector>();
             }
+
+            if (GetComponent<VisualVarietyDirector>() == null)
+            {
+                gameObject.AddComponent<VisualVarietyDirector>();
+            }
         }
 
         private void Start()
