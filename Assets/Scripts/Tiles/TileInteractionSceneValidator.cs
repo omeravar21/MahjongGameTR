@@ -1,0 +1,170 @@
+using System.Collections.Generic;
+using System.Text;
+using MahjongGame.Board;
+using MahjongGame.Tray;
+using UnityEngine;
+
+namespace MahjongGame.Tiles
+{
+    public static class TileInteractionSceneValidator
+    {
+        public static bool ValidateGameplayRoot(Transform gameplayRoot, StringBuilder reportBuilder = null)
+        {
+            if (reportBuilder == null)
+            {
+                reportBuilder = new StringBuilder();
+            }
+
+            bool passed = true;
+
+            if (gameplayRoot == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] GameplayRoot is missing.");
+                return false;
+            }
+
+            passed &= ValidateRequiredComponent<TileSelectionController>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<TileSelectabilityChecker>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<TileMovementController>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
+
+            Transform boardRoot = gameplayRoot.Find("BoardRoot");
+            if (boardRoot == null || !BoardRootController.HasRequiredBoardHierarchy(boardRoot))
+            {
+                AppendLine(reportBuilder, "[FAIL] BoardRoot hierarchy is incomplete.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] BoardRoot hierarchy is present.");
+            }
+
+            Transform trayRoot = gameplayRoot.Find("TrayRoot");
+            if (trayRoot == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] TrayRoot is missing.");
+                passed = false;
+            }
+            else
+            {
+                passed &= ValidateTrayAnchors(trayRoot, reportBuilder);
+            }
+
+            if (boardRoot != null)
+            {
+                passed &= ValidateBlockingRules(boardRoot, reportBuilder);
+            }
+
+            AppendLine(reportBuilder, passed
+                ? "[PASS] Tile interaction validation completed successfully."
+                : "[FAIL] Tile interaction validation found issues.");
+
+            return passed;
+        }
+
+        private static bool ValidateRequiredComponent<T>(Transform gameplayRoot, StringBuilder reportBuilder)
+            where T : Component
+        {
+            if (gameplayRoot.GetComponent<T>() != null)
+            {
+                AppendLine(reportBuilder, "[PASS] Found " + typeof(T).Name + ".");
+                return true;
+            }
+
+            AppendLine(reportBuilder, "[FAIL] Missing " + typeof(T).Name + " on GameplayRoot.");
+            return false;
+        }
+
+        private static bool ValidateTrayAnchors(Transform trayRoot, StringBuilder reportBuilder)
+        {
+            Transform trayContainer = trayRoot.Find(TrayMovementLayout.TrayContainerName);
+            if (trayContainer == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] TrayContainer is missing under TrayRoot.");
+                return false;
+            }
+
+            bool passed = true;
+            for (int slotIndex = 0; slotIndex < TrayMovementLayout.SlotCount; slotIndex++)
+            {
+                Transform slotTransform = trayContainer.Find(TrayMovementLayout.GetSlotName(slotIndex));
+                if (slotTransform == null)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Missing " + TrayMovementLayout.GetSlotName(slotIndex) + ".");
+                    passed = false;
+                }
+            }
+
+            if (passed)
+            {
+                AppendLine(reportBuilder, "[PASS] Tray slot anchors are present.");
+            }
+
+            return passed;
+        }
+
+        private static bool ValidateBlockingRules(Transform boardRoot, StringBuilder reportBuilder)
+        {
+            List<Tile> boardTiles = BoardTileOccupancyQuery.CollectOccupyingTiles(boardRoot);
+            if (boardTiles.Count == 0)
+            {
+                AppendLine(reportBuilder, "[SKIP] No preview tiles found for blocking rule checks.");
+                return true;
+            }
+
+            bool passed = true;
+            Tile topStackTile = FindTileAt(boardTiles, column: 2, row: 3, layerIndex: 3);
+            Tile middleStackTile = FindTileAt(boardTiles, column: 2, row: 3, layerIndex: 2);
+
+            if (topStackTile != null)
+            {
+                bool topSelectable = TileSelectabilityChecker.IsSelectable(boardRoot, topStackTile);
+                AppendLine(reportBuilder, topSelectable
+                    ? "[PASS] Top stack tile at (2,3) layer 3 is selectable when sides allow."
+                    : "[INFO] Top stack tile at (2,3) layer 3 is blocked by side rules.");
+            }
+
+            if (middleStackTile != null)
+            {
+                bool middleSelectable = TileSelectabilityChecker.IsSelectable(boardRoot, middleStackTile);
+                if (middleSelectable)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Middle stack tile at (2,3) layer 2 should be upper-blocked.");
+                    passed = false;
+                }
+                else
+                {
+                    AppendLine(reportBuilder, "[PASS] Middle stack tile at (2,3) layer 2 is upper-blocked.");
+                }
+            }
+
+            return passed;
+        }
+
+        private static Tile FindTileAt(List<Tile> tiles, int column, int row, int layerIndex)
+        {
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                Tile tile = tiles[i];
+                if (tile == null)
+                {
+                    continue;
+                }
+
+                if (tile.GridCoordinate.Column == column
+                    && tile.GridCoordinate.Row == row
+                    && tile.LayerIndex == layerIndex)
+                {
+                    return tile;
+                }
+            }
+
+            return null;
+        }
+
+        private static void AppendLine(StringBuilder reportBuilder, string line)
+        {
+            reportBuilder.AppendLine(line);
+        }
+    }
+}

@@ -17,25 +17,42 @@ namespace MahjongGame.Tiles
             ResolveTrayRootTransform();
         }
 
-        private void OnEnable()
-        {
-            TileSelectionEvents.TileSelectionRequested += HandleSelectionRequested;
-        }
-
-        private void OnDisable()
-        {
-            TileSelectionEvents.TileSelectionRequested -= HandleSelectionRequested;
-        }
-
         public bool TryBeginMovement(Tile tile)
         {
-            if (!CanBeginMovementForTile(tile))
+            return TryBeginMovement(tile, out _);
+        }
+
+        public bool TryBeginMovement(Tile tile, out TileInteractionBlockReason blockReason)
+        {
+            blockReason = TileInteractionBlockReason.None;
+
+            if (tile == null)
             {
+                blockReason = TileInteractionBlockReason.InvalidTile;
+                return false;
+            }
+
+            if (_tilesInFlight.Contains(tile))
+            {
+                blockReason = TileInteractionBlockReason.AlreadyMoving;
+                return false;
+            }
+
+            if (!CanBeginMovement(tile))
+            {
+                blockReason = TileInteractionBlockReason.InvalidState;
+                return false;
+            }
+
+            if (ResolveTrayContainerTransform() == null)
+            {
+                blockReason = TileInteractionBlockReason.MissingSceneWiring;
                 return false;
             }
 
             if (!TryFindAvailableSlot(out int slotIndex, out Transform slotTransform))
             {
+                blockReason = TileInteractionBlockReason.NoTraySlotAvailable;
                 return false;
             }
 
@@ -78,16 +95,6 @@ namespace MahjongGame.Tiles
                 default:
                     return false;
             }
-        }
-
-        private void HandleSelectionRequested(TileSelectionRequest selectionRequest)
-        {
-            if (selectionRequest == null)
-            {
-                return;
-            }
-
-            TryBeginMovement(selectionRequest.Tile);
         }
 
         private IEnumerator AnimateMovementCoroutine(TileMovementRequest request)
@@ -225,11 +232,6 @@ namespace MahjongGame.Tiles
         {
             float inverted = 1f - normalizedTime;
             return 1f - inverted * inverted;
-        }
-
-        private bool CanBeginMovementForTile(Tile tile)
-        {
-            return CanBeginMovement(tile) && !_tilesInFlight.Contains(tile);
         }
     }
 }
