@@ -215,6 +215,18 @@ namespace MahjongGame.Session
                         + ", seed="
                         + archetypeLayout.Seed
                         + ".");
+
+                    VariationLayout variationLayout = VariationSelector.Apply(archetypeLayout, recipe);
+                    Debug.Log(
+                        "[SessionDirector] Variation layout applied: archetype="
+                        + variationLayout.ArchetypeId
+                        + ", variation="
+                        + variationLayout.VariationIndex
+                        + ", activeCells="
+                        + variationLayout.ActiveCellCount
+                        + ", seed="
+                        + variationLayout.Seed
+                        + ".");
                 }
             }
         }
