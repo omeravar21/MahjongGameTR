@@ -255,6 +255,20 @@ namespace MahjongGame.Session
                         + ", seed="
                         + layeredBoardLayout.Seed
                         + ".");
+
+                    DistributedBoardLayout distributedBoardLayout = TilePairDistributor.Distribute(
+                        layeredBoardLayout,
+                        recipe);
+                    Debug.Log(
+                        "[SessionDirector] Tile pair distribution applied: pairs="
+                        + distributedBoardLayout.PairCount
+                        + ", effectiveTiles="
+                        + distributedBoardLayout.EffectiveTileCount
+                        + ", distinctSymbols="
+                        + distributedBoardLayout.DistinctSymbolCount
+                        + ", seed="
+                        + distributedBoardLayout.Seed
+                        + ".");
                 }
             }
         }
