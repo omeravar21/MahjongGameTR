@@ -104,6 +104,8 @@ namespace MahjongGame.Tiles
 
         private bool TryGetPointerPressPosition(out Vector2 screenPosition)
         {
+            screenPosition = default;
+
             if (Touchscreen.current != null)
             {
                 for (int touchIndex = 0; touchIndex < Touchscreen.current.touches.Count; touchIndex++)
@@ -123,13 +125,12 @@ namespace MahjongGame.Tiles
                 return true;
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Pen.current != null && Pen.current.tip.wasPressedThisFrame)
             {
-                screenPosition = Input.mousePosition;
+                screenPosition = Pen.current.position.ReadValue();
                 return true;
             }
 
-            screenPosition = default;
             return false;
         }
 
