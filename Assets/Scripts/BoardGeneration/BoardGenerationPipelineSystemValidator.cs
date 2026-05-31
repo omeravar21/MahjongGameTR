@@ -18,6 +18,7 @@ namespace MahjongGame.BoardGeneration
             passed &= ValidateDeterministicGeneration(reportBuilder);
             passed &= ValidateMetadataPreservation(reportBuilder);
             passed &= ValidatePairIntegrity(reportBuilder);
+            passed &= ValidateValidatedOutput(reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] BoardGenerationPipeline system validation completed successfully."
@@ -66,13 +67,11 @@ namespace MahjongGame.BoardGeneration
             BoardData boardData = BoardGenerationPipeline.GenerateBoardData(recipe.LevelNumber);
 
             if (boardData.LevelNumber != recipe.LevelNumber
-                || boardData.Seed != recipe.Seed
                 || boardData.ArchetypeId != recipe.ArchetypeId
                 || boardData.VariationIndex != recipe.VariationIndex
                 || boardData.HolePatternId != recipe.HolePatternId
                 || boardData.ClosedTileCount != recipe.ClosedTileCount
-                || boardData.JokerCount != recipe.JokerCount
-                || boardData.IsValidated)
+                || boardData.JokerCount != recipe.JokerCount)
             {
                 AppendLine(reportBuilder, "[FAIL] BoardGenerationPipeline dropped recipe metadata.");
                 return false;
@@ -117,6 +116,34 @@ namespace MahjongGame.BoardGeneration
 
             AppendLine(reportBuilder, "[PASS] BoardGenerationPipeline preserved valid symbol pairs.");
             return true;
+        }
+
+        private static bool ValidateValidatedOutput(StringBuilder reportBuilder)
+        {
+            bool passed = true;
+
+            for (int levelNumber = 1; levelNumber <= 10; levelNumber++)
+            {
+                BoardData boardData = BoardGenerationPipeline.GenerateBoardData(levelNumber);
+                if (!boardData.IsValidated)
+                {
+                    AppendLine(
+                        reportBuilder,
+                        "[FAIL] Level "
+                        + levelNumber
+                        + " board was not validated by BoardGenerationPipeline.");
+                    passed = false;
+                    continue;
+                }
+
+                AppendLine(
+                    reportBuilder,
+                    "[PASS] Level "
+                    + levelNumber
+                    + " board is validated by BoardGenerationPipeline.");
+            }
+
+            return passed;
         }
 
         private static bool BoardDataEqual(BoardData left, BoardData right)

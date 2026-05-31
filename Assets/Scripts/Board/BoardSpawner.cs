@@ -18,6 +18,12 @@ namespace MahjongGame.Board
                 return false;
             }
 
+            if (!boardData.IsValidated)
+            {
+                Debug.LogWarning("[BoardSpawner] BoardData is not validated.");
+                return false;
+            }
+
             if (tilePrefab == null)
             {
                 Debug.LogWarning("[BoardSpawner] Tile prefab is not configured.");

@@ -47,6 +47,30 @@ namespace MahjongGame.BoardGeneration
             return GenerateRecipe(clampedLevel, difficultyProfile, visualVarietyProfile);
         }
 
+        public static LevelRecipe CreateWithSeed(LevelRecipe recipe, int seed)
+        {
+            if (recipe == null)
+            {
+                return GenerateRecipe(LevelProgressData.MinLevel);
+            }
+
+            return new LevelRecipe(
+                recipe.LevelNumber,
+                seed,
+                recipe.TileCount,
+                recipe.LayerDepth,
+                recipe.ArchetypeId,
+                recipe.VariationIndex,
+                recipe.HolePatternId,
+                recipe.ClosedTileCount,
+                recipe.ClosedTilePatternId,
+                recipe.JokerCount,
+                recipe.RewardJokerPatternId,
+                recipe.RecommendedTimerSeconds,
+                recipe.DifficultyRating,
+                recipe.MaxRegenerationAttempts);
+        }
+
         private static RewardJokerPatternId ResolveRewardJokerPatternId(int seed, int jokerCount)
         {
             if (jokerCount <= 0)

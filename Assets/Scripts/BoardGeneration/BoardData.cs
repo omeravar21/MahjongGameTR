@@ -51,5 +51,21 @@ namespace MahjongGame.BoardGeneration
             IsValidated = isValidated;
             TileAssignments = tileAssignments ?? new TileSymbolAssignment[0];
         }
+
+        public BoardData WithValidationFlag(bool isValidated)
+        {
+            return new BoardData(
+                LevelNumber,
+                Seed,
+                ArchetypeId,
+                VariationIndex,
+                HolePatternId,
+                LayerDepth,
+                TileCount,
+                ClosedTileCount,
+                JokerCount,
+                isValidated,
+                TileAssignments);
+        }
     }
 }

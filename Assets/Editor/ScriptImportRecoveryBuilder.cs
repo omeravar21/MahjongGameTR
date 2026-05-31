@@ -87,6 +87,7 @@ namespace MahjongGame.Editor
             "Assets/Scripts/BoardGeneration/BoardQualityCheckResult.cs",
             "Assets/Scripts/BoardGeneration/BoardQualityChecker.cs",
             "Assets/Scripts/BoardGeneration/BoardQualityCheckerSystemValidator.cs",
+            "Assets/Scripts/BoardGeneration/BoardRegenerationDefinition.cs",
             "Assets/Editor/BoardQualityValidationBuilder.cs",
             "Assets/Editor/DeadlockRiskValidationBuilder.cs",
             "Assets/Editor/OpeningMoveValidationBuilder.cs",

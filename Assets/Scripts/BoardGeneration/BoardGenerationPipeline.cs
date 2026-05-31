@@ -6,7 +6,39 @@ namespace MahjongGame.BoardGeneration
     {
         public static BoardData GenerateBoardData(int levelNumber)
         {
-            LevelRecipe recipe = LevelRecipeDefinition.GenerateRecipe(levelNumber);
+            LevelRecipe baseRecipe = ResolveBaseRecipe(levelNumber);
+            if (baseRecipe == null)
+            {
+                return CreateEmptyBoardData();
+            }
+
+            BoardData lastCandidate = null;
+            int maxAttempts = baseRecipe.MaxRegenerationAttempts;
+            for (int attemptIndex = 0; attemptIndex < maxAttempts; attemptIndex++)
+            {
+                int attemptSeed = BoardRegenerationDefinition.ComputeAttemptSeed(baseRecipe.Seed, attemptIndex);
+                LevelRecipe attemptRecipe = LevelRecipeDefinition.CreateWithSeed(baseRecipe, attemptSeed);
+                BoardData candidate = GenerateCandidateBoardData(attemptRecipe);
+                lastCandidate = candidate;
+
+                if (BoardQualityChecker.Check(candidate).IsValid)
+                {
+                    return candidate.WithValidationFlag(true);
+                }
+            }
+
+            return lastCandidate != null
+                ? lastCandidate.WithValidationFlag(false)
+                : CreateEmptyBoardData();
+        }
+
+        public static BoardData GenerateCandidateBoardData(LevelRecipe recipe)
+        {
+            if (recipe == null)
+            {
+                return CreateEmptyBoardData();
+            }
+
             GridMask baseMask = GridMaskDefinition.GenerateFromRecipe(recipe);
             ArchetypeLayout archetypeLayout = ArchetypeSelector.Apply(baseMask, recipe);
             VariationLayout variationLayout = VariationSelector.Apply(archetypeLayout, recipe);
@@ -19,22 +51,21 @@ namespace MahjongGame.BoardGeneration
             return CreateBoardData(recipe, distributedBoardLayout);
         }
 
+        private static LevelRecipe ResolveBaseRecipe(int levelNumber)
+        {
+            if (LevelRecipeGenerator.HasInstance)
+            {
+                return LevelRecipeGenerator.Instance.GenerateRecipe(levelNumber);
+            }
+
+            return LevelRecipeDefinition.GenerateRecipe(levelNumber);
+        }
+
         private static BoardData CreateBoardData(LevelRecipe recipe, DistributedBoardLayout distributedBoardLayout)
         {
             if (recipe == null || distributedBoardLayout == null)
             {
-                return new BoardData(
-                    LevelProgressData.MinLevel,
-                    0,
-                    BoardArchetypeId.Diamond,
-                    0,
-                    HolePatternId.SingleCenter,
-                    1,
-                    0,
-                    0,
-                    0,
-                    false,
-                    new TileSymbolAssignment[0]);
+                return CreateEmptyBoardData();
             }
 
             return new BoardData(
@@ -49,6 +80,22 @@ namespace MahjongGame.BoardGeneration
                 recipe.JokerCount,
                 false,
                 distributedBoardLayout.Assignments);
+        }
+
+        private static BoardData CreateEmptyBoardData()
+        {
+            return new BoardData(
+                LevelProgressData.MinLevel,
+                0,
+                BoardArchetypeId.Diamond,
+                0,
+                HolePatternId.SingleCenter,
+                1,
+                0,
+                0,
+                0,
+                false,
+                new TileSymbolAssignment[0]);
         }
     }
 }
