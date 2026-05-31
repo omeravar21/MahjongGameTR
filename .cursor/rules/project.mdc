@@ -27,7 +27,9 @@ Authority order:
 7. PROJECT_ROADMAP.md
 8. README.md
 
-## Permanent approval
+## Autonomous execution extension
+
+### Permanent approval
 
 Do not ask for:
 - APPROVED. EXECUTE THIS PHASE
@@ -35,7 +37,19 @@ Do not ask for:
 
 Those approvals are permanently granted.
 
-You are authorized to read docs, plan, self-review the plan, implement, self-review the implementation, test, fix errors, commit, push, and continue roadmap execution without waiting for user approval.
+You are authorized to:
+- read docs
+- plan
+- self-review the plan
+- implement
+- self-review the implementation
+- test
+- fix errors
+- commit
+- push
+- continue roadmap execution
+
+without waiting for user approval.
 
 Stop only for:
 1. Documentation conflicts.
@@ -45,9 +59,16 @@ Stop only for:
 5. Git conflicts that require human intervention.
 6. Framework installation requiring user login, license, payment, or manual Unity Asset Store action.
 
-## Continuous execution loop
+### Documentation rule
 
-Before every phase, re-read ALL markdown files inside Assets/Docs.
+Before every phase, re-read ALL markdown files inside Assets/Docs (listed at top of this file).
+
+Never rely on memory.
+Never deviate from these documents.
+If implementation and documentation conflict, documentation wins.
+If documents conflict with each other, stop and report the conflict.
+
+### Continuous execution loop
 
 1. Read all Assets/Docs markdown files.
 2. Check Git status and current branch.
@@ -68,7 +89,7 @@ Before every phase, re-read ALL markdown files inside Assets/Docs.
 
 Never skip: documentation read, error check, self-review, validation, commit, push.
 
-## Error control
+### Error control rule
 
 Before starting any new phase:
 - Check current Unity compile state where possible.
@@ -88,7 +109,7 @@ If errors exist:
 - Validate again.
 - Then commit and push the fix.
 
-## Framework rule
+### Framework rule
 
 Use approved helper frameworks only when appropriate for the current roadmap phase.
 
@@ -120,7 +141,7 @@ Framework installation rules:
 - If installation requires Asset Store, login, license, or manual action, stop and give exact manual instructions.
 - After installation, commit and push a separate framework checkpoint.
 
-## MCP/tool rule
+### MCP/tool rule
 
 Use available MCP/tools only when they support the current phase and do not violate documentation.
 
