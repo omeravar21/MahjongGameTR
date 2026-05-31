@@ -109,15 +109,8 @@ namespace MahjongGame.Boosters
 
         private bool IsSelectable(Transform boardRoot, Tile tile)
         {
-            TileSelectabilityChecker checker = ResolveSelectabilityChecker();
-            if (checker != null)
-            {
-                return checker.TryValidate(boardRoot, tile, out TileSelectabilityResult result)
-                    && result.IsSelectable;
-            }
-
-            return TileSelectabilityChecker.TryValidate(boardRoot, tile, out TileSelectabilityResult fallbackResult)
-                && fallbackResult.IsSelectable;
+            return TileSelectabilityChecker.TryValidate(boardRoot, tile, out TileSelectabilityResult result)
+                && result.IsSelectable;
         }
 
         private static List<Tile> CollectOnBoardTiles(Transform boardRoot)

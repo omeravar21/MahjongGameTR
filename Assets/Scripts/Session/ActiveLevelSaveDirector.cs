@@ -1,3 +1,4 @@
+using MahjongGame.Board;
 using MahjongGame.Boosters;
 using MahjongGame.ClosedTiles;
 using MahjongGame.Combo;
