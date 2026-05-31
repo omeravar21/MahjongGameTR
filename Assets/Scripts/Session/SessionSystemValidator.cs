@@ -4,6 +4,7 @@ using MahjongGame.Board;
 using MahjongGame.Matching;
 using MahjongGame.Progression;
 using MahjongGame.Tiles;
+using MahjongGame.Timer;
 using MahjongGame.Tray;
 using UnityEngine;
 
@@ -49,6 +50,7 @@ namespace MahjongGame.Session
                 reportBuilder);
             passed &= ValidateTypes(reportBuilder);
             passed &= ValidateSessionEvents(reportBuilder);
+            passed &= ValidatePenaltyEvents(reportBuilder);
             passed &= ValidateResetApis(matchController, movementController, trayController, reportBuilder);
 
             if (Application.isPlaying && sessionDirector != null && sessionDirector.enabled)
@@ -60,6 +62,7 @@ namespace MahjongGame.Session
                     reportBuilder);
                 passed &= ValidatePlayModeLoop(
                     sessionDirector,
+                    gameplayRoot,
                     trayController,
                     boardRoot,
                     reportBuilder);
@@ -207,6 +210,15 @@ namespace MahjongGame.Session
             return passed;
         }
 
+        private static bool ValidatePenaltyEvents(StringBuilder reportBuilder)
+        {
+            bool passed = true;
+
+            passed &= ValidateEventExists(typeof(PenaltyEvents), nameof(PenaltyEvents.TimerExpirationPenaltyDetected), reportBuilder);
+
+            return passed;
+        }
+
         private static bool ValidateEventExists(System.Type eventType, string eventName, StringBuilder reportBuilder)
         {
             EventInfo eventInfo = eventType.GetEvent(eventName, BindingFlags.Static | BindingFlags.Public);
@@ -288,6 +300,11 @@ namespace MahjongGame.Session
                 nameof(TrayEvents.TrayCapacityOverflowDetected),
                 reportBuilder);
             passed &= ValidateSubscription(
+                loseConditionController,
+                typeof(TimerEvents),
+                nameof(TimerEvents.TimerExpired),
+                reportBuilder);
+            passed &= ValidateSubscription(
                 restartController,
                 typeof(SessionEvents),
                 nameof(SessionEvents.SessionEnded),
@@ -347,6 +364,7 @@ namespace MahjongGame.Session
 
         private static bool ValidatePlayModeLoop(
             SessionDirector sessionDirector,
+            Transform gameplayRoot,
             TrayController trayController,
             Transform boardRoot,
             StringBuilder reportBuilder)
@@ -362,6 +380,7 @@ namespace MahjongGame.Session
             passed &= ValidateSessionStart(sessionDirector, reportBuilder);
             passed &= ValidateSessionOwnership(sessionDirector, reportBuilder);
             passed &= ValidateFailAndRestart(sessionDirector, trayController, boardRoot, reportBuilder);
+            passed &= ValidateTimerExpirationFail(sessionDirector, gameplayRoot, reportBuilder);
             passed &= ValidateWinWithoutRestart(sessionDirector, reportBuilder);
 
             return passed;
@@ -465,6 +484,97 @@ namespace MahjongGame.Session
 
             AppendLine(reportBuilder, "[PASS] Lose failure triggers level restart with clean tray and repopulated board.");
             return true;
+        }
+
+        private static bool ValidateTimerExpirationFail(
+            SessionDirector sessionDirector,
+            Transform gameplayRoot,
+            StringBuilder reportBuilder)
+        {
+            if (!sessionDirector.IsSessionActive)
+            {
+                AppendLine(reportBuilder, "[FAIL] Session must be active before timer expiration validation.");
+                return false;
+            }
+
+            Transform timerRoot = gameplayRoot != null ? gameplayRoot.Find("TimerRoot") : null;
+            TimerController timerController = timerRoot != null
+                ? timerRoot.GetComponent<TimerController>()
+                : null;
+
+            if (timerController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] TimerController is missing for timer expiration validation.");
+                return false;
+            }
+
+            int levelBefore = ResolveCurrentLevel();
+            int sessionIdBefore = sessionDirector.CurrentSession.SessionId;
+            bool penaltyDetected = false;
+
+            void HandlePenaltyDetected(TimerExpirationPenaltyContext context)
+            {
+                if (context != null)
+                {
+                    penaltyDetected = true;
+                }
+            }
+
+            PenaltyEvents.TimerExpirationPenaltyDetected += HandlePenaltyDetected;
+            try
+            {
+                timerController.StopTimer();
+                if (!timerController.TryStartTimer(0.05f))
+                {
+                    AppendLine(reportBuilder, "[FAIL] TryStartTimer failed for timer expiration validation.");
+                    return false;
+                }
+
+                timerController.AdvanceTimerForValidation(0.06f);
+
+                if (timerController.CurrentState != TimerState.Expired)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Timer did not reach Expired state during validation.");
+                    return false;
+                }
+
+                if (!penaltyDetected)
+                {
+                    AppendLine(reportBuilder, "[FAIL] TimerExpirationPenaltyDetected was not raised on timer expiration.");
+                    return false;
+                }
+
+                if (!sessionDirector.IsSessionActive)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Session is not active after timer expiration restart.");
+                    return false;
+                }
+
+                if (sessionDirector.CurrentSession == null)
+                {
+                    AppendLine(reportBuilder, "[FAIL] CurrentSession is null after timer expiration restart.");
+                    return false;
+                }
+
+                if (sessionDirector.CurrentSession.SessionId <= sessionIdBefore)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Session id did not increase after timer expiration restart.");
+                    return false;
+                }
+
+                if (ResolveCurrentLevel() != levelBefore)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Player level changed after timer expiration restart.");
+                    return false;
+                }
+
+                AppendLine(reportBuilder, "[PASS] Timer expiration raises penalty event and triggers level restart.");
+                return true;
+            }
+            finally
+            {
+                PenaltyEvents.TimerExpirationPenaltyDetected -= HandlePenaltyDetected;
+            }
         }
 
         private static bool ValidateWinWithoutRestart(SessionDirector sessionDirector, StringBuilder reportBuilder)
