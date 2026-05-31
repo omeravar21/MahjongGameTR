@@ -314,7 +314,9 @@ namespace MahjongGame.ClosedTiles
                 passed = false;
             }
 
-            if (passed && !interactionController.TryHandleInteraction(tile, out TileInteractionResult result))
+            TileInteractionResult result = TileInteractionResult.Rejected(TileInteractionBlockReason.None);
+
+            if (passed && !interactionController.TryHandleInteraction(tile, out result))
             {
                 AppendLine(reportBuilder, "[FAIL] Second tap on revealed closed tile was rejected.");
                 passed = false;
