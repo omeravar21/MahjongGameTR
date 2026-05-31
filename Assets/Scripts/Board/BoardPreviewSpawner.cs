@@ -6,7 +6,7 @@ namespace MahjongGame.Board
 {
     public sealed class BoardPreviewSpawner : MonoBehaviour
     {
-        [SerializeField] private GameObject tilePrefab;
+        [SerializeField] private Tile tilePrefab;
 
         public bool TryResetBoard()
         {
@@ -67,20 +67,13 @@ namespace MahjongGame.Board
             for (int i = 0; i < previewTiles.Length; i++)
             {
                 BoardPreviewTileSpec spec = previewTiles[i];
-                GameObject tileObject = Instantiate(tilePrefab);
-                if (tileObject == null)
-                {
-                    continue;
-                }
-
-                tileObject.name = BoardPreviewLayoutDefinition.GetPreviewTileName(spec);
-                Tile tile = tileObject.GetComponent<Tile>();
+                Tile tile = InstantiateTileFromPrefab();
                 if (tile == null)
                 {
-                    DestroyTileObject(tileObject);
                     continue;
                 }
 
+                tile.gameObject.name = BoardPreviewLayoutDefinition.GetPreviewTileName(spec);
                 BoardGridCoordinate coordinate = new BoardGridCoordinate(spec.Column, spec.Row);
                 TileData tileData = new TileData(
                     spec.TileId,
@@ -93,6 +86,17 @@ namespace MahjongGame.Board
             }
 
             return true;
+        }
+
+        private Tile InstantiateTileFromPrefab()
+        {
+            if (tilePrefab == null)
+            {
+                return null;
+            }
+
+            Object clone = Object.Instantiate(tilePrefab);
+            return clone as Tile;
         }
 
         private static void DestroyTileObject(GameObject tileObject)

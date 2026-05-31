@@ -8,7 +8,7 @@ namespace MahjongGame.Board
 {
     public sealed class BoardSpawner : MonoBehaviour
     {
-        [SerializeField] private GameObject tilePrefab;
+        [SerializeField] private Tile tilePrefab;
 
         public bool HasTilePrefab => tilePrefab != null;
 
@@ -47,12 +47,13 @@ namespace MahjongGame.Board
             for (int index = 0; index < boardData.TileAssignments.Count; index++)
             {
                 TileSymbolAssignment assignment = boardData.TileAssignments[index];
-                GameObject tileObject = Instantiate(tilePrefab);
-                if (tileObject == null)
+                Tile tile = InstantiateTileFromPrefab();
+                if (tile == null)
                 {
                     continue;
                 }
 
+                GameObject tileObject = tile.gameObject;
                 tileObject.name = "Tile_"
                     + assignment.TileId
                     + "_L"
@@ -61,13 +62,6 @@ namespace MahjongGame.Board
                     + assignment.Position.GridCoordinate.Column
                     + "_"
                     + assignment.Position.GridCoordinate.Row;
-
-                Tile tile = tileObject.GetComponent<Tile>();
-                if (tile == null)
-                {
-                    DestroyTileObject(tileObject);
-                    continue;
-                }
 
                 TileType tileType = assignment.IsClosed
                     ? TileType.Closed
@@ -170,13 +164,13 @@ namespace MahjongGame.Board
                 return null;
             }
 
-            GameObject tileObject = Instantiate(tilePrefab);
-            if (tileObject == null)
+            Tile tile = InstantiateTileFromPrefab();
+            if (tile == null)
             {
                 return null;
             }
 
-            tileObject.name = "Tile_"
+            tile.gameObject.name = "Tile_"
                 + savedTile.tileId
                 + "_L"
                 + savedTile.layerIndex
@@ -184,13 +178,6 @@ namespace MahjongGame.Board
                 + savedTile.column
                 + "_"
                 + savedTile.row;
-
-            Tile tile = tileObject.GetComponent<Tile>();
-            if (tile == null)
-            {
-                DestroyTileObject(tileObject);
-                return null;
-            }
 
             TileType tileType = savedTile.isClosed
                 ? TileType.Closed
@@ -216,6 +203,17 @@ namespace MahjongGame.Board
             tile.SetState(restoredState);
             layerVisualController.PlaceTile(tile, savedTile.layerIndex, gridCoordinate);
             return tile;
+        }
+
+        private Tile InstantiateTileFromPrefab()
+        {
+            if (tilePrefab == null)
+            {
+                return null;
+            }
+
+            Object clone = Object.Instantiate(tilePrefab);
+            return clone as Tile;
         }
 
         public void ClearRuntimeTiles(Transform boardRoot)

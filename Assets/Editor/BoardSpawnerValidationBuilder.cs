@@ -2,6 +2,7 @@
 using System.Text;
 using MahjongGame.Board;
 using MahjongGame.BoardGeneration;
+using MahjongGame.Tiles;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace MahjongGame.Editor
         [MenuItem("MahjongGame/Build BoardSpawner")]
         public static void BuildBoardSpawner()
         {
-            GameObject tilePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TilePrefabPath);
+            Tile tilePrefab = LoadTilePrefabTemplate();
             if (tilePrefab == null)
             {
                 Debug.LogError("[BoardSpawnerValidationBuilder] Tile prefab was not found at " + TilePrefabPath + ".");
@@ -94,6 +95,12 @@ namespace MahjongGame.Editor
             }
 
             return null;
+        }
+
+        private static Tile LoadTilePrefabTemplate()
+        {
+            GameObject prefabRoot = AssetDatabase.LoadAssetAtPath<GameObject>(TilePrefabPath);
+            return prefabRoot != null ? prefabRoot.GetComponent<Tile>() : null;
         }
     }
 }

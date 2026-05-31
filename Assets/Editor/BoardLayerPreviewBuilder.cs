@@ -16,7 +16,8 @@ namespace MahjongGame.Editor
         [MenuItem("MahjongGame/Build Layer Preview")]
         public static void BuildLayerPreview()
         {
-            GameObject tilePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TilePrefabPath);
+            GameObject tilePrefabRoot = AssetDatabase.LoadAssetAtPath<GameObject>(TilePrefabPath);
+            Tile tilePrefab = tilePrefabRoot != null ? tilePrefabRoot.GetComponent<Tile>() : null;
             if (tilePrefab == null)
             {
                 Debug.LogError("[BoardLayerPreviewBuilder] Tile prefab was not found at " + TilePrefabPath + ".");
@@ -61,7 +62,7 @@ namespace MahjongGame.Editor
             for (int i = 0; i < previewTiles.Length; i++)
             {
                 BoardPreviewTileSpec spec = previewTiles[i];
-                GameObject tileObject = PrefabUtility.InstantiatePrefab(tilePrefab) as GameObject;
+                GameObject tileObject = PrefabUtility.InstantiatePrefab(tilePrefabRoot) as GameObject;
                 if (tileObject == null)
                 {
                     Debug.LogError("[BoardLayerPreviewBuilder] Failed to instantiate tile prefab.");

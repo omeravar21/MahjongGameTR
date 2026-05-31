@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using MahjongGame.Board;
 using MahjongGame.Session;
+using MahjongGame.Tiles;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace MahjongGame.Editor
         [MenuItem("MahjongGame/Build Session Restart Controller")]
         public static void BuildSessionRestartController()
         {
-            GameObject tilePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TilePrefabPath);
+            Tile tilePrefab = LoadTilePrefabTemplate();
             if (tilePrefab == null)
             {
                 Debug.LogError("[SessionRestartControllerBuilder] Tile prefab was not found at " + TilePrefabPath + ".");
@@ -81,6 +82,12 @@ namespace MahjongGame.Editor
             }
 
             return null;
+        }
+
+        private static Tile LoadTilePrefabTemplate()
+        {
+            GameObject prefabRoot = AssetDatabase.LoadAssetAtPath<GameObject>(TilePrefabPath);
+            return prefabRoot != null ? prefabRoot.GetComponent<Tile>() : null;
         }
     }
 }
