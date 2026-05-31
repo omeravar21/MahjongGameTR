@@ -7,12 +7,18 @@ namespace MahjongGame.Tiles
     public sealed class TileSelectionController : MonoBehaviour
     {
         [SerializeField] private Camera gameplayCamera;
+        [SerializeField] private TileSelectabilityChecker selectabilityChecker;
 
         private void Awake()
         {
             if (gameplayCamera == null)
             {
                 gameplayCamera = Camera.main;
+            }
+
+            if (selectabilityChecker == null)
+            {
+                selectabilityChecker = GetComponent<TileSelectabilityChecker>();
             }
         }
 
@@ -43,6 +49,11 @@ namespace MahjongGame.Tiles
                 return false;
             }
 
+            if (!IsSelectable(tile))
+            {
+                return false;
+            }
+
             TileSelectionRequest request = new TileSelectionRequest(
                 tile,
                 tile.GetIdentity(),
@@ -67,6 +78,16 @@ namespace MahjongGame.Tiles
                 default:
                     return false;
             }
+        }
+
+        private bool IsSelectable(Tile tile)
+        {
+            if (selectabilityChecker != null)
+            {
+                return selectabilityChecker.TryValidate(tile, out _);
+            }
+
+            return TileSelectabilityChecker.TryValidate(null, tile, out _);
         }
 
         private bool ShouldProcessInput()
