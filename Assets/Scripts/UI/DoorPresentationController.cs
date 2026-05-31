@@ -82,11 +82,11 @@ namespace MahjongGame.UI
             {
                 if (Application.isPlaying)
                 {
-                    Object.Destroy(existingDoor.gameObject);
+                    UnityEngine.Object.Destroy(existingDoor.gameObject);
                 }
                 else
                 {
-                    Object.DestroyImmediate(existingDoor.gameObject);
+                    UnityEngine.Object.DestroyImmediate(existingDoor.gameObject);
                 }
             }
 

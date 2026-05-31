@@ -64,15 +64,7 @@ namespace MahjongGame.Matching
                 AppendLine(reportBuilder, "[PASS] MatchController is present on GameplayRoot.");
             }
 
-            if (typeof(TileMatchComparer) == null)
-            {
-                AppendLine(reportBuilder, "[FAIL] TileMatchComparer type is missing for detection validation.");
-                passed = false;
-            }
-            else
-            {
-                AppendLine(reportBuilder, "[PASS] TileMatchComparer type is present.");
-            }
+            AppendLine(reportBuilder, "[PASS] TileMatchComparer type is present.");
 
             if (MatchDefinition.MatchDelaySeconds != 0.3f)
             {
@@ -110,15 +102,7 @@ namespace MahjongGame.Matching
         {
             bool passed = true;
 
-            if (typeof(MatchExecutor) == null)
-            {
-                AppendLine(reportBuilder, "[FAIL] MatchExecutor type is missing for execution validation.");
-                passed = false;
-            }
-            else
-            {
-                AppendLine(reportBuilder, "[PASS] MatchExecutor type is present.");
-            }
+            AppendLine(reportBuilder, "[PASS] MatchExecutor type is present.");
 
             if (!HasMatchEvent(nameof(MatchEvents.MatchExecuted)))
             {
@@ -168,15 +152,7 @@ namespace MahjongGame.Matching
         {
             bool passed = true;
 
-            if (typeof(MatchCleaner) == null)
-            {
-                AppendLine(reportBuilder, "[FAIL] MatchCleaner type is missing for cleanup validation.");
-                passed = false;
-            }
-            else
-            {
-                AppendLine(reportBuilder, "[PASS] MatchCleaner type is present.");
-            }
+            AppendLine(reportBuilder, "[PASS] MatchCleaner type is present.");
 
             if (!HasMatchEvent(nameof(MatchEvents.MatchCleanedUp)))
             {
@@ -357,11 +333,11 @@ namespace MahjongGame.Matching
 
         private static bool HasMatchEvent(string eventName)
         {
-            FieldInfo eventField = typeof(MatchEvents).GetField(
+            EventInfo eventInfo = typeof(MatchEvents).GetEvent(
                 eventName,
-                BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                BindingFlags.Static | BindingFlags.Public);
 
-            return eventField != null;
+            return eventInfo != null;
         }
 
         private static bool HasTrayMethod(TrayController trayController, string methodName)

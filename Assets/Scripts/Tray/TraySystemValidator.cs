@@ -264,7 +264,7 @@ namespace MahjongGame.Tray
             bool trayControllerSubscribed = false;
             foreach (System.Delegate subscriber in subscribers.GetInvocationList())
             {
-                if (subscriber.Target == trayController)
+                if (ReferenceEquals(subscriber.Target, trayController))
                 {
                     trayControllerSubscribed = true;
                     break;

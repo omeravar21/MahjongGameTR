@@ -66,7 +66,7 @@ namespace MahjongGame.UI
 
         private static void EnsureEventSystem()
         {
-            EventSystem existing = Object.FindFirstObjectByType<EventSystem>();
+            EventSystem existing = Object.FindAnyObjectByType<EventSystem>();
             if (existing != null)
             {
                 if (existing.GetComponent<InputSystemUIInputModule>() == null)

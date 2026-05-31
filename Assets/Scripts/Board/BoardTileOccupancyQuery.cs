@@ -146,7 +146,7 @@ namespace MahjongGame.Board
 
         public static Transform ResolveBoardRootFromScene()
         {
-            BoardRootController boardRootController = Object.FindFirstObjectByType<BoardRootController>();
+            BoardRootController boardRootController = Object.FindAnyObjectByType<BoardRootController>();
             return boardRootController != null ? boardRootController.BoardRootTransform : null;
         }
 
