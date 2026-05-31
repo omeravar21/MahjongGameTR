@@ -8,12 +8,14 @@ namespace MahjongGame.Tiles
     public sealed class TileMovementController : MonoBehaviour
     {
         [SerializeField] private Transform trayRootTransform;
+        [SerializeField] private TrayController trayController;
         [SerializeField] private float movementDurationSeconds = TrayMovementLayout.MovementDurationSeconds;
 
         private readonly HashSet<Tile> _tilesInFlight = new HashSet<Tile>();
 
         private void Awake()
         {
+            ResolveTrayController();
             ResolveTrayRootTransform();
         }
 
@@ -44,13 +46,14 @@ namespace MahjongGame.Tiles
                 return false;
             }
 
-            if (ResolveTrayRootTransform() == null)
+            TrayController resolvedTrayController = ResolveTrayController();
+            if (resolvedTrayController == null)
             {
                 blockReason = TileInteractionBlockReason.MissingSceneWiring;
                 return false;
             }
 
-            if (!TrayCapacityController.TryReserveSlot(ResolveTrayRootTransform(), tile, out int slotIndex, out Transform slotTransform))
+            if (!resolvedTrayController.TryBeginTileAdmission(tile, out int slotIndex, out Transform slotTransform))
             {
                 blockReason = TileInteractionBlockReason.NoTraySlotAvailable;
                 return false;
@@ -147,6 +150,17 @@ namespace MahjongGame.Tiles
             TileMovementEvents.RaiseTileMovementCompleted(request);
         }
 
+        private TrayController ResolveTrayController()
+        {
+            if (trayController != null)
+            {
+                return trayController;
+            }
+
+            trayController = GetComponent<TrayController>();
+            return trayController;
+        }
+
         private Transform ResolveTrayRootTransform()
         {
             if (trayRootTransform != null)
@@ -154,7 +168,7 @@ namespace MahjongGame.Tiles
                 return trayRootTransform;
             }
 
-            trayRootTransform = transform.Find("TrayRoot");
+            trayRootTransform = transform.Find(TrayRootDefinition.TrayRootName);
             if (trayRootTransform != null)
             {
                 return trayRootTransform;

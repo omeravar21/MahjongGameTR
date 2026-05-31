@@ -77,7 +77,7 @@ namespace MahjongGame.Tray
             return true;
         }
 
-        public static bool TryReserveSlot(Transform trayRoot, Tile tile, out int slotIndex, out Transform slotTransform)
+        internal static bool TryReserveSlot(Transform trayRoot, Tile tile, out int slotIndex, out Transform slotTransform)
         {
             slotIndex = -1;
             slotTransform = null;

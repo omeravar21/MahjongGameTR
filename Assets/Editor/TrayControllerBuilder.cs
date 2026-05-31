@@ -8,18 +8,18 @@ using UnityEngine.SceneManagement;
 
 namespace MahjongGame.Editor
 {
-    public static class TileMovementBuilder
+    public static class TrayControllerBuilder
     {
         private const string GameScenePath = "Assets/Scenes/GameScene.unity";
 
-        [MenuItem("MahjongGame/Build Tile Movement")]
-        public static void BuildTileMovement()
+        [MenuItem("MahjongGame/Build Tray Controller")]
+        public static void BuildTrayController()
         {
             Scene scene = EditorSceneManager.OpenScene(GameScenePath, OpenSceneMode.Single);
             Transform gameplayRoot = FindGameplayRoot(scene);
             if (gameplayRoot == null)
             {
-                Debug.LogError("[TileMovementBuilder] GameplayRoot was not found in GameScene.");
+                Debug.LogError("[TrayControllerBuilder] GameplayRoot was not found in GameScene.");
                 return;
             }
 
@@ -44,20 +44,18 @@ namespace MahjongGame.Editor
             trayControllerObject.ApplyModifiedPropertiesWithoutUndo();
 
             TileMovementController movementController = gameplayRoot.GetComponent<TileMovementController>();
-            if (movementController == null)
+            if (movementController != null)
             {
-                movementController = gameplayRoot.gameObject.AddComponent<TileMovementController>();
+                SerializedObject movementObject = new SerializedObject(movementController);
+                movementObject.FindProperty("trayRootTransform").objectReferenceValue = trayRoot;
+                movementObject.FindProperty("trayController").objectReferenceValue = trayController;
+                movementObject.ApplyModifiedPropertiesWithoutUndo();
             }
-
-            SerializedObject movementObject = new SerializedObject(movementController);
-            movementObject.FindProperty("trayRootTransform").objectReferenceValue = trayRoot;
-            movementObject.FindProperty("trayController").objectReferenceValue = trayController;
-            movementObject.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
-            Debug.Log("[TileMovementBuilder] Tile movement controller and tray anchors wired in GameScene.");
+            Debug.Log("[TrayControllerBuilder] Tray controller wired on GameplayRoot.");
         }
 
         private static Transform FindGameplayRoot(Scene scene)

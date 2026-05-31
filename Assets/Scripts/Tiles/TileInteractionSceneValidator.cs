@@ -26,6 +26,7 @@ namespace MahjongGame.Tiles
             passed &= ValidateRequiredComponent<TileSelectionController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<TileSelectabilityChecker>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<TileMovementController>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<TrayController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
 
             Transform boardRoot = gameplayRoot.Find("BoardRoot");
