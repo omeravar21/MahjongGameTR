@@ -19,6 +19,8 @@ namespace MahjongGame.Timer
 
         public bool IsRunning => _currentState == TimerState.Running;
 
+        public float LastElapsedTimeSeconds { get; private set; }
+
         private void OnEnable()
         {
             SessionEvents.SessionStarted += HandleSessionStarted;
@@ -89,6 +91,7 @@ namespace MahjongGame.Timer
 
         public void StopTimer()
         {
+            SnapshotElapsedTime();
             _remainingTimeSeconds = 0f;
             _allocatedTimeSeconds = 0f;
             SetState(TimerState.Stopped);
@@ -112,6 +115,7 @@ namespace MahjongGame.Timer
             }
 
             _levelNumber = context.LevelNumber;
+            LastElapsedTimeSeconds = 0f;
             StopTimer();
             TryStartTimer(TimerDefinition.ResolveDurationSeconds(context.LevelNumber));
         }
@@ -138,9 +142,22 @@ namespace MahjongGame.Timer
 
             if (_remainingTimeSeconds <= 0f)
             {
+                SnapshotElapsedTime();
                 SetState(TimerState.Expired);
                 TimerEvents.RaiseTimerExpired(new TimerExpiredContext(_allocatedTimeSeconds, _levelNumber));
             }
+        }
+
+        private void SnapshotElapsedTime()
+        {
+            if (_allocatedTimeSeconds <= 0f)
+            {
+                LastElapsedTimeSeconds = 0f;
+                return;
+            }
+
+            float elapsed = _allocatedTimeSeconds - _remainingTimeSeconds;
+            LastElapsedTimeSeconds = elapsed < 0f ? 0f : elapsed;
         }
 
         private void SetState(TimerState newState)

@@ -7,6 +7,7 @@ using MahjongGame.Score;
 using MahjongGame.Session;
 using MahjongGame.Timer;
 using MahjongGame.Tray;
+using MahjongGame.UI;
 using UnityEngine;
 
 namespace MahjongGame.Tiles
@@ -39,6 +40,7 @@ namespace MahjongGame.Tiles
             passed &= ValidateRequiredComponent<SessionRestartController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<ScoreController>(gameplayRoot, reportBuilder);
             passed &= ValidateRequiredComponent<ComboController>(gameplayRoot, reportBuilder);
+            passed &= ValidateRequiredComponent<LevelResultController>(gameplayRoot, reportBuilder);
             passed &= ValidateMatchExecutionEvents(reportBuilder);
             passed &= ValidateRequiredComponent<TileInteractionController>(gameplayRoot, reportBuilder);
 
@@ -79,6 +81,7 @@ namespace MahjongGame.Tiles
             passed &= TimerSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= ScoreSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= ComboSystemValidator.Validate(gameplayRoot, reportBuilder);
+            passed &= PerformanceScreenSystemValidator.Validate(gameplayRoot, reportBuilder);
             passed &= SessionSystemValidator.Validate(gameplayRoot, reportBuilder);
 
             AppendLine(reportBuilder, passed
