@@ -21,6 +21,17 @@ namespace MahjongGame.Tiles
 
         public TileType Type => _data != null ? _data.Type : TileType.Normal;
 
+        public int SymbolId => _data != null ? _data.SymbolId : TileData.UnassignedSymbolId;
+
+        public TileBoardPosition OriginalBoardPosition =>
+            _data != null ? _data.OriginalBoardPosition : default;
+
+        public bool IsClosed => _data != null && _data.IsClosedTile;
+
+        public bool IsJoker => _data != null && _data.IsRewardJoker;
+
+        public bool HasAssignedSymbol => _data != null && _data.HasAssignedSymbol;
+
         private void Awake()
         {
             if (tileView == null)
@@ -69,12 +80,33 @@ namespace MahjongGame.Tiles
                 GetSharedTileSprite());
         }
 
+        public TileIdentity GetIdentity()
+        {
+            return _data != null ? _data.Identity : default;
+        }
+
         public void Initialize(TileData data)
         {
+            if (data == null)
+            {
+                Debug.LogWarning("[Tile] TileData is not available.");
+                return;
+            }
+
+            if (!data.HasValidIdentity)
+            {
+                Debug.LogWarning("[Tile] TileData has an invalid identity: " + data.TileId + ".");
+                return;
+            }
+
+            if (!data.OriginalBoardPosition.IsValid)
+            {
+                Debug.LogWarning("[Tile] TileData has an invalid original board position.");
+                return;
+            }
+
             _data = data;
-            State = data != null && (data.IsClosed || data.Type == TileType.Closed)
-                ? TileState.Closed
-                : TileState.OnBoard;
+            State = data.IsClosedTile ? TileState.Closed : TileState.OnBoard;
 
             if (tileView == null)
             {
@@ -83,11 +115,7 @@ namespace MahjongGame.Tiles
 
             tileView?.CacheReferencesFromHierarchy();
             tileView?.ApplyVisualState(State, Type);
-
-            if (data != null)
-            {
-                ApplySortingOrder(data.LayerIndex, data.GridCoordinate.Row, data.GridCoordinate.Column);
-            }
+            ApplySortingOrder(data.LayerIndex, data.GridCoordinate.Row, data.GridCoordinate.Column);
         }
 
         public void SetState(TileState state)

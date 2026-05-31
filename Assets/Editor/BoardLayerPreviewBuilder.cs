@@ -86,7 +86,12 @@ namespace MahjongGame.Editor
                 }
 
                 BoardGridCoordinate coordinate = new BoardGridCoordinate(spec.Column, spec.Row);
-                TileData tileData = new TileData(spec.TileId, coordinate, spec.LayerIndex, TileType.Normal);
+                TileData tileData = new TileData(
+                    spec.TileId,
+                    coordinate,
+                    spec.LayerIndex,
+                    TileType.Normal,
+                    symbolId: spec.TileId % 10);
                 tile.Initialize(tileData);
                 layerVisualController.PlaceTile(tile, spec.LayerIndex, coordinate);
             }
