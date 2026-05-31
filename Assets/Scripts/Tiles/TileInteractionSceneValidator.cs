@@ -3,7 +3,6 @@ using System.Text;
 using MahjongGame.Board;
 using MahjongGame.BoardGeneration;
 using MahjongGame.Matching;
-using MahjongGame.BoardGeneration;
 using MahjongGame.Combo;
 using MahjongGame.Score;
 using MahjongGame.Session;

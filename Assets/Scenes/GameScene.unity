@@ -1089,7 +1089,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 800000007}
-  - component: {fileID: 800000049}
+  - component: {fileID: 800000054}
   m_Layer: 0
   m_Name: TimerRoot
   m_TagString: Untagged
@@ -1112,7 +1112,7 @@ Transform:
   m_Father: {fileID: 800000013}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &800000049
+--- !u!114 &800000054
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

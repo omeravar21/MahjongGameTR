@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using MahjongGame.Board;
+using MahjongGame.BoardGeneration;
 using MahjongGame.Matching;
 using MahjongGame.Progression;
 using MahjongGame.Tiles;
@@ -487,10 +488,17 @@ namespace MahjongGame.Session
                 return false;
             }
 
-            int expectedBoardTileCount = BoardPreviewLayoutDefinition.DefaultTiles.Length;
+            BoardData expectedBoardData = BoardGenerationPipeline.GenerateBoardData(levelBefore);
+            int expectedBoardTileCount = expectedBoardData != null ? expectedBoardData.TileCount : 0;
             int boardTileCount = boardRoot != null
                 ? BoardTileOccupancyQuery.CollectOccupyingTiles(boardRoot).Count
                 : 0;
+
+            if (expectedBoardTileCount <= 0)
+            {
+                AppendLine(reportBuilder, "[FAIL] BoardGenerationPipeline produced empty board data for restart validation.");
+                return false;
+            }
 
             if (boardTileCount != expectedBoardTileCount)
             {

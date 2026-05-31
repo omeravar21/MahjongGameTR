@@ -192,93 +192,35 @@ namespace MahjongGame.Session
                     + ".");
             }
 
-            if (GridMaskGenerator.HasInstance)
-            {
-                GridMask gridMask = GridMaskGenerator.Instance.GenerateMask(levelNumber);
-                Debug.Log(
-                    "[SessionDirector] Grid mask generated: activeCells="
-                    + gridMask.ActiveCellCount
-                    + ", totalCells="
-                    + gridMask.TotalCellCount
-                    + ", seed="
-                    + gridMask.Seed
-                    + ".");
-
-                if (LevelRecipeGenerator.HasInstance)
-                {
-                    LevelRecipe recipe = LevelRecipeGenerator.Instance.GenerateRecipe(levelNumber);
-                    ArchetypeLayout archetypeLayout = ArchetypeSelector.Apply(gridMask, recipe);
-                    Debug.Log(
-                        "[SessionDirector] Archetype layout applied: archetype="
-                        + archetypeLayout.ArchetypeId
-                        + ", activeCells="
-                        + archetypeLayout.ActiveCellCount
-                        + ", seed="
-                        + archetypeLayout.Seed
-                        + ".");
-
-                    VariationLayout variationLayout = VariationSelector.Apply(archetypeLayout, recipe);
-                    Debug.Log(
-                        "[SessionDirector] Variation layout applied: archetype="
-                        + variationLayout.ArchetypeId
-                        + ", variation="
-                        + variationLayout.VariationIndex
-                        + ", activeCells="
-                        + variationLayout.ActiveCellCount
-                        + ", seed="
-                        + variationLayout.Seed
-                        + ".");
-
-                    HolePatternLayout holePatternLayout = HolePatternSelector.Apply(variationLayout, recipe);
-                    Debug.Log(
-                        "[SessionDirector] Hole pattern layout applied: holePattern="
-                        + holePatternLayout.HolePatternId
-                        + ", archetype="
-                        + holePatternLayout.ArchetypeId
-                        + ", variation="
-                        + holePatternLayout.VariationIndex
-                        + ", activeCells="
-                        + holePatternLayout.ActiveCellCount
-                        + ", seed="
-                        + holePatternLayout.Seed
-                        + ".");
-
-                    LayeredBoardLayout layeredBoardLayout = LayerBuilder.Build(holePatternLayout, recipe);
-                    Debug.Log(
-                        "[SessionDirector] Layered board layout built: layerDepth="
-                        + layeredBoardLayout.LayerDepth
-                        + ", requestedTiles="
-                        + layeredBoardLayout.RequestedTileCount
-                        + ", assignedTiles="
-                        + layeredBoardLayout.AssignedTileCount
-                        + ", availableSlots="
-                        + layeredBoardLayout.AvailableSlotCount
-                        + ", seed="
-                        + layeredBoardLayout.Seed
-                        + ".");
-
-                    DistributedBoardLayout distributedBoardLayout = TilePairDistributor.Distribute(
-                        layeredBoardLayout,
-                        recipe);
-                    Debug.Log(
-                        "[SessionDirector] Tile pair distribution applied: pairs="
-                        + distributedBoardLayout.PairCount
-                        + ", effectiveTiles="
-                        + distributedBoardLayout.EffectiveTileCount
-                        + ", distinctSymbols="
-                        + distributedBoardLayout.DistinctSymbolCount
-                        + ", seed="
-                        + distributedBoardLayout.Seed
-                        + ".");
-                }
-            }
-
             TrySpawnRuntimeBoard(levelNumber);
         }
 
         private void TrySpawnRuntimeBoard(int levelNumber)
         {
             BoardData boardData = BoardGenerationPipeline.GenerateBoardData(levelNumber);
+            Debug.Log(
+                "[SessionDirector] Board generation pipeline completed: level="
+                + boardData.LevelNumber
+                + ", tiles="
+                + boardData.TileCount
+                + ", layers="
+                + boardData.LayerDepth
+                + ", archetype="
+                + boardData.ArchetypeId
+                + ", variation="
+                + boardData.VariationIndex
+                + ", holePattern="
+                + boardData.HolePatternId
+                + ", closed="
+                + boardData.ClosedTileCount
+                + ", jokers="
+                + boardData.JokerCount
+                + ", validated="
+                + boardData.IsValidated
+                + ", seed="
+                + boardData.Seed
+                + ".");
+
             Transform boardRoot = transform.Find("BoardRoot");
             if (boardRoot == null)
             {
