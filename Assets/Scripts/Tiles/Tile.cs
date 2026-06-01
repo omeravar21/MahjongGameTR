@@ -179,8 +179,16 @@ namespace MahjongGame.Tiles
 
         private static Sprite _sharedTileSprite;
 
+        private const string SharedTileSpriteAssetPath = "Assets/Sprites/TileSharedWhite.png";
+
         private static Sprite GetSharedTileSprite()
         {
+            if (_sharedTileSprite != null)
+            {
+                return _sharedTileSprite;
+            }
+
+            _sharedTileSprite = LoadSharedTileSpriteAsset();
             if (_sharedTileSprite != null)
             {
                 return _sharedTileSprite;
@@ -198,6 +206,15 @@ namespace MahjongGame.Tiles
                 1f);
             _sharedTileSprite.hideFlags = HideFlags.HideAndDontSave;
             return _sharedTileSprite;
+        }
+
+        private static Sprite LoadSharedTileSpriteAsset()
+        {
+#if UNITY_EDITOR
+            return UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(SharedTileSpriteAssetPath);
+#else
+            return null;
+#endif
         }
     }
 }
