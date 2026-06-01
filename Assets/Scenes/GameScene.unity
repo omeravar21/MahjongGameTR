@@ -1151,8 +1151,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 800000005}
-  - component: {fileID: 800000060}
-  - component: {fileID: 800000061}
+  - component: {fileID: 800000064}
+  - component: {fileID: 800000065}
   - component: {fileID: 800000062}
   - component: {fileID: 800000063}
   m_Layer: 0
@@ -1177,7 +1177,7 @@ Transform:
   m_Father: {fileID: 800000013}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &800000060
+--- !u!114 &800000064
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1190,7 +1190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardRootTransform: {fileID: 800000001}
---- !u!114 &800000061
+--- !u!114 &800000065
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1203,7 +1203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   economyDirector: {fileID: 800000059}
-  shuffleBooster: {fileID: 800000060}
+  shuffleBooster: {fileID: 800000064}
   undoBooster: {fileID: 800000062}
   hintBooster: {fileID: 800000063}
 --- !u!114 &800000062
