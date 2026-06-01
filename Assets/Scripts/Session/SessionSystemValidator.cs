@@ -398,7 +398,7 @@ namespace MahjongGame.Session
                 return false;
             }
 
-            passed &= ValidateSessionStart(sessionDirector, reportBuilder);
+            passed &= ValidateSessionStart(sessionDirector, boardRoot, reportBuilder);
             passed &= ValidateSessionOwnership(sessionDirector, reportBuilder);
             passed &= ValidateFailAndRestart(sessionDirector, trayController, boardRoot, reportBuilder);
             passed &= ValidateTimerExpirationFail(sessionDirector, gameplayRoot, reportBuilder);
@@ -407,7 +407,10 @@ namespace MahjongGame.Session
             return passed;
         }
 
-        private static bool ValidateSessionStart(SessionDirector sessionDirector, StringBuilder reportBuilder)
+        private static bool ValidateSessionStart(
+            SessionDirector sessionDirector,
+            Transform boardRoot,
+            StringBuilder reportBuilder)
         {
             if (!sessionDirector.IsSessionActive)
             {
@@ -427,6 +430,42 @@ namespace MahjongGame.Session
                 return false;
             }
 
+            int sessionLevel = sessionDirector.CurrentSession.LevelNumber;
+            int currentLevel = ResolveCurrentLevel();
+            if (sessionLevel != currentLevel)
+            {
+                AppendLine(
+                    reportBuilder,
+                    "[FAIL] Session level "
+                    + sessionLevel
+                    + " does not match current progression level "
+                    + currentLevel
+                    + ".");
+                return false;
+            }
+
+            AppendLine(reportBuilder, "[PASS] Session level matches current progression level.");
+
+            DifficultyProfile profile = DifficultyDirector.HasInstance
+                ? DifficultyDirector.Instance.ResolveProfile(sessionLevel)
+                : DifficultyDefinition.ResolveProfile(sessionLevel);
+
+            int boardTileCount = boardRoot != null
+                ? BoardTileOccupancyQuery.CollectOccupyingTiles(boardRoot).Count
+                : 0;
+            if (boardTileCount != profile.TileCount)
+            {
+                AppendLine(
+                    reportBuilder,
+                    "[FAIL] Spawned board tile count "
+                    + boardTileCount
+                    + " does not match difficulty profile "
+                    + profile.TileCount
+                    + ".");
+                return false;
+            }
+
+            AppendLine(reportBuilder, "[PASS] Spawned board tile count matches difficulty profile.");
             AppendLine(reportBuilder, "[PASS] Session started and is active.");
             return true;
         }

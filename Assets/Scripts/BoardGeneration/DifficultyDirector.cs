@@ -61,5 +61,42 @@ namespace MahjongGame.BoardGeneration
             profile = DifficultyDefinition.ResolveProfile(levelNumber);
             return profile != null;
         }
+
+        public bool TryResolveProfileForCurrentLevel(out DifficultyProfile profile)
+        {
+            if (!PlayerProgressionDirector.HasInstance)
+            {
+                Debug.LogWarning("[DifficultyDirector] PlayerProgressionDirector is not available.");
+                profile = null;
+                return false;
+            }
+
+            profile = ResolveProfile(PlayerProgressionDirector.Instance.CurrentLevel);
+            return profile != null;
+        }
+
+        public static bool HasDifficultyScaled(DifficultyProfile previous, DifficultyProfile next)
+        {
+            if (previous == null || next == null)
+            {
+                return false;
+            }
+
+            if (next.LevelNumber <= previous.LevelNumber)
+            {
+                return false;
+            }
+
+            if (next.TileCount < previous.TileCount
+                || next.ClosedTileCount < previous.ClosedTileCount
+                || next.JokerCount < previous.JokerCount
+                || next.LayerDepth < previous.LayerDepth
+                || next.RecommendedTimerSeconds < previous.RecommendedTimerSeconds - 0.001f)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

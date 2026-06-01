@@ -1,7 +1,10 @@
 using System.Reflection;
 using System.Text;
+using MahjongGame.Board;
+using MahjongGame.BoardGeneration;
 using MahjongGame.Progression;
 using MahjongGame.Session;
+using MahjongGame.Timer;
 using UnityEngine;
 
 namespace MahjongGame.UI
@@ -42,6 +45,7 @@ namespace MahjongGame.UI
                 && performanceScreenController.enabled)
             {
                 passed &= ValidatePlayModeBehavior(
+                    gameplayRoot,
                     levelResultController,
                     performanceScreenController,
                     reportBuilder);
@@ -176,6 +180,7 @@ namespace MahjongGame.UI
         }
 
         private static bool ValidatePlayModeBehavior(
+            Transform gameplayRoot,
             LevelResultController levelResultController,
             PerformanceScreenController performanceScreenController,
             StringBuilder reportBuilder)
@@ -192,6 +197,7 @@ namespace MahjongGame.UI
             }
 
             int levelBefore = ResolveCurrentLevel();
+            DifficultyProfile profileBeforeAdvance = DifficultyDefinition.ResolveProfile(levelBefore);
             int sessionIdBefore = SessionDirector.Instance.CurrentSession.SessionId;
             bool levelCompletedRaised = false;
             bool levelAdvancedRaised = false;
@@ -295,6 +301,70 @@ namespace MahjongGame.UI
                     AppendLine(reportBuilder, "[FAIL] Player level did not advance after Next Level selection.");
                     return false;
                 }
+
+                int newLevel = levelBefore + 1;
+                DifficultyProfile profileAfterAdvance = DifficultyDefinition.ResolveProfile(newLevel);
+                if (!DifficultyDirector.HasDifficultyScaled(profileBeforeAdvance, profileAfterAdvance))
+                {
+                    AppendLine(reportBuilder, "[FAIL] Difficulty profile did not scale after Next Level selection.");
+                    return false;
+                }
+
+                AppendLine(reportBuilder, "[PASS] Difficulty profile scales after Next Level selection.");
+
+                BoardData expectedBoardData = BoardGenerationPipeline.GenerateBoardData(newLevel);
+                if (expectedBoardData == null
+                    || expectedBoardData.TileCount != profileAfterAdvance.TileCount
+                    || expectedBoardData.ClosedTileCount != profileAfterAdvance.ClosedTileCount
+                    || expectedBoardData.JokerCount != profileAfterAdvance.JokerCount)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Generated board data does not match scaled difficulty profile.");
+                    return false;
+                }
+
+                Transform boardRoot = gameplayRoot != null ? gameplayRoot.Find("BoardRoot") : null;
+                int boardTileCount = boardRoot != null
+                    ? BoardTileOccupancyQuery.CollectOccupyingTiles(boardRoot).Count
+                    : 0;
+                if (boardTileCount != profileAfterAdvance.TileCount)
+                {
+                    AppendLine(
+                        reportBuilder,
+                        "[FAIL] Spawned board tile count "
+                        + boardTileCount
+                        + " does not match scaled difficulty profile "
+                        + profileAfterAdvance.TileCount
+                        + ".");
+                    return false;
+                }
+
+                AppendLine(reportBuilder, "[PASS] Spawned board matches scaled difficulty profile.");
+
+                Transform timerRoot = gameplayRoot != null ? gameplayRoot.Find("TimerRoot") : null;
+                TimerController timerController = timerRoot != null
+                    ? timerRoot.GetComponent<TimerController>()
+                    : null;
+                if (timerController == null)
+                {
+                    AppendLine(reportBuilder, "[FAIL] TimerController is missing for post-advance difficulty validation.");
+                    return false;
+                }
+
+                if (!Mathf.Approximately(
+                    timerController.AllocatedTimeSeconds,
+                    profileAfterAdvance.RecommendedTimerSeconds))
+                {
+                    AppendLine(
+                        reportBuilder,
+                        "[FAIL] Timer allocation "
+                        + timerController.AllocatedTimeSeconds
+                        + " does not match scaled difficulty timer "
+                        + profileAfterAdvance.RecommendedTimerSeconds
+                        + ".");
+                    return false;
+                }
+
+                AppendLine(reportBuilder, "[PASS] Timer allocation matches scaled difficulty profile.");
 
                 AppendLine(reportBuilder, "[PASS] Next Level advances progression and starts a new session.");
                 return true;
