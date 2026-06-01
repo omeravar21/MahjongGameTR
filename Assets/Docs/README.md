@@ -24,15 +24,19 @@ Do not write code before understanding the project architecture.
 Do not bypass documented systems.
 
 REQUIRED READING ORDER
-PROJECT_CONTEXT.md
-PROJECT_BIBLE.md
-PROJECT_ARCHITECTURE.md
-PROJECT_DECISIONS.md
-DESIGN_BIBLE.md
-CURSOR_RULES.md
-PROJECT_ROADMAP.md
 
-All files must be understood before implementation begins.
+Authority order (highest to lowest):
+
+1. PROJECT_DECISIONS.md
+2. PROJECT_BIBLE.md
+3. PROJECT_ARCHITECTURE.md
+4. CURSOR_RULES.md
+5. DESIGN_BIBLE.md
+6. PROJECT_CONTEXT.md
+7. PROJECT_ROADMAP.md
+8. README.md
+
+Before every phase, re-read all markdown files inside Assets/Docs. Never rely on memory.
 
 PROJECT DOCUMENTATION
 PROJECT_CONTEXT.md
@@ -57,7 +61,9 @@ Visual design, UI, animation and audio philosophy.
 
 CURSOR_RULES.md
 
-Strict development rules and forbidden actions.
+Strict development rules, forbidden actions, and the autonomous execution extension.
+
+Autonomous execution is permanently approved for read, plan, implement, test, fix, commit, push, and roadmap continuation. Stop only for documentation conflicts, missing design decisions, required Unity Editor manual steps, unresolvable compile errors, Git conflicts, or framework installs requiring login/license/manual Asset Store action. Full rules are in CURSOR_RULES.md under AUTONOMOUS EXECUTION EXTENSION.
 
 PROJECT_ROADMAP.md
 

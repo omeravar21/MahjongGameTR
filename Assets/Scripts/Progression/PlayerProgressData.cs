@@ -57,5 +57,11 @@ namespace MahjongGame.Progression
         {
             GlobalPerformanceScore = score < 0 ? 0 : score;
         }
+
+        public void MarkCurrentLevelCompleted()
+        {
+            CurrentLevelData.isCompleted = true;
+            CurrentLevelData.completionCount++;
+        }
     }
 }

@@ -86,6 +86,44 @@ namespace MahjongGame.Progression
             return new LevelProgressData(_progressData.CurrentLevel);
         }
 
+        public int GetNextLevelNumber()
+        {
+            return LevelProgressionDefinition.GetNextLevelNumber(CurrentLevel);
+        }
+
+        public bool TryCompleteCurrentLevel(out LevelProgressionResult result)
+        {
+            int completedLevel = CurrentLevel;
+            _progressData.MarkCurrentLevelCompleted();
+            PersistProgress();
+
+            ProgressionEvents.RaiseLevelCompleted(new LevelCompletedContext(completedLevel));
+            result = LevelProgressionResult.Completed(completedLevel);
+            return true;
+        }
+
+        public bool TryAdvanceToNextLevel(out LevelProgressionResult result)
+        {
+            int previousLevel = CurrentLevel;
+            if (!LevelProgressionDefinition.CanAdvanceFrom(previousLevel))
+            {
+                result = LevelProgressionResult.FailedAtMaxLevel(previousLevel);
+                return false;
+            }
+
+            int nextLevel = LevelProgressionDefinition.GetNextLevelNumber(previousLevel);
+            SetCurrentLevel(nextLevel);
+
+            ProgressionEvents.RaiseLevelAdvanced(new LevelAdvancedContext(previousLevel, nextLevel));
+            result = LevelProgressionResult.Advanced(previousLevel, nextLevel);
+            return true;
+        }
+
+        internal void SetCurrentLevelForValidation(int levelNumber)
+        {
+            _progressData.SetCurrentLevel(levelNumber);
+        }
+
         private void PersistProgress()
         {
             if (!SaveSystem.HasInstance)
