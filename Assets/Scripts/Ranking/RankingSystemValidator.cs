@@ -21,6 +21,7 @@ namespace MahjongGame.Ranking
             passed &= ValidateModelBehavior(reportBuilder);
             passed &= GlobalPerformanceScoreSystemValidator.Validate(reportBuilder);
             passed &= LeaderboardSystemValidator.Validate(reportBuilder);
+            passed &= RankingSyncSystemValidator.Validate(reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Ranking architecture validation completed successfully."
@@ -40,6 +41,7 @@ namespace MahjongGame.Ranking
             passed &= ValidateTypeExists(typeof(LeaderboardEntry), reportBuilder);
             passed &= ValidateTypeExists(typeof(GlobalLeaderboardBuilder), reportBuilder);
             passed &= ValidateTypeExists(typeof(RankingUIController), reportBuilder);
+            passed &= ValidateTypeExists(typeof(RankingSyncController), reportBuilder);
 
             return passed;
         }
@@ -55,6 +57,10 @@ namespace MahjongGame.Ranking
             passed &= ValidateEventExists(
                 typeof(RankingEvents),
                 nameof(RankingEvents.GlobalRankChanged),
+                reportBuilder);
+            passed &= ValidateEventExists(
+                typeof(RankingEvents),
+                nameof(RankingEvents.RankingSyncCompleted),
                 reportBuilder);
 
             return passed;
@@ -193,11 +199,11 @@ namespace MahjongGame.Ranking
             string eventName,
             StringBuilder reportBuilder)
         {
-            FieldInfo eventBackingField = eventOwner.GetField(
+            System.Reflection.EventInfo eventInfo = eventOwner.GetEvent(
                 eventName,
                 BindingFlags.Public | BindingFlags.Static);
 
-            if (eventBackingField == null)
+            if (eventInfo == null)
             {
                 AppendLine(reportBuilder, "[FAIL] Event " + eventName + " is missing.");
                 return false;

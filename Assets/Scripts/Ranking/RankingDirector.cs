@@ -91,9 +91,20 @@ namespace MahjongGame.Ranking
 
         public void RefreshGlobalRank()
         {
+            if (RankingSyncController.HasInstance)
+            {
+                RankingSyncController.Instance.RefreshSyncData(GlobalPerformanceScore);
+            }
+
+            RankingSyncEntrySaveData[] remoteEntries = RankingSyncController.HasInstance
+                && RankingSyncController.Instance.HasCachedRemoteSnapshot
+                ? RankingSyncController.Instance.GetActiveRemoteEntries()
+                : null;
+
             _cachedLeaderboardData = GlobalLeaderboardBuilder.Build(
                 GlobalPerformanceScore,
-                GlobalLeaderboardDefinition.LocalPlayerDisplayName);
+                GlobalLeaderboardDefinition.LocalPlayerDisplayName,
+                remoteEntries);
 
             int previousRank = CurrentGlobalRank;
             int newRank = _cachedLeaderboardData.LocalPlayerRank;

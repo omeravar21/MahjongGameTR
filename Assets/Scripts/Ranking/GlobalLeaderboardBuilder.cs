@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MahjongGame.Core.Save;
 
 namespace MahjongGame.Ranking
 {
@@ -15,17 +16,46 @@ namespace MahjongGame.Ranking
 
         public static LeaderboardData Build(long localPlayerScore, string localDisplayName)
         {
+            return Build(localPlayerScore, localDisplayName, null);
+        }
+
+        public static LeaderboardData Build(
+            long localPlayerScore,
+            string localDisplayName,
+            RankingSyncEntrySaveData[] remoteEntries)
+        {
             List<LeaderboardSortEntry> mergedEntries = new List<LeaderboardSortEntry>();
 
-            for (int index = 0; index < GlobalLeaderboardDefinition.ReferenceEntryCount; index++)
+            if (remoteEntries != null && remoteEntries.Length > 0)
             {
-                (string displayName, long score) = GlobalLeaderboardDefinition.GetReferenceEntry(index);
-                mergedEntries.Add(new LeaderboardSortEntry
+                for (int index = 0; index < remoteEntries.Length; index++)
                 {
-                    DisplayName = displayName,
-                    GlobalPerformanceScore = score,
-                    IsLocalPlayer = false
-                });
+                    RankingSyncEntrySaveData entry = remoteEntries[index];
+                    if (entry == null)
+                    {
+                        continue;
+                    }
+
+                    mergedEntries.Add(new LeaderboardSortEntry
+                    {
+                        DisplayName = entry.displayName,
+                        GlobalPerformanceScore = entry.globalPerformanceScore,
+                        IsLocalPlayer = false
+                    });
+                }
+            }
+            else
+            {
+                for (int index = 0; index < GlobalLeaderboardDefinition.ReferenceEntryCount; index++)
+                {
+                    (string displayName, long score) = GlobalLeaderboardDefinition.GetReferenceEntry(index);
+                    mergedEntries.Add(new LeaderboardSortEntry
+                    {
+                        DisplayName = displayName,
+                        GlobalPerformanceScore = score,
+                        IsLocalPlayer = false
+                    });
+                }
             }
 
             mergedEntries.Add(new LeaderboardSortEntry
@@ -35,6 +65,13 @@ namespace MahjongGame.Ranking
                 IsLocalPlayer = true
             });
 
+            return BuildSortedLeaderboard(mergedEntries, localPlayerScore);
+        }
+
+        private static LeaderboardData BuildSortedLeaderboard(
+            List<LeaderboardSortEntry> mergedEntries,
+            long localPlayerScore)
+        {
             mergedEntries.Sort((left, right) =>
             {
                 int scoreComparison = right.GlobalPerformanceScore.CompareTo(left.GlobalPerformanceScore);

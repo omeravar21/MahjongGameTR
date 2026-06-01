@@ -34,6 +34,8 @@ namespace MahjongGame.Ranking
 
         public static event Action<GlobalRankChangedContext> GlobalRankChanged;
 
+        public static event Action<RankingSyncCompletedContext> RankingSyncCompleted;
+
         internal static void RaiseGlobalPerformanceScoreChanged(GlobalPerformanceScoreChangedContext context)
         {
             if (context == null)
@@ -52,6 +54,16 @@ namespace MahjongGame.Ranking
             }
 
             GlobalRankChanged?.Invoke(context);
+        }
+
+        internal static void RaiseRankingSyncCompleted(RankingSyncCompletedContext context)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            RankingSyncCompleted?.Invoke(context);
         }
     }
 }

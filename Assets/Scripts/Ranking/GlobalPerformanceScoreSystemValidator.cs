@@ -182,21 +182,24 @@ namespace MahjongGame.Ranking
             try
             {
                 saveSystem.ResetToDefaults();
+                rankingDirector.LoadFromSave();
 
                 LevelPerformanceResult firstResult = new LevelPerformanceResult(3000, 8000, 10000, 5000);
                 LevelPerformanceResult secondResult = new LevelPerformanceResult(1000, 3000, 10000, 0);
+                long expectedFirstTotal = firstResult.TotalPerformanceScore;
+                long expectedSecondTotal = expectedFirstTotal + secondResult.TotalPerformanceScore;
 
                 if (!rankingDirector.TryAccumulateLevelPerformance(firstResult, out long firstPrevious, out long firstNew)
                     || firstPrevious != 0
-                    || firstNew != firstResult.TotalPerformanceScore)
+                    || firstNew != expectedFirstTotal)
                 {
                     AppendLine(reportBuilder, "[FAIL] RankingDirector first accumulation failed.");
                     return false;
                 }
 
                 if (!rankingDirector.TryAccumulateLevelPerformance(secondResult, out long secondPrevious, out long secondNew)
-                    || secondPrevious != firstNew
-                    || secondNew != firstPrevious + secondResult.TotalPerformanceScore)
+                    || secondPrevious != expectedFirstTotal
+                    || secondNew != expectedSecondTotal)
                 {
                     AppendLine(reportBuilder, "[FAIL] RankingDirector second accumulation failed.");
                     return false;

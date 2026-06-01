@@ -46,6 +46,11 @@ namespace MahjongGame.Core
                 gameObject.AddComponent<RankingDirector>();
             }
 
+            if (GetComponent<RankingSyncController>() == null)
+            {
+                gameObject.AddComponent<RankingSyncController>();
+            }
+
             if (GetComponent<DifficultyDirector>() == null)
             {
                 gameObject.AddComponent<DifficultyDirector>();
