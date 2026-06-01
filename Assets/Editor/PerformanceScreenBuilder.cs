@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using MahjongGame.Progression;
 using MahjongGame.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -33,6 +34,12 @@ namespace MahjongGame.Editor
             if (levelResultController == null)
             {
                 levelResultController = gameplayRoot.gameObject.AddComponent<LevelResultController>();
+            }
+
+            LevelCompletionController levelCompletionController = gameplayRoot.GetComponent<LevelCompletionController>();
+            if (levelCompletionController == null)
+            {
+                levelCompletionController = gameplayRoot.gameObject.AddComponent<LevelCompletionController>();
             }
 
             PerformanceScreenController performanceScreenController = uiRoot.GetComponent<PerformanceScreenController>();

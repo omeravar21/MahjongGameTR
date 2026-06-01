@@ -24,9 +24,14 @@ namespace MahjongGame.UI
             }
 
             LevelResultController levelResultController = gameplayRoot.GetComponent<LevelResultController>();
+            LevelCompletionController levelCompletionController = gameplayRoot.GetComponent<LevelCompletionController>();
             PerformanceScreenController performanceScreenController = ResolvePerformanceScreenController(gameplayRoot);
 
-            passed &= ValidateComponents(levelResultController, performanceScreenController, reportBuilder);
+            passed &= ValidateComponents(
+                levelResultController,
+                levelCompletionController,
+                performanceScreenController,
+                reportBuilder);
             passed &= ValidateTypesAndEvents(reportBuilder);
             passed &= ValidateLayout(reportBuilder);
 
@@ -65,6 +70,7 @@ namespace MahjongGame.UI
 
         private static bool ValidateComponents(
             LevelResultController levelResultController,
+            LevelCompletionController levelCompletionController,
             PerformanceScreenController performanceScreenController,
             StringBuilder reportBuilder)
         {
@@ -78,6 +84,16 @@ namespace MahjongGame.UI
             else
             {
                 AppendLine(reportBuilder, "[PASS] LevelResultController is present on GameplayRoot.");
+            }
+
+            if (levelCompletionController == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] LevelCompletionController is missing on GameplayRoot.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] LevelCompletionController is present on GameplayRoot.");
             }
 
             if (performanceScreenController == null)
@@ -122,6 +138,8 @@ namespace MahjongGame.UI
             }
 
             passed &= ValidateEventExists(typeof(LevelResultEvents), nameof(LevelResultEvents.LevelResultReady), reportBuilder);
+            passed &= ValidateEventExists(typeof(ProgressionEvents), nameof(ProgressionEvents.LevelCompleted), reportBuilder);
+            passed &= ValidateEventExists(typeof(ProgressionEvents), nameof(ProgressionEvents.LevelAdvanced), reportBuilder);
 
             return passed;
         }
@@ -175,66 +193,117 @@ namespace MahjongGame.UI
 
             int levelBefore = ResolveCurrentLevel();
             int sessionIdBefore = SessionDirector.Instance.CurrentSession.SessionId;
+            bool levelCompletedRaised = false;
+            bool levelAdvancedRaised = false;
 
-            if (!SessionDirector.Instance.TryEndSession(SessionEndReason.Win))
+            void HandleLevelCompleted(LevelCompletedContext context)
             {
-                AppendLine(reportBuilder, "[FAIL] TryEndSession(Win) failed during performance screen validation.");
-                return false;
+                if (context != null && context.CompletedLevel == levelBefore)
+                {
+                    levelCompletedRaised = true;
+                }
             }
 
-            if (!performanceScreenController.IsVisible)
+            void HandleLevelAdvanced(LevelAdvancedContext context)
             {
-                AppendLine(reportBuilder, "[FAIL] Performance screen is not visible after win.");
-                return false;
+                if (context != null
+                    && context.PreviousLevel == levelBefore
+                    && context.NewLevel == levelBefore + 1)
+                {
+                    levelAdvancedRaised = true;
+                }
             }
 
-            LevelResultSummary summary = levelResultController.BuildSummaryForValidation();
-            if (summary == null)
+            ProgressionEvents.LevelCompleted += HandleLevelCompleted;
+            ProgressionEvents.LevelAdvanced += HandleLevelAdvanced;
+
+            try
             {
-                AppendLine(reportBuilder, "[FAIL] Level result summary is null after win.");
-                return false;
-            }
+                if (!SessionDirector.Instance.TryEndSession(SessionEndReason.Win))
+                {
+                    AppendLine(reportBuilder, "[FAIL] TryEndSession(Win) failed during performance screen validation.");
+                    return false;
+                }
 
-            if (summary.Score < 0 || summary.CompletionTimeSeconds < 0f || summary.TotalComboCount < 0)
+                if (!levelCompletedRaised)
+                {
+                    AppendLine(reportBuilder, "[FAIL] LevelCompleted event was not raised after win.");
+                    return false;
+                }
+
+                if (ResolveCurrentLevel() != levelBefore)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Current level changed before Next Level selection.");
+                    return false;
+                }
+
+                AppendLine(reportBuilder, "[PASS] Win marks the current level complete without advancing progression.");
+
+                if (!performanceScreenController.IsVisible)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Performance screen is not visible after win.");
+                    return false;
+                }
+
+                LevelResultSummary summary = levelResultController.BuildSummaryForValidation();
+                if (summary == null)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Level result summary is null after win.");
+                    return false;
+                }
+
+                if (summary.Score < 0 || summary.CompletionTimeSeconds < 0f || summary.TotalComboCount < 0)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Level result summary contains invalid values.");
+                    return false;
+                }
+
+                AppendLine(reportBuilder, "[PASS] Performance screen displays after win with valid summary data.");
+
+                performanceScreenController.InvokeNextLevelForValidation();
+
+                if (!performanceScreenController.IsVisible)
+                {
+                    AppendLine(reportBuilder, "[PASS] Performance screen hides after Next Level is selected.");
+                }
+                else
+                {
+                    AppendLine(reportBuilder, "[FAIL] Performance screen remains visible after Next Level is selected.");
+                    return false;
+                }
+
+                if (!levelAdvancedRaised)
+                {
+                    AppendLine(reportBuilder, "[FAIL] LevelAdvanced event was not raised after Next Level selection.");
+                    return false;
+                }
+
+                if (!SessionDirector.Instance.IsSessionActive)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Session is not active after Next Level selection.");
+                    return false;
+                }
+
+                if (SessionDirector.Instance.CurrentSession.SessionId <= sessionIdBefore)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Session id did not increase after Next Level selection.");
+                    return false;
+                }
+
+                if (ResolveCurrentLevel() != levelBefore + 1)
+                {
+                    AppendLine(reportBuilder, "[FAIL] Player level did not advance after Next Level selection.");
+                    return false;
+                }
+
+                AppendLine(reportBuilder, "[PASS] Next Level advances progression and starts a new session.");
+                return true;
+            }
+            finally
             {
-                AppendLine(reportBuilder, "[FAIL] Level result summary contains invalid values.");
-                return false;
+                ProgressionEvents.LevelCompleted -= HandleLevelCompleted;
+                ProgressionEvents.LevelAdvanced -= HandleLevelAdvanced;
             }
-
-            AppendLine(reportBuilder, "[PASS] Performance screen displays after win with valid summary data.");
-
-            performanceScreenController.InvokeNextLevelForValidation();
-
-            if (!performanceScreenController.IsVisible)
-            {
-                AppendLine(reportBuilder, "[PASS] Performance screen hides after Next Level is selected.");
-            }
-            else
-            {
-                AppendLine(reportBuilder, "[FAIL] Performance screen remains visible after Next Level is selected.");
-                return false;
-            }
-
-            if (!SessionDirector.Instance.IsSessionActive)
-            {
-                AppendLine(reportBuilder, "[FAIL] Session is not active after Next Level selection.");
-                return false;
-            }
-
-            if (SessionDirector.Instance.CurrentSession.SessionId <= sessionIdBefore)
-            {
-                AppendLine(reportBuilder, "[FAIL] Session id did not increase after Next Level selection.");
-                return false;
-            }
-
-            if (ResolveCurrentLevel() != levelBefore + 1)
-            {
-                AppendLine(reportBuilder, "[FAIL] Player level did not advance after Next Level selection.");
-                return false;
-            }
-
-            AppendLine(reportBuilder, "[PASS] Next Level advances progression and starts a new session.");
-            return true;
         }
 
         private static bool EnsureActiveSessionForValidation(StringBuilder reportBuilder)

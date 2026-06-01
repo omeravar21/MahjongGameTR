@@ -12,6 +12,8 @@ namespace MahjongGame.UI
         public const string CanvasName = "Canvas_Game";
         public const string PanelName = "PerformanceScreenPanel";
         public const string NextLevelButtonName = "NextLevelButton";
+        private const string NextLevelButtonLabel = "Next Level";
+        private const string MaxLevelButtonLabel = "Max Level";
 
         private static readonly Color PanelColor = new Color(0.12f, 0.1f, 0.08f, 0.92f);
         private static readonly Color ButtonColor = new Color(0.24f, 0.18f, 0.14f, 0.95f);
@@ -230,6 +232,26 @@ namespace MahjongGame.UI
             {
                 _panelRoot.SetActive(true);
             }
+
+            RefreshNextLevelButtonState(summary.LevelNumber);
+        }
+
+        private void RefreshNextLevelButtonState(int completedLevelNumber)
+        {
+            if (_nextLevelButton == null)
+            {
+                return;
+            }
+
+            bool canAdvance = LevelProgressionDefinition.CanAdvanceFrom(completedLevelNumber);
+            _nextLevelButton.interactable = canAdvance;
+
+            Transform labelTransform = _nextLevelButton.transform.Find("Label");
+            Text labelText = labelTransform != null ? labelTransform.GetComponent<Text>() : null;
+            if (labelText != null)
+            {
+                labelText.text = canAdvance ? NextLevelButtonLabel : MaxLevelButtonLabel;
+            }
         }
 
         private void HidePanel()
@@ -253,10 +275,19 @@ namespace MahjongGame.UI
                 return;
             }
 
-            int nextLevel = ResolveNextLevelNumber();
-            if (PlayerProgressionDirector.HasInstance)
+            if (!PlayerProgressionDirector.HasInstance)
             {
-                PlayerProgressionDirector.Instance.SetCurrentLevel(nextLevel);
+                Debug.LogWarning("[PerformanceScreenController] PlayerProgressionDirector is not available.");
+                return;
+            }
+
+            if (!PlayerProgressionDirector.Instance.TryAdvanceToNextLevel(out LevelProgressionResult result))
+            {
+                Debug.LogWarning(
+                    "[PerformanceScreenController] Could not advance from level "
+                    + result.PreviousLevel
+                    + ".");
+                return;
             }
 
             LevelRuntimeResetter.TryResetLevel(gameplayRoot);
@@ -265,25 +296,6 @@ namespace MahjongGame.UI
             {
                 SessionDirector.Instance.TryStartSession(out _);
             }
-        }
-
-        private int ResolveNextLevelNumber()
-        {
-            int currentLevel = _activeSummary != null
-                ? _activeSummary.LevelNumber
-                : ResolveCurrentLevelFallback();
-
-            return currentLevel + 1;
-        }
-
-        private static int ResolveCurrentLevelFallback()
-        {
-            if (PlayerProgressionDirector.HasInstance)
-            {
-                return PlayerProgressionDirector.Instance.CurrentLevel;
-            }
-
-            return LevelProgressData.MinLevel;
         }
 
         private static Transform ResolveGameplayRootTransform()
