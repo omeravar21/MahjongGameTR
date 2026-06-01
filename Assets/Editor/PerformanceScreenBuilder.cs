@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using MahjongGame.DailyBoard;
 using MahjongGame.Progression;
 using MahjongGame.UI;
 using MahjongGame.BoardGeneration;
@@ -41,6 +42,12 @@ namespace MahjongGame.Editor
             if (levelCompletionController == null)
             {
                 levelCompletionController = gameplayRoot.gameObject.AddComponent<LevelCompletionController>();
+            }
+
+            DailyBoardCompletionController dailyBoardCompletionController = gameplayRoot.GetComponent<DailyBoardCompletionController>();
+            if (dailyBoardCompletionController == null)
+            {
+                dailyBoardCompletionController = gameplayRoot.gameObject.AddComponent<DailyBoardCompletionController>();
             }
 
             DifficultyScalingController difficultyScalingController = gameplayRoot.GetComponent<DifficultyScalingController>();

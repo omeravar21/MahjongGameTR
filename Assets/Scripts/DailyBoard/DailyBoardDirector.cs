@@ -1,4 +1,5 @@
 using System;
+using MahjongGame.BoardGeneration;
 using MahjongGame.Core;
 using MahjongGame.Core.Save;
 using UnityEngine;
@@ -100,6 +101,33 @@ namespace MahjongGame.DailyBoard
             PersistToSave();
             RefreshDailyBoard();
             return true;
+        }
+
+        public bool TryGenerateRecipe(out LevelRecipe recipe)
+        {
+            recipe = null;
+            DailyBoardIdentity identity = GetCurrentIdentity();
+
+            if (!identity.IsValid())
+            {
+                return false;
+            }
+
+            recipe = DailyBoardRecipeDefinition.GenerateRecipe(identity.DayId, identity.DailySeed);
+            return recipe != null;
+        }
+
+        public bool TryGenerateBoardData(out BoardData boardData)
+        {
+            boardData = null;
+
+            if (!TryGenerateRecipe(out LevelRecipe recipe))
+            {
+                return false;
+            }
+
+            boardData = BoardGenerationPipeline.GenerateBoardData(recipe);
+            return boardData != null && boardData.IsValidated;
         }
 
         internal void SetStateForValidation(int lastCompletedDayId, DateTime utcNow)

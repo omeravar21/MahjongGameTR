@@ -40,6 +40,7 @@ namespace MahjongGame.UI
                 && FindChild(canvasTransform, "TopBar/RankingButton") != null
                 && FindChild(canvasTransform, "TopBar/ThemeButton") != null
                 && FindChild(canvasTransform, "TopBar/SettingsButton") != null
+                && FindChild(canvasTransform, "TopBar/DailyBoardButton") != null
                 && FindChild(canvasTransform, "LevelButton") != null;
         }
 
@@ -58,6 +59,7 @@ namespace MahjongGame.UI
             CreateMenuButton("RankingButton", topBar.transform, new Vector2(-82f, -60f), new Vector2(150f, 80f), "Ranking");
             CreateMenuButton("ThemeButton", topBar.transform, new Vector2(82f, -60f), new Vector2(150f, 80f), "Theme");
             CreateMenuButton("SettingsButton", topBar.transform, new Vector2(247f, -60f), new Vector2(150f, 80f), "Settings");
+            CreateMenuButton("DailyBoardButton", topBar.transform, new Vector2(0f, -115f), new Vector2(220f, 56f), "Daily");
             CreateMenuButton("LevelButton", canvasTransform, Vector2.zero, new Vector2(420f, 180f), CurrentLevelButtonController.FormatLevelLabel(LevelProgressData.MinLevel));
         }
 

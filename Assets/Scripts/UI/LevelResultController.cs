@@ -32,15 +32,16 @@ namespace MahjongGame.UI
                 return;
             }
 
+            bool isDailyBoardSession = context.Session != null && context.Session.Mode == SessionMode.DailyBoard;
             int levelNumber = context.Session != null
                 ? context.Session.LevelNumber
                 : ResolveLevelNumber();
 
-            LevelResultSummary summary = BuildSummaryFromCurrentState(levelNumber);
+            LevelResultSummary summary = BuildSummaryFromCurrentState(levelNumber, accumulateGlobalPerformanceScore: !isDailyBoardSession);
             LevelResultEvents.RaiseLevelResultReady(summary);
         }
 
-        private LevelResultSummary BuildSummaryFromCurrentState(int levelNumber)
+        private LevelResultSummary BuildSummaryFromCurrentState(int levelNumber, bool accumulateGlobalPerformanceScore = true)
         {
             ScoreController scoreController = GetComponent<ScoreController>();
             ComboController comboController = GetComponent<ComboController>();
@@ -71,7 +72,7 @@ namespace MahjongGame.UI
                 noBoosterBonus = performanceResult.NoBoosterBonus;
                 globalPerformanceScoreEarned = performanceResult.TotalPerformanceScore;
 
-                if (RankingDirector.HasInstance)
+                if (accumulateGlobalPerformanceScore && RankingDirector.HasInstance)
                 {
                     RankingDirector.Instance.TryAccumulateLevelPerformance(
                         performanceResult,

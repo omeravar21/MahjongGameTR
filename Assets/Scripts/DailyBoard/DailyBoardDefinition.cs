@@ -7,6 +7,7 @@ namespace MahjongGame.DailyBoard
     /// </summary>
     public static class DailyBoardDefinition
     {
+        public const int DailySessionLevelNumber = -1;
         public static int GetUtcDayId(DateTime utcNow)
         {
             DateTime utcDate = utcNow.Kind == DateTimeKind.Utc

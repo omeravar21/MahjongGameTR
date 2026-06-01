@@ -1,6 +1,7 @@
 using MahjongGame.Board;
 using MahjongGame.BoardGeneration;
 using MahjongGame.ClosedTiles;
+using MahjongGame.DailyBoard;
 using MahjongGame.Rewards;
 using MahjongGame.Core;
 using MahjongGame.Progression;
@@ -96,7 +97,47 @@ namespace MahjongGame.Session
             PrepareLevelSession(levelNumber);
             SetState(LevelSessionState.Active);
 
-            _currentSession = new SessionData(sessionId, levelNumber, _currentState);
+            _currentSession = new SessionData(sessionId, levelNumber, _currentState, SessionMode.Normal, 0);
+            SessionEvents.RaiseSessionStarted(new SessionStartedContext(_currentSession));
+            TryRegisterSpawnedSpecialTiles();
+            session = _currentSession;
+            return true;
+        }
+
+        public bool TryStartDailySession(out SessionData session)
+        {
+            session = null;
+
+            if (_currentState == LevelSessionState.Starting || _currentState == LevelSessionState.Active)
+            {
+                return false;
+            }
+
+            if (!DailyBoardDirector.HasInstance)
+            {
+                Debug.LogWarning("[SessionDirector] DailyBoardDirector is not available.");
+                return false;
+            }
+
+            DailyBoardIdentity identity = DailyBoardDirector.Instance.GetCurrentIdentity();
+            if (!identity.IsAvailable)
+            {
+                Debug.LogWarning("[SessionDirector] Daily board is not available for day " + identity.DayId + ".");
+                return false;
+            }
+
+            int sessionId = _nextSessionId++;
+
+            SetState(LevelSessionState.Starting);
+            PrepareDailySession(identity);
+            SetState(LevelSessionState.Active);
+
+            _currentSession = new SessionData(
+                sessionId,
+                DailyBoardDefinition.DailySessionLevelNumber,
+                _currentState,
+                SessionMode.DailyBoard,
+                identity.DayId);
             SessionEvents.RaiseSessionStarted(new SessionStartedContext(_currentSession));
             TryRegisterSpawnedSpecialTiles();
             session = _currentSession;
@@ -153,6 +194,32 @@ namespace MahjongGame.Session
                 return;
             }
 
+            SessionMode pendingSessionMode = GameLaunchRequest.ConsumePendingSessionMode();
+
+            if (pendingSessionMode == SessionMode.DailyBoard)
+            {
+                if (TryStartDailySession(out _))
+                {
+                    Debug.Log(
+                        "[SessionDirector] Gameplay session bootstrap started daily board session, trigger="
+                        + triggerSource
+                        + ", activeScene="
+                        + activeSceneName
+                        + ".");
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        "[SessionDirector] Gameplay session bootstrap failed to start daily board session, trigger="
+                        + triggerSource
+                        + ", activeScene="
+                        + activeSceneName
+                        + ".");
+                }
+
+                return;
+            }
+
             if (ActiveLevelSaveDirector.HasInstance
                 && ActiveLevelSaveDirector.Instance.HasPersistedActiveSession()
                 && ActiveLevelSaveDirector.Instance.TryRestoreActiveSession())
@@ -199,7 +266,12 @@ namespace MahjongGame.Session
             SetState(LevelSessionState.Starting);
             SetState(LevelSessionState.Active);
 
-            _currentSession = new SessionData(sessionId, levelNumber, _currentState);
+            _currentSession = new SessionData(
+                sessionId,
+                levelNumber,
+                _currentState,
+                SessionMode.Normal,
+                0);
             SessionEvents.RaiseSessionStarted(new SessionStartedContext(_currentSession, isResumeSession: true));
             session = _currentSession;
             return true;
@@ -284,9 +356,56 @@ namespace MahjongGame.Session
             TrySpawnRuntimeBoard(levelNumber);
         }
 
+        private void PrepareDailySession(DailyBoardIdentity identity)
+        {
+            Debug.Log(
+                "[SessionDirector] Preparing daily board session for day "
+                + identity.DayId
+                + ", seed="
+                + identity.DailySeed
+                + ".");
+
+            LevelRecipe recipe = DailyBoardRecipeDefinition.GenerateRecipe(identity.DayId, identity.DailySeed);
+            Debug.Log(
+                "[SessionDirector] Daily board recipe generated: seed="
+                + recipe.Seed
+                + ", tiles="
+                + recipe.TileCount
+                + ", layers="
+                + recipe.LayerDepth
+                + ", archetype="
+                + recipe.ArchetypeId
+                + ", variation="
+                + recipe.VariationIndex
+                + ", jokers="
+                + recipe.JokerCount
+                + ", timer="
+                + recipe.RecommendedTimerSeconds
+                + "s.");
+
+            TrySpawnRuntimeBoard(recipe);
+        }
+
         private void TrySpawnRuntimeBoard(int levelNumber)
         {
             BoardData boardData = BoardGenerationPipeline.GenerateBoardData(levelNumber);
+            SpawnRuntimeBoard(boardData, levelNumber);
+        }
+
+        private void TrySpawnRuntimeBoard(LevelRecipe recipe)
+        {
+            if (recipe == null)
+            {
+                Debug.LogWarning("[SessionDirector] Daily board recipe is null.");
+                return;
+            }
+
+            BoardData boardData = BoardGenerationPipeline.GenerateBoardData(recipe);
+            SpawnRuntimeBoard(boardData, recipe.LevelNumber);
+        }
+
+        private void SpawnRuntimeBoard(BoardData boardData, int logLevelNumber)
+        {
             Debug.Log(
                 "[SessionDirector] Board generation pipeline completed: level="
                 + boardData.LevelNumber
@@ -326,12 +445,12 @@ namespace MahjongGame.Session
 
             if (!boardSpawner.Spawn(boardData))
             {
-                Debug.LogWarning("[SessionDirector] BoardSpawner failed to spawn runtime board for level " + levelNumber + ".");
+                Debug.LogWarning("[SessionDirector] BoardSpawner failed to spawn runtime board for level " + logLevelNumber + ".");
                 return;
             }
 
             LastBoardSeed = boardData.Seed;
-            if (ActiveLevelSaveDirector.HasInstance)
+            if (ActiveLevelSaveDirector.HasInstance && _currentSession?.Mode != SessionMode.DailyBoard)
             {
                 ActiveLevelSaveDirector.Instance.NotifyBoardSeed(boardData.Seed);
             }
@@ -412,7 +531,9 @@ namespace MahjongGame.Session
                 _currentSession = new SessionData(
                     _currentSession.SessionId,
                     _currentSession.LevelNumber,
-                    newState);
+                    newState,
+                    _currentSession.Mode,
+                    _currentSession.DailyDayId);
             }
 
             SessionEvents.RaiseSessionStateChanged(previousState, newState);

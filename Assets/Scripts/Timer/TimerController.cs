@@ -1,3 +1,4 @@
+using MahjongGame.DailyBoard;
 using MahjongGame.Progression;
 using MahjongGame.Session;
 using UnityEngine;
@@ -138,6 +139,15 @@ namespace MahjongGame.Timer
         {
             if (context == null || context.IsResumeSession)
             {
+                return;
+            }
+
+            if (context.Session != null && context.Session.Mode == SessionMode.DailyBoard)
+            {
+                _levelNumber = context.Session.LevelNumber;
+                LastElapsedTimeSeconds = 0f;
+                StopTimer();
+                TryStartTimer(DailyBoardRulesDefinition.GetRecommendedTimerSeconds());
                 return;
             }
 

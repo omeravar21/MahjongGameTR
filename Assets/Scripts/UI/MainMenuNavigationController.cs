@@ -1,6 +1,7 @@
 ﻿using System;
 using MahjongGame.Core;
 using MahjongGame.Core.Save;
+using MahjongGame.DailyBoard;
 using MahjongGame.Progression;
 using MahjongGame.Ranking;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace MahjongGame.UI
         };
 
         public static event Action LevelStartRequested;
+        public static event Action DailyBoardStartRequested;
 
         private enum MainMenuView
         {
@@ -37,6 +39,7 @@ namespace MahjongGame.UI
 
         private Transform _topBar;
         private Transform _levelButton;
+        private Transform _dailyBoardButton;
         private Transform _profilePanel;
         private Transform _leaderboardPanel;
         private Transform _themePanel;
@@ -62,6 +65,7 @@ namespace MahjongGame.UI
 
             CacheReferences(canvasTransform);
             WireButtons();
+            ApplyDailyBoardButtonState();
             ShowView(MainMenuView.Home);
 
             if (ShouldAutoContinueActiveSession())
@@ -127,6 +131,11 @@ namespace MahjongGame.UI
             overlayRoot.SetActive(false);
         }
 
+        public static void RaiseDailyBoardStartRequested()
+        {
+            DailyBoardStartRequested?.Invoke();
+        }
+
         public static void RaiseLevelStartRequested()
         {
             LevelStartRequested?.Invoke();
@@ -182,6 +191,7 @@ namespace MahjongGame.UI
         {
             _topBar = canvasTransform.Find("TopBar");
             _levelButton = canvasTransform.Find("LevelButton");
+            _dailyBoardButton = canvasTransform.Find("TopBar/DailyBoardButton");
 
             Transform overlayRoot = canvasTransform.Find("MenuOverlayRoot");
             if (overlayRoot == null)
@@ -212,6 +222,7 @@ namespace MahjongGame.UI
             WireMenuButton("TopBar/ThemeButton", () => ShowView(MainMenuView.Theme));
             WireMenuButton("TopBar/SettingsButton", () => ShowView(MainMenuView.Settings));
             WireMenuButton("LevelButton", RequestLevelStart);
+            WireMenuButton("TopBar/DailyBoardButton", RequestDailyBoardStart);
 
             WireBackButton(_profilePanel, () => ShowView(MainMenuView.Home));
             WireBackButton(_leaderboardPanel, () => ShowView(MainMenuView.Home));
@@ -259,7 +270,52 @@ namespace MahjongGame.UI
 
         private void RequestLevelStart()
         {
+            GameLaunchRequest.RequestNormalLevel();
             RaiseLevelStartRequested();
+        }
+
+        private void RequestDailyBoardStart()
+        {
+            if (!DailyBoardDirector.HasInstance)
+            {
+                Debug.LogWarning("[MainMenuNavigationController] DailyBoardDirector is not available.");
+                return;
+            }
+
+            DailyBoardIdentity identity = DailyBoardDirector.Instance.GetCurrentIdentity();
+            if (!identity.IsAvailable)
+            {
+                Debug.Log("[MainMenuNavigationController] Daily board is not available today.");
+                return;
+            }
+
+            GameLaunchRequest.RequestDailyBoard();
+            RaiseDailyBoardStartRequested();
+        }
+
+        private void ApplyDailyBoardButtonState()
+        {
+            if (_dailyBoardButton == null)
+            {
+                return;
+            }
+
+            Button button = _dailyBoardButton.GetComponent<Button>();
+            Text label = _dailyBoardButton.Find("Label")?.GetComponent<Text>();
+            bool isAvailable = DailyBoardDirector.HasInstance
+                && DailyBoardDirector.Instance.GetCurrentIdentity().IsAvailable;
+            bool isCompletedToday = DailyBoardDirector.HasInstance
+                && DailyBoardDirector.Instance.GetCurrentIdentity().IsCompletedToday;
+
+            if (button != null)
+            {
+                button.interactable = isAvailable;
+            }
+
+            if (label != null)
+            {
+                label.text = isCompletedToday ? "Daily Done" : "Daily";
+            }
         }
 
         private void ShowView(MainMenuView view)
@@ -276,6 +332,11 @@ namespace MahjongGame.UI
             if (_levelButton != null)
             {
                 _levelButton.gameObject.SetActive(isHome);
+            }
+
+            if (_dailyBoardButton != null)
+            {
+                _dailyBoardButton.gameObject.SetActive(isHome);
             }
 
             if (overlayRoot != null)

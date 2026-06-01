@@ -26,6 +26,18 @@ namespace MahjongGame.Session
                 return;
             }
 
+            if (context.Session != null && context.Session.Mode == SessionMode.DailyBoard)
+            {
+                LevelRuntimeResetter.TryResetRuntimeState(transform);
+
+                if (SessionDirector.Instance.TryStartDailySession(out _))
+                {
+                    Debug.Log("[SessionRestartController] Daily board restarted after failure.");
+                }
+
+                return;
+            }
+
             LevelRuntimeResetter.TryResetLevel(transform);
 
             if (SessionDirector.Instance.TryStartSession(out _))
