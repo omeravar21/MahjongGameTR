@@ -1,0 +1,474 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.4/staging' branch; Version is '6000.4.7f1 (f3c3c4248748) revision 15975364'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Omer Avar" at "2026-06-01T19:42:28.4905246Z"
+OS: 'Windows 11  (10.0.26200) Professional' Language: 'tr' Physical Memory: 8029 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-06-01T19:42:28Z
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.4.7f1\Editor\Unity.exe
+-batchmode
+-nographics
+-quit
+-projectPath
+d:\MahjongGame
+-logFile
+d:\MahjongGame\compile-phase172.log
+Successfully changed project path to: d:\MahjongGame
+D:/MahjongGame
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Player connection [14856]  Target information:
+
+Player connection [14856]  * "[IP] 192.168.1.124 [Port] 55504 [Flags] 2 [Guid] 1999901075 [EditorId] 1999901075 [Version] 1048832 [Id] WindowsEditor(7,OmerAvar) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [14856] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [14856] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Licensing::Client] Error: HandshakeResponse reported an error:
+	ResponseCode: 505
+	ResponseStatus: Unsupported protocol version '1.18.1'.
+[Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-Omer Avar"
+[Licensing::IpcConnector] LicenseClient-Omer Avar channel disconnected successfully.
+[Licensing::IpcConnector] Channel LicenseClient-Omer Avar-6000.4.7 doesn't exist
+[Licensing::Module] Successfully launched the LicensingClient (PId: 6388)
+[Package Manager] Connected to IPC stream "Upm-15928" after 0.8 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Omer Avar-6000.4.7" at "2026-06-01T19:42:31.9549661Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 6388, path: "C:/Program Files/Unity/Hub/Editor/6000.4.7f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.1+9fbee8e
+  Session Id:              5143748b28624b71bb17b6d10ac75698
+  Correlation Id:          f51dbcf140aab01b65abf98de8a30b63
+  External correlation Id: 6726636568710614111
+  Machine Id:              1JW6h006V6e30suiqZEd3XsVnTE=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Omer Avar-6000.4.7" (connect: 0.86s, validation: 0.39s, handshake: 0.02s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Omer Avar-6000.4.7-notifications" at "2026-06-01T19:42:32.3644008Z"
+[Licensing::Module] Connected to LicensingClient (PId: 6388, launch time: 0.09, total connection time: 1.27s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968433548162-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.03
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 4.05s
+[Licensing::Module] Licensing is initialized (took 1.23s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Refreshing native plugins compatible for Editor in 2.17 ms, found 0 plugins.
+Initialize engine version: 6000.4.7f1 (f3c3c4248748)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.7f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/MahjongGame/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.7f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.7f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.7f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56928
+CodeReloadManager initialized
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.7f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.004472 seconds.
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.066 seconds
+Domain Reload Profiling: 2300ms
+	BeginReloadAssembly (423ms)
+		CreateAndSetChildDomain (49ms)
+	RebuildCommonClasses (99ms)
+	RebuildNativeTypeToScriptingClass (24ms)
+	initialDomainReloadingComplete (158ms)
+	LoadAllAssembliesAndSetupDomain (525ms)
+		LoadAssemblies (351ms)
+		AnalyzeDomain (507ms)
+			TypeCache.Refresh (503ms)
+				TypeCache.ScanAssembly (470ms)
+	FinalizeReload (1072ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (92ms)
+			BeforeProcessingInitializeOnLoad (238ms)
+			ProcessInitializeOnLoadAttributes (248ms)
+			ProcessInitializeOnLoadMethodAttributes (287ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 65 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.2d.animation@14.0.4 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.animation@011d329ac58b)
+    com.unity.2d.aseprite@4.0.2 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.aseprite@ccedfadacc51)
+    com.unity.2d.psdimporter@13.0.3 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.psdimporter@e58d0a2c1d48)
+    com.unity.2d.spriteshape@14.0.1 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.spriteshape@da3647ffbbd7)
+    com.unity.2d.tilemap.extras@7.0.1 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.tilemap.extras@66df903b3633)
+    com.unity.2d.tooling@2.0.2 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.tooling@9d6aff712598)
+    com.unity.collab-proxy@2.12.4 (location: D:\MahjongGame\Library\PackageCache\com.unity.collab-proxy@0b1559bcd34e)
+    com.unity.ide.rider@3.0.40 (location: D:\MahjongGame\Library\PackageCache\com.unity.ide.rider@e4950c6d131b)
+    com.unity.ide.visualstudio@2.0.27 (location: D:\MahjongGame\Library\PackageCache\com.unity.ide.visualstudio@dc1ddd4f09b6)
+    com.unity.inputsystem@1.19.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.inputsystem@21a28c3a6c83)
+    com.unity.timeline@1.8.12 (location: D:\MahjongGame\Library\PackageCache\com.unity.timeline@8cd8509afae5)
+    com.unity.visualscripting@1.9.11 (location: D:\MahjongGame\Library\PackageCache\com.unity.visualscripting@8bed5ad90189)
+    com.unity.2d.common@13.0.2 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.common@edfe77495b67)
+    com.unity.mathematics@1.3.3 (location: D:\MahjongGame\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.searcher@4.9.4 (location: D:\MahjongGame\Library\PackageCache\com.unity.searcher@d45a78918735)
+    com.unity.burst@1.8.29 (location: D:\MahjongGame\Library\PackageCache\com.unity.burst@6bb9aca3ef38)
+    com.unity.nuget.mono-cecil@1.11.6 (location: D:\MahjongGame\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.test-framework.performance@3.4.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.test-framework.performance@aa81a99c4a75)
+  Built-in packages:
+    com.unity.2d.sprite@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.sprite@929df5adbb1f)
+    com.unity.2d.tilemap@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.2d.tilemap@191c90975efd)
+    com.unity.multiplayer.center@1.0.1 (location: D:\MahjongGame\Library\PackageCache\com.unity.multiplayer.center@f01f4ba8d00a)
+    com.unity.render-pipelines.universal@17.4.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.render-pipelines.universal@7228970dbdbf)
+    com.unity.test-framework@1.6.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.test-framework@76560ee600cb)
+    com.unity.ugui@2.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.ugui@4dc88464a83d)
+    com.unity.modules.accessibility@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tilemap@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.vr@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.vr)
+    com.unity.modules.wind@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ext.nunit@2.0.5 (location: D:\MahjongGame\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.render-pipelines.core@17.4.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.render-pipelines.core@6f62546dd936)
+    com.unity.shadergraph@17.4.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.shadergraph@6db99422c248)
+    com.unity.render-pipelines.universal-config@17.4.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.render-pipelines.universal-config@0db4263b9e6b)
+    com.unity.collections@6.4.0 (location: D:\MahjongGame\Library\PackageCache\com.unity.collections@5b6ebd78ccc0)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.12 seconds
+The GUID inside 'Assets/Scripts/Timer.meta' cannot be extracted by the YAML Parser. Attempting to extract it via string matching instead. Please verify the file does not contain unexpected data.
+The GUID inside 'Assets/Scripts/Session.meta' cannot be extracted by the YAML Parser. Attempting to extract it via string matching instead. Please verify the file does not contain unexpected data.
+The .meta file Assets/Scripts/Session.meta does not have a valid GUID and its corresponding Asset file will be ignored. If this file is not malformed, please add a GUID, or delete the .meta file and it will be recreated correctly
+The .meta file Assets/Scripts/Timer.meta does not have a valid GUID and its corresponding Asset file will be ignored. If this file is not malformed, please add a GUID, or delete the .meta file and it will be recreated correctly
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.7f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/MahjongGame
+DisplayProgressbar: Compiling Scripts
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.7f1\Editor\Data\netcorerun\netcorerun.exe "C:\Program Files\Unity\Hub\Editor\6000.4.7f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/1900b0aE.dag.json" "Library/Bee/1900b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/MahjongGame
+ExitCode: 4 Duration: 4s714ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/1900b0aE-inputdata.json
+[ 852/1101  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra requires additional run (4.47 seconds), 2 items updated, 851 evaluated
+ExitCode: 0 Duration: 3s565ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.4.7f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --dagfilejson="Library\Bee\1900b0aE.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: D:/MahjongGame
+ExitCode: 0 Duration: 9s253ms
+Finished compiling graph: 1104 nodes, 21623 flattened edges (17695 ToBuild, 176 ToUse), maximum node priority 1266
+[ 536/1101  0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.rsp
+[ 852/1101  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1093/1101  2s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.dll (+2 others)
+Assets\Scripts\ClosedTiles\ClosedTileSystemValidator.cs(96,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\BoardGeneration\VisualVarietySystemValidator.cs(100,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\Score\ScoreSystemValidator.cs(145,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\Score\ScoreSystemValidator.cs(153,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\Rewards\JokerSystemValidator.cs(131,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\Boosters\BoosterEconomySystemValidator.cs(91,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\Boosters\BoosterEconomySystemValidator.cs(101,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\Boosters\BoosterEconomySystemValidator.cs(113,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\BoardGeneration\GridMaskSystemValidator.cs(35,17): warning CS0162: Unreachable code detected
+
+Assets\Scripts\BoardGeneration\GridMaskSystemValidator.cs(41,17): warning CS0162: Unreachable code detected
+[1094/1101  0s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Editor\GameSceneSpawnVerificationBuilder.cs(159,88): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\GameSceneSpawnVerificationBuilder.cs(159,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+[1095/1101  3s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 137 defines and 358 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1096/1101  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[1097/1101  4s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.dll, with 139 defines and 336 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+
+running zzzUnity.Burst.CodeGen.BurstILPostProcessor
+[1098/1101  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.pdb
+[1099/1101  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+[1100/1101  0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.dll
+*** Tundra build success (9.20 seconds), 10 items updated, 1101 evaluated
+Assets\Scripts\ClosedTiles\ClosedTileSystemValidator.cs(96,17): warning CS0162: Unreachable code detected
+Assets\Scripts\BoardGeneration\VisualVarietySystemValidator.cs(100,17): warning CS0162: Unreachable code detected
+Assets\Scripts\Score\ScoreSystemValidator.cs(145,17): warning CS0162: Unreachable code detected
+Assets\Scripts\Score\ScoreSystemValidator.cs(153,17): warning CS0162: Unreachable code detected
+Assets\Scripts\Rewards\JokerSystemValidator.cs(131,17): warning CS0162: Unreachable code detected
+Assets\Scripts\Boosters\BoosterEconomySystemValidator.cs(91,17): warning CS0162: Unreachable code detected
+Assets\Scripts\Boosters\BoosterEconomySystemValidator.cs(101,17): warning CS0162: Unreachable code detected
+Assets\Scripts\Boosters\BoosterEconomySystemValidator.cs(113,17): warning CS0162: Unreachable code detected
+Assets\Scripts\BoardGeneration\GridMaskSystemValidator.cs(35,17): warning CS0162: Unreachable code detected
+Assets\Scripts\BoardGeneration\GridMaskSystemValidator.cs(41,17): warning CS0162: Unreachable code detected
+Assets\Editor\GameSceneSpawnVerificationBuilder.cs(159,88): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\GameSceneSpawnVerificationBuilder.cs(159,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+AssetDatabase: script compilation time: 18.809900s
+The GUID inside 'Assets/Scripts/Session.meta' cannot be extracted by the YAML Parser. Attempting to extract it via string matching instead. Please verify the file does not contain unexpected data.
+The .meta file Assets/Scripts/Session.meta does not have a valid GUID and its corresponding Asset file will be ignored. If this file is not malformed, please add a GUID, or delete the .meta file and it will be recreated correctly
+Begin MonoManager ReloadAssembly
+Assembly Assembly-CSharp-Editor-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll not valid. Loading of assembly skipped.
+Assembly Assembly-CSharp-firstpass.dll at Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll not valid. Loading of assembly skipped.
+Assembly DocCodeExamples.dll at Library/ScriptAssemblies/DocCodeExamples.dll not valid. Loading of assembly skipped.
+Assembly TestNewCustomAssembly.dll at Library/ScriptAssemblies/TestNewCustomAssembly.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Animation.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Animation.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Aseprite.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Aseprite.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Common.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Common.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Psdimporter.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Psdimporter.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Sprite.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Sprite.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.SpriteShape.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.SpriteShape.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.2D.Tilemap.Package.EditorTests.dll at Library/ScriptAssemblies/Unity.2D.Tilemap.Package.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.BurstCompatibilityGen.dll at Library/ScriptAssemblies/Unity.Collections.BurstCompatibilityGen.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.DocCodeSamples.dll at Library/ScriptAssemblies/Unity.Collections.DocCodeSamples.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.PerformanceTests.dll at Library/ScriptAssemblies/Unity.Collections.PerformanceTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.dll at Library/ScriptAssemblies/Unity.Collections.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Collections.Tests.Playmode.dll at Library/ScriptAssemblies/Unity.Collections.Tests.Playmode.dll not valid. Loading of assembly skipped.
+Assembly Unity.InputSystem.IntegrationTests.dll at Library/ScriptAssemblies/Unity.InputSystem.IntegrationTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Mathematics.Tests.dll at Library/ScriptAssemblies/Unity.Mathematics.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Editor.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Multiplayer.Center.Tests.dll at Library/ScriptAssemblies/Unity.Multiplayer.Center.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Nuget.Mono-Cecil.dll at Library/ScriptAssemblies/Unity.Nuget.Mono-Cecil.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.PathTracing.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.PathTracing.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Core.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Config.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Editor.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.RenderPipelines.Universal.Runtime.Tests.dll at Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.Searcher.EditorTests.dll at Library/ScriptAssemblies/Unity.Searcher.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly Unity.ShaderGraph.Editor.Tests.dll at Library/ScriptAssemblies/Unity.ShaderGraph.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Editor.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.TextMeshPro.Tests.dll at Library/ScriptAssemblies/Unity.TextMeshPro.Tests.dll not valid. Loading of assembly skipped.
+Assembly Unity.UnifiedRayTracing.Editor.Tests.dll at Library/ScriptAssemblies/Unity.UnifiedRayTracing.Editor.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor.UI.Common.Tests.dll not valid. Loading of assembly skipped.
+Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
+Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
+Refreshing native plugins compatible for Editor in 3.78 ms, found 5 plugins.
+Native extension for WindowsStandalone target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  3.258 seconds
+Domain Reload Profiling: 5091ms
+	BeginReloadAssembly (365ms)
+		DisableScriptedObjects (27ms)
+		CreateAndSetChildDomain (163ms)
+	RebuildCommonClasses (41ms)
+	RebuildNativeTypeToScriptingClass (26ms)
+	initialDomainReloadingComplete (718ms)
+	LoadAllAssembliesAndSetupDomain (682ms)
+		LoadAssemblies (430ms)
+		AnalyzeDomain (355ms)
+			TypeCache.Refresh (228ms)
+				TypeCache.ScanAssembly (215ms)
+			BuildScriptInfoCaches (106ms)
+			ResolveRequiredComponents (17ms)
+	FinalizeReload (3259ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (23ms)
+			BeforeProcessingInitializeOnLoad (210ms)
+			ProcessInitializeOnLoadAttributes (2439ms)
+			ProcessInitializeOnLoadMethodAttributes (288ms)
+			AfterProcessingInitializeOnLoad (6ms)
+		AwakeInstancesAfterBackupRestoration (19ms)
+Start importing Assets/Docs/PROJECT_ROADMAP.md using Guid(7928f5376968524488480e168a9be291) (TextScriptImporter) -> (Import Result ID: 'c31d7b1a581157f1791347477478d8a0') in 0.0370535 seconds [static dependencies only]. Details - ImportResultOutputID=cba091ff83627c92020ca248a87380bb DependenciesID=30e63faeb37d01a1fd24ec2939137360 StaticDependenciesID=cd3212e3daa91ee926d962b02a7dedbc 
+(Values over 0.050ms)
+Asset Pipeline Refresh (id=bc5818cc2f6147e439f257e41b45b520): Total: 26.594 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=8 ms, native=4804 ms
+		Asset DB Callback time: managed=810 ms, native=146 ms
+		Scripting: domain reloads=1, domain reload time=1836 ms, compile time=18828 ms, other=154 ms
+		Project Asset Count: scripts=1582, non-scripts=3203
+		Asset File Changes: new=7, changed=24, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 129.442ms
+	ApplyChangesToAssetFolders: 1.306ms
+	Scan: 560.439ms
+	OnSourceAssetsModified: 5.735ms
+	CategorizeScriptCompilationAssets: 213.565ms
+	ProcessAssetsWithTransientArtifactChanges: 138.653ms
+	CategorizeAssets: 167.859ms
+	CompileScripts: 18827.787ms
+	ImportOutOfDateAssets: 3326.021ms (3273.948ms without children)
+		ImportManagerImport: 49.403ms (8.235ms without children)
+		UnloadImportedAssets: 1.141ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.714ms
+		OnDemandSchedulerStart: 0.778ms
+	PostProcessAllAssets: 815.428ms
+		VCAutoAddAssetPostprocess 4.002ms
+		ShaderAssetModifiedCallback 1.576ms
+		PostProcessCallbackCreateDeferredMaterials 0.662ms
+		XRBuildSystem.XRAssetImported 0.446ms
+		SpriteAtlasDatabase.OnAssetPostprocessCallback 0.295ms
+		VersionControlSettings.HiddenFilePostprocess 0.145ms
+		ComputeShaderImportPostprocess 0.064ms
+		SpeedTreeImporter.PostprocessAllAssets 0.053ms
+		RaytracingShaderImportPostprocess 0.051ms
+		MonoPostProcessAllAssets: 805.378ms
+			AssetPostprocessor.OnPostprocessAllAssets 313.853ms
+			SyncVS.PostprocessSyncProject 293.765ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 65.769ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 31.523ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 20.495ms
+			AssetChangedListener.OnPostprocessAllAssets 13.593ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 4.090ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 3.162ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 2.592ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.482ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 2.093ms
+			AssetProcessor.OnPostprocessAllAssets 1.393ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 1.132ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.933ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.736ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.725ms
+			SpriteShapeAssetPostProcessor.OnPostprocessAllAssets 0.610ms
+			UVCSAssetPostprocessor.OnPostprocessAllAssets 0.597ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.578ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.567ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.559ms
+			PostProcessor.OnPostprocessAllAssets 0.500ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.475ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.400ms
+			AssetEvents.OnPostprocessAllAssets 0.374ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.369ms
+			SpriteLibraryAssetPostprocessor.OnPostprocessAllAssets 0.350ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.326ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.318ms
+			SamplePostprocessor.OnPostprocessAllAssets 0.278ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.269ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.252ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.229ms
+			PSDImportPostProcessor.OnPostprocessAllAssets 0.176ms
+			PSDImporterAssetPostProcessor.OnPostprocessAllAssets 0.129ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.089ms
+	PostAssetChangesProfiler: 9.572ms
+	UnloadStreamsBegin: 4.787ms
+	PersistCurrentRevisions: 0.490ms
+	GenerateScriptTypeHashes: 4.196ms
+	GenerateScriptTypeSerializationHashes: 6.668ms
+	Untracked: 2388.306ms
+
+Application.AssetDatabase Initial Refresh End
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Scanning for USB devices : 2.867ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-MahjongGame
+Unloading 75 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 7672 unused Assets / (6.5 MB). Loaded Objects now: 8440.
+Memory consumption went from 230.5 MB to 223.9 MB.
+Total: 35.482100 ms (FindLiveObjects: 1.934300 ms CreateObjectMapping: 2.947100 ms MarkObjects: 21.448100 ms  DeleteObjects: 9.144000 ms)
+
+Batchmode quit successfully invoked - shutting down!
+Curl error 42: Callback aborted
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-Omer Avar-6000.4.7-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-Omer Avar-6000.4.7 channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+Exiting without the bug reporter. Application will terminate with return code 0

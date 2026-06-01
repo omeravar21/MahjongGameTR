@@ -11,7 +11,7 @@ namespace MahjongGame.Session
 {
     public static class LevelRuntimeResetter
     {
-        public static bool TryResetLevel(Transform gameplayRoot)
+        public static bool TryResetRuntimeState(Transform gameplayRoot)
         {
             if (gameplayRoot == null)
             {
@@ -37,6 +37,17 @@ namespace MahjongGame.Session
             }
 
             DestroyOrphanTiles(gameplayRoot);
+            return true;
+        }
+
+        public static bool TryResetLevel(Transform gameplayRoot)
+        {
+            if (gameplayRoot == null)
+            {
+                return false;
+            }
+
+            TryResetRuntimeState(gameplayRoot);
 
             Transform boardRoot = gameplayRoot.Find("BoardRoot");
             if (boardRoot == null)

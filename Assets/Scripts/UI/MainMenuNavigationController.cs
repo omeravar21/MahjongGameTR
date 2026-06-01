@@ -1,7 +1,9 @@
 ﻿using System;
 using MahjongGame.Core;
 using MahjongGame.Core.Save;
+using MahjongGame.DailyBoard;
 using MahjongGame.Progression;
+using MahjongGame.Ranking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,22 +26,27 @@ namespace MahjongGame.UI
         };
 
         public static event Action LevelStartRequested;
+        public static event Action DailyBoardStartRequested;
 
         private enum MainMenuView
         {
             Home,
             Profile,
+            Leaderboard,
             Theme,
             Settings
         }
 
         private Transform _topBar;
         private Transform _levelButton;
+        private Transform _dailyBoardButton;
         private Transform _profilePanel;
+        private Transform _leaderboardPanel;
         private Transform _themePanel;
         private Transform _settingsPanel;
         private Text _profileBodyText;
         private Text _themeBodyText;
+        private RankingUIController _rankingUiController;
         private bool _isWired;
 
         private void Start()
@@ -58,6 +65,7 @@ namespace MahjongGame.UI
 
             CacheReferences(canvasTransform);
             WireButtons();
+            ApplyDailyBoardButtonState();
             ShowView(MainMenuView.Home);
 
             if (ShouldAutoContinueActiveSession())
@@ -92,6 +100,7 @@ namespace MahjongGame.UI
             }
 
             return HasNavigationPanel(overlayRoot, "ProfilePanel")
+                && HasLeaderboardPanel(overlayRoot)
                 && HasNavigationPanel(overlayRoot, "ThemePanel")
                 && HasNavigationPanel(overlayRoot, "SettingsPanel");
         }
@@ -115,15 +124,30 @@ namespace MahjongGame.UI
             StretchFullScreen(overlayRoot.GetComponent<RectTransform>());
 
             CreateNavigationPanel(overlayRoot.transform, "ProfilePanel", "Profile", "Loading profile...");
+            CreateLeaderboardPanel(overlayRoot.transform);
             CreateNavigationPanel(overlayRoot.transform, "ThemePanel", "Theme Selection", BuildThemePlaceholderBody());
             CreateNavigationPanel(overlayRoot.transform, "SettingsPanel", "Settings", "Audio and gameplay settings will appear here.");
 
             overlayRoot.SetActive(false);
         }
 
+        public static void RaiseDailyBoardStartRequested()
+        {
+            DailyBoardStartRequested?.Invoke();
+        }
+
         public static void RaiseLevelStartRequested()
         {
             LevelStartRequested?.Invoke();
+        }
+
+        private static bool HasLeaderboardPanel(Transform overlayRoot)
+        {
+            Transform panel = overlayRoot.Find("LeaderboardPanel");
+            Transform content = panel != null ? panel.Find("Content") : null;
+            return content != null
+                && content.Find("BackButton") != null
+                && content.GetComponent<RankingUIController>() != null;
         }
 
         private static bool HasNavigationPanel(Transform overlayRoot, string panelName)
@@ -167,6 +191,7 @@ namespace MahjongGame.UI
         {
             _topBar = canvasTransform.Find("TopBar");
             _levelButton = canvasTransform.Find("LevelButton");
+            _dailyBoardButton = canvasTransform.Find("TopBar/DailyBoardButton");
 
             Transform overlayRoot = canvasTransform.Find("MenuOverlayRoot");
             if (overlayRoot == null)
@@ -175,10 +200,14 @@ namespace MahjongGame.UI
             }
 
             _profilePanel = overlayRoot.Find("ProfilePanel");
+            _leaderboardPanel = overlayRoot.Find("LeaderboardPanel");
             _themePanel = overlayRoot.Find("ThemePanel");
             _settingsPanel = overlayRoot.Find("SettingsPanel");
             _profileBodyText = _profilePanel != null ? _profilePanel.Find("Content/BodyText")?.GetComponent<Text>() : null;
             _themeBodyText = _themePanel != null ? _themePanel.Find("Content/BodyText")?.GetComponent<Text>() : null;
+            _rankingUiController = _leaderboardPanel != null
+                ? _leaderboardPanel.Find("Content")?.GetComponent<RankingUIController>()
+                : null;
         }
 
         private void WireButtons()
@@ -189,11 +218,14 @@ namespace MahjongGame.UI
             }
 
             WireMenuButton("TopBar/ProfileButton", () => ShowView(MainMenuView.Profile));
+            WireMenuButton("TopBar/RankingButton", () => ShowView(MainMenuView.Leaderboard));
             WireMenuButton("TopBar/ThemeButton", () => ShowView(MainMenuView.Theme));
             WireMenuButton("TopBar/SettingsButton", () => ShowView(MainMenuView.Settings));
             WireMenuButton("LevelButton", RequestLevelStart);
+            WireMenuButton("TopBar/DailyBoardButton", RequestDailyBoardStart);
 
             WireBackButton(_profilePanel, () => ShowView(MainMenuView.Home));
+            WireBackButton(_leaderboardPanel, () => ShowView(MainMenuView.Home));
             WireBackButton(_themePanel, () => ShowView(MainMenuView.Home));
             WireBackButton(_settingsPanel, () => ShowView(MainMenuView.Home));
 
@@ -238,7 +270,52 @@ namespace MahjongGame.UI
 
         private void RequestLevelStart()
         {
+            GameLaunchRequest.RequestNormalLevel();
             RaiseLevelStartRequested();
+        }
+
+        private void RequestDailyBoardStart()
+        {
+            if (!DailyBoardDirector.HasInstance)
+            {
+                Debug.LogWarning("[MainMenuNavigationController] DailyBoardDirector is not available.");
+                return;
+            }
+
+            DailyBoardIdentity identity = DailyBoardDirector.Instance.GetCurrentIdentity();
+            if (!identity.IsAvailable)
+            {
+                Debug.Log("[MainMenuNavigationController] Daily board is not available today.");
+                return;
+            }
+
+            GameLaunchRequest.RequestDailyBoard();
+            RaiseDailyBoardStartRequested();
+        }
+
+        private void ApplyDailyBoardButtonState()
+        {
+            if (_dailyBoardButton == null)
+            {
+                return;
+            }
+
+            Button button = _dailyBoardButton.GetComponent<Button>();
+            Text label = _dailyBoardButton.Find("Label")?.GetComponent<Text>();
+            bool isAvailable = DailyBoardDirector.HasInstance
+                && DailyBoardDirector.Instance.GetCurrentIdentity().IsAvailable;
+            bool isCompletedToday = DailyBoardDirector.HasInstance
+                && DailyBoardDirector.Instance.GetCurrentIdentity().IsCompletedToday;
+
+            if (button != null)
+            {
+                button.interactable = isAvailable;
+            }
+
+            if (label != null)
+            {
+                label.text = isCompletedToday ? "Daily Done" : "Daily";
+            }
         }
 
         private void ShowView(MainMenuView view)
@@ -257,18 +334,34 @@ namespace MahjongGame.UI
                 _levelButton.gameObject.SetActive(isHome);
             }
 
+            if (_dailyBoardButton != null)
+            {
+                _dailyBoardButton.gameObject.SetActive(isHome);
+            }
+
             if (overlayRoot != null)
             {
                 overlayRoot.gameObject.SetActive(!isHome);
             }
 
             SetPanelActive(_profilePanel, view == MainMenuView.Profile);
+            SetPanelActive(_leaderboardPanel, view == MainMenuView.Leaderboard);
             SetPanelActive(_themePanel, view == MainMenuView.Theme);
             SetPanelActive(_settingsPanel, view == MainMenuView.Settings);
+
+            if (_rankingUiController != null)
+            {
+                _rankingUiController.SetVisibleForValidation(view == MainMenuView.Leaderboard);
+            }
 
             if (view == MainMenuView.Profile)
             {
                 RefreshProfileBody();
+            }
+
+            if (view == MainMenuView.Leaderboard && _rankingUiController != null)
+            {
+                _rankingUiController.RefreshFromDirector();
             }
 
             if (view == MainMenuView.Theme && _themeBodyText != null)
@@ -298,15 +391,19 @@ namespace MahjongGame.UI
             int highestLevel = PlayerProgressionDirector.HasInstance
                 ? PlayerProgressionDirector.Instance.HighestLevel
                 : LevelProgressData.MinLevel;
-            long globalScore = PlayerProgressionDirector.HasInstance
-                ? PlayerProgressionDirector.Instance.GlobalPerformanceScore
-                : 0;
+            long globalScore = RankingDirector.HasInstance
+                ? RankingDirector.Instance.GlobalPerformanceScore
+                : PlayerProgressionDirector.HasInstance
+                    ? PlayerProgressionDirector.Instance.GlobalPerformanceScore
+                    : 0;
 
             StatisticsSaveData statistics = SaveSystem.HasInstance && SaveSystem.Instance.Data != null
                 ? SaveSystem.Instance.Data.statistics
                 : null;
 
-            int globalRank = statistics != null ? statistics.currentGlobalRank : 0;
+            int globalRank = RankingDirector.HasInstance
+                ? RankingDirector.Instance.CurrentGlobalRank
+                : 0;
             int highestCombo = statistics != null ? statistics.highestCombo : 0;
             int perfectClears = statistics != null ? statistics.perfectClears : 0;
             long totalPlayTimeSeconds = statistics != null ? statistics.totalPlayTimeSeconds : 0;
@@ -359,6 +456,32 @@ namespace MahjongGame.UI
 
             CreatePanelText("TitleText", contentObject.transform, title, 36, AccentTextColor, new Vector2(0f, -24f), new Vector2(0f, -90f));
             CreatePanelText("BodyText", contentObject.transform, body, 24, TextColor, new Vector2(24f, -110f), new Vector2(-24f, -120f));
+            CreateBackButton(contentObject.transform);
+        }
+
+        private static void CreateLeaderboardPanel(Transform overlayRoot)
+        {
+            GameObject panelObject = CreateRectObject("LeaderboardPanel", overlayRoot);
+            StretchFullScreen(panelObject.GetComponent<RectTransform>());
+            panelObject.SetActive(false);
+
+            GameObject dimObject = CreateRectObject("DimBackground", panelObject.transform);
+            StretchFullScreen(dimObject.GetComponent<RectTransform>());
+            Image dimImage = dimObject.AddComponent<Image>();
+            dimImage.color = OverlayDimColor;
+            dimImage.raycastTarget = true;
+
+            GameObject contentObject = CreateRectObject("Content", panelObject.transform);
+            RectTransform contentRect = contentObject.GetComponent<RectTransform>();
+            contentRect.anchorMin = new Vector2(0.1f, 0.18f);
+            contentRect.anchorMax = new Vector2(0.9f, 0.82f);
+            contentRect.offsetMin = Vector2.zero;
+            contentRect.offsetMax = Vector2.zero;
+            Image contentImage = contentObject.AddComponent<Image>();
+            contentImage.color = PanelBackgroundColor;
+
+            RankingUIController rankingUiController = contentObject.AddComponent<RankingUIController>();
+            rankingUiController.BuildLayout();
             CreateBackButton(contentObject.transform);
         }
 

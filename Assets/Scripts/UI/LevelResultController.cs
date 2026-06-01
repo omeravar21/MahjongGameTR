@@ -1,5 +1,6 @@
 using MahjongGame.Combo;
 using MahjongGame.Progression;
+using MahjongGame.Ranking;
 using MahjongGame.Score;
 using MahjongGame.Session;
 using MahjongGame.Timer;
@@ -31,15 +32,16 @@ namespace MahjongGame.UI
                 return;
             }
 
+            bool isDailyBoardSession = context.Session != null && context.Session.Mode == SessionMode.DailyBoard;
             int levelNumber = context.Session != null
                 ? context.Session.LevelNumber
                 : ResolveLevelNumber();
 
-            LevelResultSummary summary = BuildSummaryFromCurrentState(levelNumber);
+            LevelResultSummary summary = BuildSummaryFromCurrentState(levelNumber, accumulateGlobalPerformanceScore: !isDailyBoardSession);
             LevelResultEvents.RaiseLevelResultReady(summary);
         }
 
-        private LevelResultSummary BuildSummaryFromCurrentState(int levelNumber)
+        private LevelResultSummary BuildSummaryFromCurrentState(int levelNumber, bool accumulateGlobalPerformanceScore = true)
         {
             ScoreController scoreController = GetComponent<ScoreController>();
             ComboController comboController = GetComponent<ComboController>();
@@ -47,9 +49,37 @@ namespace MahjongGame.UI
 
             int score = scoreController != null ? scoreController.CurrentScore : 0;
             int totalComboCount = comboController != null ? comboController.TotalComboCount : 0;
+            int highestCombo = comboController != null ? comboController.HighestCombo : 0;
             int earlyJokerMatchCount = scoreController != null ? scoreController.EarlyJokerMatchCount : 0;
             int jokerBonusTotal = scoreController != null ? scoreController.JokerBonusTotal : 0;
             float completionTimeSeconds = timerController != null ? timerController.LastElapsedTimeSeconds : 0f;
+            float allocatedTimeSeconds = timerController != null ? timerController.AllocatedTimeSeconds : 0f;
+
+            int timePerformanceBonus = 0;
+            int perfectClearBonus = 0;
+            int noBoosterBonus = 0;
+            int globalPerformanceScoreEarned = 0;
+
+            if (scoreController != null)
+            {
+                LevelPerformanceResult performanceResult = scoreController.CalculateLevelPerformanceResult(
+                    completionTimeSeconds,
+                    allocatedTimeSeconds,
+                    isPerfectClear: true);
+
+                timePerformanceBonus = performanceResult.TimePerformanceBonus;
+                perfectClearBonus = performanceResult.PerfectClearBonus;
+                noBoosterBonus = performanceResult.NoBoosterBonus;
+                globalPerformanceScoreEarned = performanceResult.TotalPerformanceScore;
+
+                if (accumulateGlobalPerformanceScore && RankingDirector.HasInstance)
+                {
+                    RankingDirector.Instance.TryAccumulateLevelPerformance(
+                        performanceResult,
+                        out _,
+                        out _);
+                }
+            }
 
             return new LevelResultSummary(
                 levelNumber,
@@ -57,7 +87,12 @@ namespace MahjongGame.UI
                 score,
                 totalComboCount,
                 earlyJokerMatchCount,
-                jokerBonusTotal);
+                jokerBonusTotal,
+                highestCombo,
+                timePerformanceBonus,
+                perfectClearBonus,
+                noBoosterBonus,
+                globalPerformanceScoreEarned);
         }
 
         private TimerController ResolveTimerController()

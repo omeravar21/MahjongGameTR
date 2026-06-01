@@ -22,6 +22,11 @@ namespace MahjongGame.Progression
                 return;
             }
 
+            if (context.Session != null && context.Session.Mode == SessionMode.DailyBoard)
+            {
+                return;
+            }
+
             if (!PlayerProgressionDirector.HasInstance)
             {
                 Debug.LogWarning("[LevelCompletionController] PlayerProgressionDirector is not available.");

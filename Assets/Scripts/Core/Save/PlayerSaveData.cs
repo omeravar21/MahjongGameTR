@@ -19,6 +19,9 @@ namespace MahjongGame.Core.Save
         public AudioSettingsSaveData audioSettings = new AudioSettingsSaveData();
         public StatisticsSaveData statistics = new StatisticsSaveData();
         public ActiveLevelStateSaveData activeLevelState = new ActiveLevelStateSaveData();
+        public RankingSyncSaveData rankingSync = new RankingSyncSaveData();
+        public DailyBoardSaveData dailyBoard = new DailyBoardSaveData();
+        public DailyMissionSaveData dailyMissions = new DailyMissionSaveData();
 
         public static PlayerSaveData CreateDefault()
         {
@@ -33,6 +36,12 @@ namespace MahjongGame.Core.Save
             audioSettings ??= new AudioSettingsSaveData();
             statistics ??= new StatisticsSaveData();
             activeLevelState ??= new ActiveLevelStateSaveData();
+            rankingSync ??= new RankingSyncSaveData();
+            rankingSync.EnsureDefaults();
+            dailyBoard ??= new DailyBoardSaveData();
+            dailyBoard.EnsureDefaults();
+            dailyMissions ??= new DailyMissionSaveData();
+            dailyMissions.EnsureDefaults();
         }
     }
 }

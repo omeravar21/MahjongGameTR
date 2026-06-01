@@ -16,6 +16,16 @@ namespace MahjongGame.BoardGeneration
             return GenerateValidatedBoardData(baseRecipe);
         }
 
+        public static BoardData GenerateBoardData(LevelRecipe recipe)
+        {
+            if (recipe == null)
+            {
+                return CreateEmptyBoardData();
+            }
+
+            return GenerateValidatedBoardData(recipe);
+        }
+
         private static BoardData GenerateValidatedBoardData(LevelRecipe baseRecipe)
         {
             BoardData lastCandidate = null;

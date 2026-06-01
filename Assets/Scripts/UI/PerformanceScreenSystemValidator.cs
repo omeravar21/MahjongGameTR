@@ -141,6 +141,36 @@ namespace MahjongGame.UI
                 AppendLine(reportBuilder, "[PASS] LevelResultSummary.JokerBonusTotal property is present.");
             }
 
+            if (typeof(LevelResultSummary).GetProperty(nameof(LevelResultSummary.GlobalPerformanceScoreEarned)) == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] LevelResultSummary.GlobalPerformanceScoreEarned property is missing.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] LevelResultSummary.GlobalPerformanceScoreEarned property is present.");
+            }
+
+            if (typeof(LevelResultSummary).GetProperty(nameof(LevelResultSummary.TimePerformanceBonus)) == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] LevelResultSummary.TimePerformanceBonus property is missing.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] LevelResultSummary.TimePerformanceBonus property is present.");
+            }
+
+            if (typeof(LevelResultSummary).GetProperty(nameof(LevelResultSummary.HighestCombo)) == null)
+            {
+                AppendLine(reportBuilder, "[FAIL] LevelResultSummary.HighestCombo property is missing.");
+                passed = false;
+            }
+            else
+            {
+                AppendLine(reportBuilder, "[PASS] LevelResultSummary.HighestCombo property is present.");
+            }
+
             passed &= ValidateEventExists(typeof(LevelResultEvents), nameof(LevelResultEvents.LevelResultReady), reportBuilder);
             passed &= ValidateEventExists(typeof(ProgressionEvents), nameof(ProgressionEvents.LevelCompleted), reportBuilder);
             passed &= ValidateEventExists(typeof(ProgressionEvents), nameof(ProgressionEvents.LevelAdvanced), reportBuilder);

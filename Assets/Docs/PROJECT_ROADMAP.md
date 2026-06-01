@@ -3085,7 +3085,7 @@ High
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3125,7 +3125,7 @@ High
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3161,7 +3161,7 @@ High
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3197,7 +3197,7 @@ Critical
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3233,7 +3233,7 @@ Critical
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3269,7 +3269,7 @@ Critical
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3311,7 +3311,7 @@ High
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3347,7 +3347,7 @@ High
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3383,7 +3383,7 @@ Medium
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 
@@ -3419,7 +3419,7 @@ Medium
 
 Status:
 
-Not Started
+Complete
 
 Goal:
 

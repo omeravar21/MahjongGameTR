@@ -217,6 +217,11 @@ namespace MahjongGame.Session
                 return;
             }
 
+            if (context.Session != null && context.Session.Mode == SessionMode.DailyBoard)
+            {
+                return;
+            }
+
             ResetSessionUsageCounters();
             MarkActiveSessionStarted(context.LevelNumber, SessionDirector.Instance.LastBoardSeed);
             TryPersistActiveSession(forcePersist: true);

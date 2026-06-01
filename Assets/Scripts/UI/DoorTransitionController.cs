@@ -25,14 +25,26 @@ namespace MahjongGame.UI
         private void OnEnable()
         {
             MainMenuNavigationController.LevelStartRequested += HandleLevelStartRequested;
+            MainMenuNavigationController.DailyBoardStartRequested += HandleDailyBoardStartRequested;
         }
 
         private void OnDisable()
         {
             MainMenuNavigationController.LevelStartRequested -= HandleLevelStartRequested;
+            MainMenuNavigationController.DailyBoardStartRequested -= HandleDailyBoardStartRequested;
         }
 
         private void HandleLevelStartRequested()
+        {
+            BeginTransition();
+        }
+
+        private void HandleDailyBoardStartRequested()
+        {
+            BeginTransition();
+        }
+
+        private void BeginTransition()
         {
             if (_isTransitioning)
             {

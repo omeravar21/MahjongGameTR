@@ -142,5 +142,19 @@ namespace MahjongGame.Core
             _data.EnsureDefaults();
             Save();
         }
+
+        internal void EnsureValidationInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+
+            if (_data == null)
+            {
+                _data = PlayerSaveData.CreateDefault();
+                _data.EnsureDefaults();
+            }
+        }
     }
 }
