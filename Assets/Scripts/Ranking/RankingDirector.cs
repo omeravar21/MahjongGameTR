@@ -1,5 +1,6 @@
 using MahjongGame.Core;
 using MahjongGame.Core.Save;
+using MahjongGame.Score;
 using UnityEngine;
 
 namespace MahjongGame.Ranking
@@ -86,10 +87,44 @@ namespace MahjongGame.Ranking
             return LeaderboardData.Empty;
         }
 
+        public bool TryAccumulateLevelPerformance(
+            LevelPerformanceResult result,
+            out long previousScore,
+            out long newScore)
+        {
+            previousScore = GlobalPerformanceScore;
+            newScore = previousScore;
+
+            if (result == null || result.TotalPerformanceScore <= 0)
+            {
+                return false;
+            }
+
+            newScore = previousScore + result.TotalPerformanceScore;
+            _rankingData.SetGlobalPerformanceScore(newScore);
+            PersistRankingState();
+
+            RankingEvents.RaiseGlobalPerformanceScoreChanged(
+                new GlobalPerformanceScoreChangedContext(previousScore, newScore));
+
+            return true;
+        }
+
         internal void SetRankingStateForValidation(long globalPerformanceScore, int currentGlobalRank)
         {
             _rankingData.SetGlobalPerformanceScore(globalPerformanceScore);
             _rankingData.SetCurrentGlobalRank(currentGlobalRank);
+        }
+
+        private void PersistRankingState()
+        {
+            if (!SaveSystem.HasInstance)
+            {
+                return;
+            }
+
+            _rankingData.WriteToSave(SaveSystem.Instance.Data);
+            SaveSystem.Instance.Save();
         }
     }
 }

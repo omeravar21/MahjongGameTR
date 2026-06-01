@@ -1,3 +1,4 @@
+using MahjongGame.Boosters;
 using MahjongGame.Combo;
 using MahjongGame.Matching;
 using MahjongGame.Rewards;
@@ -14,6 +15,7 @@ namespace MahjongGame.Score
         private int _jokerBonusTotal;
         private int _matchCount;
         private int _earlyJokerMatchCount;
+        private bool _boosterUsedInSession;
 
         public int CurrentScore => _currentScore;
 
@@ -27,12 +29,15 @@ namespace MahjongGame.Score
 
         public int EarlyJokerMatchCount => _earlyJokerMatchCount;
 
+        public bool BoosterUsedInSession => _boosterUsedInSession;
+
         private void OnEnable()
         {
             SessionEvents.SessionStarted += HandleSessionStarted;
             MatchEvents.MatchCleanedUp += HandleMatchCleanedUp;
             ComboEvents.ComboIncreased += HandleComboIncreased;
             JokerEvents.JokerEarlyMatchDetected += HandleJokerEarlyMatchDetected;
+            BoosterEvents.BoosterUsedInSession += HandleBoosterUsedInSession;
         }
 
         private void OnDisable()
@@ -41,6 +46,7 @@ namespace MahjongGame.Score
             MatchEvents.MatchCleanedUp -= HandleMatchCleanedUp;
             ComboEvents.ComboIncreased -= HandleComboIncreased;
             JokerEvents.JokerEarlyMatchDetected -= HandleJokerEarlyMatchDetected;
+            BoosterEvents.BoosterUsedInSession -= HandleBoosterUsedInSession;
         }
 
         internal void AwardComboBonusForValidation(int comboLevel)
@@ -51,6 +57,34 @@ namespace MahjongGame.Score
         internal void AwardJokerBonusForValidation(int jokerTileId)
         {
             AwardJokerBonus(jokerTileId);
+        }
+
+        public LevelPerformanceResult CalculateLevelPerformanceResult(
+            float elapsedSeconds,
+            float allocatedSeconds,
+            bool isPerfectClear)
+        {
+            int timePerformanceBonus = ScoreDefinition.ResolveTimePerformanceBonus(
+                elapsedSeconds,
+                allocatedSeconds);
+            int perfectClearBonus = ScoreDefinition.ResolvePerfectClearBonus(isPerfectClear);
+            int noBoosterBonus = ScoreDefinition.ResolveNoBoosterBonus(_boosterUsedInSession);
+
+            return new LevelPerformanceResult(
+                _currentScore,
+                timePerformanceBonus,
+                perfectClearBonus,
+                noBoosterBonus);
+        }
+
+        private void HandleBoosterUsedInSession(BoosterType boosterType)
+        {
+            if (!SessionDirector.HasInstance || !SessionDirector.Instance.IsSessionActive)
+            {
+                return;
+            }
+
+            _boosterUsedInSession = true;
         }
 
         private void HandleComboIncreased(ComboIncreasedContext context)
@@ -152,6 +186,7 @@ namespace MahjongGame.Score
             _jokerBonusTotal = 0;
             _matchCount = 0;
             _earlyJokerMatchCount = 0;
+            _boosterUsedInSession = false;
 
             if (previousScore != _currentScore)
             {
@@ -180,6 +215,7 @@ namespace MahjongGame.Score
             _jokerBonusTotal = 0;
             _matchCount = 0;
             _earlyJokerMatchCount = 0;
+            _boosterUsedInSession = false;
 
             if (previousScore != 0)
             {

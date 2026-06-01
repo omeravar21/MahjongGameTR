@@ -22,7 +22,10 @@ namespace MahjongGame.UI
         private GameObject _panelRoot;
         private Text _scoreText;
         private Text _completionTimeText;
+        private Text _timeBonusText;
+        private Text _globalPerformanceScoreText;
         private Text _comboCountText;
+        private Text _highestComboText;
         private Text _jokerBonusText;
         private Button _nextLevelButton;
         private LevelResultSummary _activeSummary;
@@ -78,7 +81,10 @@ namespace MahjongGame.UI
 
             return panelTransform.Find("ScoreText") != null
                 && panelTransform.Find("CompletionTimeText") != null
+                && panelTransform.Find("TimeBonusText") != null
+                && panelTransform.Find("GlobalPerformanceScoreText") != null
                 && panelTransform.Find("ComboCountText") != null
+                && panelTransform.Find("HighestComboText") != null
                 && panelTransform.Find("JokerBonusText") != null
                 && panelTransform.Find(NextLevelButtonName) != null;
         }
@@ -127,17 +133,20 @@ namespace MahjongGame.UI
             panelRect.anchorMax = new Vector2(0.5f, 0.5f);
             panelRect.pivot = new Vector2(0.5f, 0.5f);
             panelRect.anchoredPosition = Vector2.zero;
-            panelRect.sizeDelta = new Vector2(860f, 980f);
+            panelRect.sizeDelta = new Vector2(860f, 1180f);
 
             Image panelImage = panelObject.AddComponent<Image>();
             panelImage.color = PanelColor;
 
-            CreateLabelText("TitleText", panelObject.transform, new Vector2(0f, 360f), new Vector2(760f, 100f), "Level Complete", 48);
-            _ = CreateMetricText("ScoreText", panelObject.transform, new Vector2(0f, 210f), "Score: 0");
-            _ = CreateMetricText("CompletionTimeText", panelObject.transform, new Vector2(0f, 80f), "Time: 0.0s");
+            CreateLabelText("TitleText", panelObject.transform, new Vector2(0f, 500f), new Vector2(760f, 100f), "Level Complete", 48);
+            _ = CreateMetricText("ScoreText", panelObject.transform, new Vector2(0f, 390f), "Score: 0");
+            _ = CreateMetricText("TimeBonusText", panelObject.transform, new Vector2(0f, 280f), "Time Bonus: +0");
+            _ = CreateMetricText("CompletionTimeText", panelObject.transform, new Vector2(0f, 170f), "Time: 0.0s");
+            _ = CreateMetricText("GlobalPerformanceScoreText", panelObject.transform, new Vector2(0f, 60f), "Global Performance Score: +0");
             _ = CreateMetricText("ComboCountText", panelObject.transform, new Vector2(0f, -50f), "Combos: 0");
-            _ = CreateMetricText("JokerBonusText", panelObject.transform, new Vector2(0f, -180f), "Joker Bonus: 0");
-            CreateActionButton(NextLevelButtonName, panelObject.transform, new Vector2(0f, -320f), new Vector2(420f, 120f), "Next Level");
+            _ = CreateMetricText("HighestComboText", panelObject.transform, new Vector2(0f, -160f), "Highest Combo: 0");
+            _ = CreateMetricText("JokerBonusText", panelObject.transform, new Vector2(0f, -270f), "Joker Bonus: 0");
+            CreateActionButton(NextLevelButtonName, panelObject.transform, new Vector2(0f, -420f), new Vector2(420f, 120f), "Next Level");
         }
 
         internal void ShowSummaryForValidation(LevelResultSummary summary)
@@ -172,7 +181,10 @@ namespace MahjongGame.UI
             _panelRoot = panelTransform.gameObject;
             _scoreText = panelTransform.Find("ScoreText")?.GetComponent<Text>();
             _completionTimeText = panelTransform.Find("CompletionTimeText")?.GetComponent<Text>();
+            _timeBonusText = panelTransform.Find("TimeBonusText")?.GetComponent<Text>();
+            _globalPerformanceScoreText = panelTransform.Find("GlobalPerformanceScoreText")?.GetComponent<Text>();
             _comboCountText = panelTransform.Find("ComboCountText")?.GetComponent<Text>();
+            _highestComboText = panelTransform.Find("HighestComboText")?.GetComponent<Text>();
             _jokerBonusText = panelTransform.Find("JokerBonusText")?.GetComponent<Text>();
             _nextLevelButton = panelTransform.Find(NextLevelButtonName)?.GetComponent<Button>();
         }
@@ -206,9 +218,25 @@ namespace MahjongGame.UI
                 _completionTimeText.text = "Time: " + summary.CompletionTimeSeconds.ToString("0.0") + "s";
             }
 
+            if (_timeBonusText != null)
+            {
+                _timeBonusText.text = "Time Bonus: +" + summary.TimePerformanceBonus;
+            }
+
+            if (_globalPerformanceScoreText != null)
+            {
+                _globalPerformanceScoreText.text = "Global Performance Score: +"
+                    + summary.GlobalPerformanceScoreEarned;
+            }
+
             if (_comboCountText != null)
             {
                 _comboCountText.text = "Combos: " + summary.TotalComboCount;
+            }
+
+            if (_highestComboText != null)
+            {
+                _highestComboText.text = "Highest Combo: " + summary.HighestCombo;
             }
 
             if (_jokerBonusText != null)

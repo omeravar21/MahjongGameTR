@@ -19,6 +19,7 @@ namespace MahjongGame.Ranking
             passed &= ValidateEvents(reportBuilder);
             passed &= ValidateDirectorBehavior(reportBuilder);
             passed &= ValidateModelBehavior(reportBuilder);
+            passed &= GlobalPerformanceScoreSystemValidator.Validate(reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Ranking architecture validation completed successfully."

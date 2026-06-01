@@ -2,6 +2,7 @@
 using MahjongGame.Core;
 using MahjongGame.Core.Save;
 using MahjongGame.Progression;
+using MahjongGame.Ranking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -298,9 +299,11 @@ namespace MahjongGame.UI
             int highestLevel = PlayerProgressionDirector.HasInstance
                 ? PlayerProgressionDirector.Instance.HighestLevel
                 : LevelProgressData.MinLevel;
-            long globalScore = PlayerProgressionDirector.HasInstance
-                ? PlayerProgressionDirector.Instance.GlobalPerformanceScore
-                : 0;
+            long globalScore = RankingDirector.HasInstance
+                ? RankingDirector.Instance.GlobalPerformanceScore
+                : PlayerProgressionDirector.HasInstance
+                    ? PlayerProgressionDirector.Instance.GlobalPerformanceScore
+                    : 0;
 
             StatisticsSaveData statistics = SaveSystem.HasInstance && SaveSystem.Instance.Data != null
                 ? SaveSystem.Instance.Data.statistics
