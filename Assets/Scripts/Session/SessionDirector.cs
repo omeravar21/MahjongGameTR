@@ -6,6 +6,7 @@ using MahjongGame.Core;
 using MahjongGame.Progression;
 using MahjongGame.Tiles;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MahjongGame.Session
 {
@@ -74,6 +75,11 @@ namespace MahjongGame.Session
             }
         }
 
+        private void Start()
+        {
+            TryBootstrapGameplaySession("Start");
+        }
+
         public bool TryStartSession(out SessionData session)
         {
             session = null;
@@ -119,14 +125,63 @@ namespace MahjongGame.Session
                 return;
             }
 
+            TryBootstrapGameplaySession("SceneLoadCompleted");
+        }
+
+        private void TryBootstrapGameplaySession(string triggerSource)
+        {
+            string activeSceneName = SceneManager.GetActiveScene().name;
+            if (activeSceneName != SceneLoadController.GameSceneName)
+            {
+                Debug.Log(
+                    "[SessionDirector] Gameplay session bootstrap skipped: activeScene="
+                    + activeSceneName
+                    + ", trigger="
+                    + triggerSource
+                    + ".");
+                return;
+            }
+
+            if (_currentState == LevelSessionState.Starting || _currentState == LevelSessionState.Active)
+            {
+                Debug.Log(
+                    "[SessionDirector] Gameplay session bootstrap skipped: session already "
+                    + _currentState
+                    + ", trigger="
+                    + triggerSource
+                    + ".");
+                return;
+            }
+
             if (ActiveLevelSaveDirector.HasInstance
                 && ActiveLevelSaveDirector.Instance.HasPersistedActiveSession()
                 && ActiveLevelSaveDirector.Instance.TryRestoreActiveSession())
             {
+                Debug.Log(
+                    "[SessionDirector] Gameplay session bootstrap skipped: restored persisted session, trigger="
+                    + triggerSource
+                    + ".");
                 return;
             }
 
-            TryStartSession(out _);
+            if (TryStartSession(out _))
+            {
+                Debug.Log(
+                    "[SessionDirector] Gameplay session bootstrap started session, trigger="
+                    + triggerSource
+                    + ", activeScene="
+                    + activeSceneName
+                    + ".");
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "[SessionDirector] Gameplay session bootstrap failed to start session, trigger="
+                    + triggerSource
+                    + ", activeScene="
+                    + activeSceneName
+                    + ".");
+            }
         }
 
         public bool TryStartSessionFromRestore(int levelNumber, int boardSeed, out SessionData session)
