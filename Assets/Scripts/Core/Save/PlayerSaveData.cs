@@ -21,6 +21,7 @@ namespace MahjongGame.Core.Save
         public ActiveLevelStateSaveData activeLevelState = new ActiveLevelStateSaveData();
         public RankingSyncSaveData rankingSync = new RankingSyncSaveData();
         public DailyBoardSaveData dailyBoard = new DailyBoardSaveData();
+        public DailyMissionSaveData dailyMissions = new DailyMissionSaveData();
 
         public static PlayerSaveData CreateDefault()
         {
@@ -39,6 +40,8 @@ namespace MahjongGame.Core.Save
             rankingSync.EnsureDefaults();
             dailyBoard ??= new DailyBoardSaveData();
             dailyBoard.EnsureDefaults();
+            dailyMissions ??= new DailyMissionSaveData();
+            dailyMissions.EnsureDefaults();
         }
     }
 }

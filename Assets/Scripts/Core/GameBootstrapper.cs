@@ -1,5 +1,6 @@
 using MahjongGame.BoardGeneration;
 using MahjongGame.DailyBoard;
+using MahjongGame.DailyMissions;
 using MahjongGame.Progression;
 using MahjongGame.Ranking;
 using UnityEngine;
@@ -55,6 +56,16 @@ namespace MahjongGame.Core
             if (GetComponent<DailyBoardDirector>() == null)
             {
                 gameObject.AddComponent<DailyBoardDirector>();
+            }
+
+            if (GetComponent<DailyMissionDirector>() == null)
+            {
+                gameObject.AddComponent<DailyMissionDirector>();
+            }
+
+            if (GetComponent<DailyMissionProgressTracker>() == null)
+            {
+                gameObject.AddComponent<DailyMissionProgressTracker>();
             }
 
             if (GetComponent<DifficultyDirector>() == null)
