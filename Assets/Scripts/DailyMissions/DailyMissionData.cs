@@ -12,6 +12,8 @@ namespace MahjongGame.DailyMissions
 
         public bool[] SlotCompleted { get; private set; } = new bool[DailyMissionSaveData.SlotCount];
 
+        public bool[] SlotRewardClaimed { get; private set; } = new bool[DailyMissionSaveData.SlotCount];
+
         public static DailyMissionData CreateDefault()
         {
             return new DailyMissionData();
@@ -49,6 +51,7 @@ namespace MahjongGame.DailyMissions
                 SlotMissionTypes[i] = save.slotMissionTypes[i];
                 SlotProgress[i] = save.slotProgress[i] < 0 ? 0 : save.slotProgress[i];
                 SlotCompleted[i] = save.slotCompleted[i];
+                SlotRewardClaimed[i] = save.slotRewardClaimed[i];
             }
         }
 
@@ -68,6 +71,7 @@ namespace MahjongGame.DailyMissions
                 saveData.dailyMissions.slotMissionTypes[i] = SlotMissionTypes[i];
                 saveData.dailyMissions.slotProgress[i] = SlotProgress[i] < 0 ? 0 : SlotProgress[i];
                 saveData.dailyMissions.slotCompleted[i] = SlotCompleted[i];
+                saveData.dailyMissions.slotRewardClaimed[i] = SlotRewardClaimed[i];
             }
         }
 
@@ -129,11 +133,33 @@ namespace MahjongGame.DailyMissions
             SlotCompleted[slotIndex] = isCompleted;
         }
 
+        public bool IsSlotRewardClaimed(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= DailyMissionSaveData.SlotCount)
+            {
+                return false;
+            }
+
+            return SlotRewardClaimed[slotIndex];
+        }
+
+        public bool TryMarkSlotRewardClaimed(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= DailyMissionSaveData.SlotCount || SlotRewardClaimed[slotIndex])
+            {
+                return false;
+            }
+
+            SlotRewardClaimed[slotIndex] = true;
+            return true;
+        }
+
         private void ResetRuntimeArrays()
         {
             SlotMissionTypes = new int[DailyMissionSaveData.SlotCount];
             SlotProgress = new int[DailyMissionSaveData.SlotCount];
             SlotCompleted = new bool[DailyMissionSaveData.SlotCount];
+            SlotRewardClaimed = new bool[DailyMissionSaveData.SlotCount];
         }
     }
 }

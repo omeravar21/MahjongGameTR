@@ -150,6 +150,16 @@ namespace MahjongGame.Ranking
                 GlobalLeaderboardDefinition.LocalPlayerDisplayName);
         }
 
+        internal void EnsureValidationInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+
+            LoadFromSave();
+        }
+
         private void PersistRankingState()
         {
             if (!SaveSystem.HasInstance)

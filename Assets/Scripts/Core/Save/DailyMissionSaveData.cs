@@ -11,6 +11,7 @@ namespace MahjongGame.Core.Save
         public int[] slotMissionTypes = new int[SlotCount];
         public int[] slotProgress = new int[SlotCount];
         public bool[] slotCompleted = new bool[SlotCount];
+        public bool[] slotRewardClaimed = new bool[SlotCount];
 
         public void EnsureDefaults()
         {
@@ -22,6 +23,7 @@ namespace MahjongGame.Core.Save
             slotMissionTypes ??= new int[SlotCount];
             slotProgress ??= new int[SlotCount];
             slotCompleted ??= new bool[SlotCount];
+            slotRewardClaimed ??= new bool[SlotCount];
 
             if (slotMissionTypes.Length != SlotCount)
             {
@@ -36,6 +38,11 @@ namespace MahjongGame.Core.Save
             if (slotCompleted.Length != SlotCount)
             {
                 slotCompleted = ResizeBoolArray(slotCompleted, SlotCount);
+            }
+
+            if (slotRewardClaimed.Length != SlotCount)
+            {
+                slotRewardClaimed = ResizeBoolArray(slotRewardClaimed, SlotCount);
             }
 
             for (int i = 0; i < SlotCount; i++)

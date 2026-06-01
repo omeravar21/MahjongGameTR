@@ -1,6 +1,5 @@
 using MahjongGame.DailyBoard;
-using MahjongGame.Ranking;
-using MahjongGame.Score;
+using MahjongGame.DailyRewards;
 using MahjongGame.Session;
 using UnityEngine;
 
@@ -34,16 +33,13 @@ namespace MahjongGame.DailyBoard
                 return;
             }
 
-            int rewardScore = DailyBoardRewardDefinition.GetCompletionGlobalPerformanceScore();
-            LevelPerformanceResult performanceResult = new LevelPerformanceResult(
-                0,
-                0,
-                rewardScore,
-                0);
-
-            if (RankingDirector.HasInstance)
+            if (DailyRewardDirector.HasInstance)
             {
-                RankingDirector.Instance.TryAccumulateLevelPerformance(performanceResult, out _, out _);
+                DailyRewardDirector.Instance.TryGrantDailyBoardCompletionRewards();
+            }
+            else
+            {
+                Debug.LogWarning("[DailyBoardCompletionController] DailyRewardDirector is not available.");
             }
 
             if (DailyBoardDirector.Instance.TryMarkCompletedToday())
@@ -51,8 +47,6 @@ namespace MahjongGame.DailyBoard
                 Debug.Log(
                     "[DailyBoardCompletionController] Daily board completed for day "
                     + context.Session.DailyDayId
-                    + " with GPS reward "
-                    + rewardScore
                     + ".");
             }
         }

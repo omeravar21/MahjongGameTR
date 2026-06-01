@@ -267,6 +267,22 @@ namespace MahjongGame.DailyMissions
             return TryApplyProgress(DailyMissionType.CompleteDailyBoard, 1, out _);
         }
 
+        public bool IsSlotRewardClaimed(int slotIndex)
+        {
+            return _missionData.IsSlotRewardClaimed(slotIndex);
+        }
+
+        public bool TryMarkSlotRewardClaimed(int slotIndex)
+        {
+            if (!_missionData.TryMarkSlotRewardClaimed(slotIndex))
+            {
+                return false;
+            }
+
+            PersistToSave();
+            return true;
+        }
+
         internal void SetStateForValidation(int dayId, DateTime utcNow)
         {
             _utcNowProvider = () => utcNow;
