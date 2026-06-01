@@ -20,6 +20,7 @@ namespace MahjongGame.Ranking
             passed &= ValidateDirectorBehavior(reportBuilder);
             passed &= ValidateModelBehavior(reportBuilder);
             passed &= GlobalPerformanceScoreSystemValidator.Validate(reportBuilder);
+            passed &= LeaderboardSystemValidator.Validate(reportBuilder);
 
             AppendLine(reportBuilder, passed
                 ? "[PASS] Ranking architecture validation completed successfully."
@@ -37,6 +38,8 @@ namespace MahjongGame.Ranking
             passed &= ValidateTypeExists(typeof(RankingEntry), reportBuilder);
             passed &= ValidateTypeExists(typeof(LeaderboardData), reportBuilder);
             passed &= ValidateTypeExists(typeof(LeaderboardEntry), reportBuilder);
+            passed &= ValidateTypeExists(typeof(GlobalLeaderboardBuilder), reportBuilder);
+            passed &= ValidateTypeExists(typeof(RankingUIController), reportBuilder);
 
             return passed;
         }
@@ -66,11 +69,15 @@ namespace MahjongGame.Ranking
 
             try
             {
-                director.SetRankingStateForValidation(25_000, 42);
+                director.SetRankingStateForValidation(250_000, 0);
+                director.RefreshGlobalRank();
 
-                if (director.GlobalPerformanceScore != 25_000
-                    || director.CurrentGlobalRank != 42
-                    || director.HighestGlobalRank != 42)
+                LeaderboardData expectedLeaderboard = director.GetLeaderboardData();
+                int expectedRank = expectedLeaderboard.LocalPlayerRank;
+
+                if (director.GlobalPerformanceScore != 250_000
+                    || director.CurrentGlobalRank != expectedRank
+                    || expectedRank <= 0)
                 {
                     AppendLine(reportBuilder, "[FAIL] RankingDirector did not retain validation ranking state.");
                     passed = false;
@@ -83,8 +90,8 @@ namespace MahjongGame.Ranking
                 RankingEntry localEntry = director.GetLocalRankingEntry();
                 if (localEntry == null
                     || !localEntry.IsLocalPlayer
-                    || localEntry.GlobalPerformanceScore != 25_000
-                    || localEntry.RankPosition != 42)
+                    || localEntry.GlobalPerformanceScore != 250_000
+                    || localEntry.RankPosition != expectedRank)
                 {
                     AppendLine(reportBuilder, "[FAIL] RankingDirector local ranking entry is invalid.");
                     passed = false;
@@ -100,14 +107,19 @@ namespace MahjongGame.Ranking
                     AppendLine(reportBuilder, "[FAIL] RankingDirector returned null leaderboard data.");
                     passed = false;
                 }
-                else if (leaderboardData.Entries == null)
+                else if (leaderboardData.Entries == null || leaderboardData.Entries.Length == 0)
                 {
-                    AppendLine(reportBuilder, "[FAIL] RankingDirector leaderboard data has null entries.");
+                    AppendLine(reportBuilder, "[FAIL] RankingDirector leaderboard data has no entries.");
+                    passed = false;
+                }
+                else if (leaderboardData.LocalPlayerRank != expectedRank)
+                {
+                    AppendLine(reportBuilder, "[FAIL] RankingDirector cached leaderboard does not reflect validation rank.");
                     passed = false;
                 }
                 else
                 {
-                    AppendLine(reportBuilder, "[PASS] RankingDirector exposes leaderboard data architecture.");
+                    AppendLine(reportBuilder, "[PASS] RankingDirector exposes populated leaderboard data.");
                 }
             }
             finally

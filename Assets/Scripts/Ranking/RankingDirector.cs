@@ -12,6 +12,7 @@ namespace MahjongGame.Ranking
         private static RankingDirector _instance;
 
         private RankingData _rankingData = RankingData.CreateDefault();
+        private LeaderboardData _cachedLeaderboardData = LeaderboardData.Empty;
 
         public static RankingDirector Instance
         {
@@ -51,6 +52,7 @@ namespace MahjongGame.Ranking
         private void Start()
         {
             LoadFromSave();
+            RefreshGlobalRank();
         }
 
         private void OnDestroy()
@@ -76,7 +78,7 @@ namespace MahjongGame.Ranking
         {
             return new RankingEntry(
                 LocalPlayerId,
-                "Player",
+                GlobalLeaderboardDefinition.LocalPlayerDisplayName,
                 GlobalPerformanceScore,
                 CurrentGlobalRank,
                 true);
@@ -84,7 +86,24 @@ namespace MahjongGame.Ranking
 
         public LeaderboardData GetLeaderboardData()
         {
-            return LeaderboardData.Empty;
+            return _cachedLeaderboardData;
+        }
+
+        public void RefreshGlobalRank()
+        {
+            _cachedLeaderboardData = GlobalLeaderboardBuilder.Build(
+                GlobalPerformanceScore,
+                GlobalLeaderboardDefinition.LocalPlayerDisplayName);
+
+            int previousRank = CurrentGlobalRank;
+            int newRank = _cachedLeaderboardData.LocalPlayerRank;
+            _rankingData.SetCurrentGlobalRank(newRank);
+            PersistRankingState();
+
+            if (previousRank != newRank)
+            {
+                RankingEvents.RaiseGlobalRankChanged(new GlobalRankChangedContext(previousRank, newRank));
+            }
         }
 
         public bool TryAccumulateLevelPerformance(
@@ -107,6 +126,7 @@ namespace MahjongGame.Ranking
             RankingEvents.RaiseGlobalPerformanceScoreChanged(
                 new GlobalPerformanceScoreChangedContext(previousScore, newScore));
 
+            RefreshGlobalRank();
             return true;
         }
 
@@ -114,6 +134,9 @@ namespace MahjongGame.Ranking
         {
             _rankingData.SetGlobalPerformanceScore(globalPerformanceScore);
             _rankingData.SetCurrentGlobalRank(currentGlobalRank);
+            _cachedLeaderboardData = GlobalLeaderboardBuilder.Build(
+                globalPerformanceScore,
+                GlobalLeaderboardDefinition.LocalPlayerDisplayName);
         }
 
         private void PersistRankingState()
