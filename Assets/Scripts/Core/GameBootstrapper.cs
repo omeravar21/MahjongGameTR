@@ -1,4 +1,5 @@
 using MahjongGame.BoardGeneration;
+using MahjongGame.DailyBoard;
 using MahjongGame.Progression;
 using MahjongGame.Ranking;
 using UnityEngine;
@@ -49,6 +50,11 @@ namespace MahjongGame.Core
             if (GetComponent<RankingSyncController>() == null)
             {
                 gameObject.AddComponent<RankingSyncController>();
+            }
+
+            if (GetComponent<DailyBoardDirector>() == null)
+            {
+                gameObject.AddComponent<DailyBoardDirector>();
             }
 
             if (GetComponent<DifficultyDirector>() == null)
