@@ -22,10 +22,11 @@ namespace MahjongGame.Ranking
             passed &= GlobalPerformanceScoreSystemValidator.Validate(reportBuilder);
             passed &= LeaderboardSystemValidator.Validate(reportBuilder);
             passed &= RankingSyncSystemValidator.Validate(reportBuilder);
+            passed &= RankingDisplaySystemValidator.Validate(reportBuilder);
 
             AppendLine(reportBuilder, passed
-                ? "[PASS] Ranking architecture validation completed successfully."
-                : "[FAIL] Ranking architecture validation found issues.");
+                ? "[PASS] Ranking system validation completed successfully."
+                : "[FAIL] Ranking system validation found issues.");
 
             return passed;
         }

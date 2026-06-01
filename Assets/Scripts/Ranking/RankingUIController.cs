@@ -74,6 +74,32 @@ namespace MahjongGame.Ranking
             _isVisible = isVisible;
         }
 
+        internal void RefreshFromLeaderboardDataForValidation(LeaderboardData leaderboardData)
+        {
+            if (leaderboardData == null)
+            {
+                SetSummaryText("Global Leaderboard", 0, 0);
+                ClearEntryRows();
+                return;
+            }
+
+            SetSummaryText(
+                "Global Leaderboard",
+                leaderboardData.LocalPlayerRank,
+                leaderboardData.LocalPlayerScore);
+            RenderEntries(leaderboardData);
+        }
+
+        internal string GetSummaryTextForValidation()
+        {
+            return _summaryText != null ? _summaryText.text : string.Empty;
+        }
+
+        internal int GetEntryRowCountForValidation()
+        {
+            return _entryListRoot != null ? _entryListRoot.childCount : 0;
+        }
+
         private void HandleGlobalPerformanceScoreChanged(GlobalPerformanceScoreChangedContext context)
         {
             if (!_isVisible)
